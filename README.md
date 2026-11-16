@@ -7,7 +7,7 @@ visualised as particle flow, surface pressure, and per-part explanations.
 Single HTML file. No backend, no build step, no physics engine — three.js r187 is vendored locally,
 so the whole thing also runs offline.
 
-**Live demo:** https://phenomenal-cannoli-230ed4.netlify.app
+**Live demo:** https://jklin6632-dot.github.io/f1-aero/ 　·　 mirror: https://phenomenal-cannoli-230ed4.netlify.app
 
 [中文文档见下方 ↓](#中文) 　·　 Code **MIT** · 3D model **CC BY 4.0** (Abu Saif / Sketchfab) · see [NOTICE.md](NOTICE.md)
 
