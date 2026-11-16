@@ -9,6 +9,8 @@ so the whole thing also runs offline.
 
 **Live demo:** https://jklin6632-dot.github.io/f1-aero/ 　·　 mirror: https://phenomenal-cannoli-230ed4.netlify.app
 
+![F1 2024 — Aerodynamics Explorer](docs/preview.jpg)
+
 [中文文档见下方 ↓](#中文) 　·　 Code **MIT** · 3D model **CC BY 4.0** (Abu Saif / Sketchfab) · see [NOTICE.md](NOTICE.md)
 
 ## What's inside
