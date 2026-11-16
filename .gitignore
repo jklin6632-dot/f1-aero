@@ -1,0 +1,27 @@
+# 依赖 / 构建产物
+node_modules/
+_tools/
+ml/
+ml2/
+*.tgz
+
+# 开发期探针与截图（体积大，且与本项目功能无关）
+_probe/
+
+# 打包与备份
+deploy.zip
+deploy/
+*.bak
+*.bak-*
+*.ui-bak
+index.html.bak-preclean
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+*.lnk
+
+# 内部交接记录（开发过程笔记，不对外）
+HANDOFF-*.txt
