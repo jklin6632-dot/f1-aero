@@ -1,4 +1,56 @@
-# F1 2024 · 空气动力学展示（单页 Three.js）
+# F1 2024 — Aerodynamics Explorer
+
+An interactive, fully client-side 3D explorer for a Formula 1 car (Ferrari SF-25) built to make
+aerodynamics *tangible*: a vortex-lattice (VLM) solver runs **in the browser** and its results are
+visualised as particle flow, surface pressure, and per-part explanations.
+
+Single HTML file. No backend, no build step, no physics engine — three.js r187 is vendored locally,
+so the whole thing also runs offline.
+
+**Live demo:** https://phenomenal-cannoli-230ed4.netlify.app
+
+[中文文档见下方 ↓](#中文) 　·　 Code **MIT** · 3D model **CC BY 4.0** (Abu Saif / Sketchfab) · see [NOTICE.md](NOTICE.md)
+
+## What's inside
+
+| Feature | Detail |
+|---|---|
+| **VLM solver** | 8 lifting surfaces / **396 vortex rings**, ~150 ms per solve, calibrated to `CL 3.500 / CD 1.000` |
+| **Particle flow** | **8,000 streamlines** sampled on a 24×16×92 grid, per-mesh AABB occlusion, speed-scaled to the car (static at 0 km/h) |
+| **Surface pressure** | `Δp = q·Cp` colouring — VLM circulation on wings, potential-flow + separation model on suspension |
+| **Part inspector** | **~258 meshes** classified into 20 named parts; click any part → isolate it, ghost the rest, open an info card |
+| **Steering wheel exploded view** `Q` | 13 parts + **57 buttons** with per-button descriptions, ghosting, explode slider |
+| **Power-unit cutaway** `Z` | engine block / exhaust / intake extracted from the body geometry |
+| **Drive mode** | `WASD` throttle & steering with wheel rotation ±180°, DRS toggle, cockpit view, 32 s demo |
+| **Keyboard-first UI** | press `?` for the built-in shortcut guide; `H` for a clean screenshot mode |
+
+The numbers are **not CFD**: it is a vortex-lattice approximation with semi-empirical corrections,
+labelled as such inside the UI. Good enough to explain *why* the floor and the front wing matter,
+not to design a car with.
+
+## 3D model credit
+
+> **Ferrari SF-25 by [Abu Saif](https://sketchfab.com/)** — licensed **CC BY 4.0** (Creative Commons Attribution 4.0).
+>
+> This repository ships a re-packed copy of that model (`sf25.glb`, and a web-optimised
+> `docs/sf25.web.glb`). Changes made: unused resources pruned and textures converted PNG → WebP.
+> **Geometry is not quantised** (positions stay float32) and all mesh/material names are preserved,
+> because the part inspector and the steering-wheel view identify parts by those names.
+
+three.js r187 (MIT) · Inter & Space Grotesk (SIL OFL 1.1).
+The Ferrari / FIA / sponsor marks inside the model's textures remain the property of their owners:
+this is a **non-commercial technical demo**, not affiliated with Ferrari, FIA or Formula 1.
+
+## License
+
+Code: **MIT** (see `LICENSE`). 3D model: **CC BY 4.0** (attribution required).
+Third-party assets and trademark notes: **`NOTICE.md`**.
+
+---
+
+<a id="中文"></a>
+
+# 中文说明
 
 法拉利 SF-25 的浏览器内 3D 展示 + 空气动力学交互演示。全部计算在页内完成，不依赖任何后端或物理引擎。
 
@@ -8,6 +60,7 @@
 > **一句话**：涡格法（VLM）在浏览器里算 8 条翼面 / 396 个涡环，再把结果画成粒子和压力色——不是 CFD。
 >
 > 代码 MIT · 模型 CC BY 4.0（Abu Saif / Sketchfab）· 商标归各自权利人，详见 [NOTICE.md](NOTICE.md)。
+
 
 
 ---
