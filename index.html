@@ -852,6 +852,10 @@ body.ui-hidden::after{ opacity:0; }
 
   body.lang-en #ch-season .win b{ font-size:14px; letter-spacing:-.02em; }
   body.lang-en #ch-season .win span{ font-size:9.8px; }
+  /* 整页可点：空白处即翻下一页，按钮/圆点/热区单独处理光标 */
+  body.mode-site #site, body.mode-site #c3d canvas{ cursor:pointer; }
+  body.mode-site #site button, body.mode-site #site a,
+  body.mode-site #pager, body.mode-site #pager *, body.mode-site #snav button{ cursor:pointer; }
   /* ---------- §SITE-8 点击翻页（不再用滚动驱动） ---------- */
   #site{ overflow:hidden !important; }
   #site .ch{
@@ -933,7 +937,7 @@ body.ui-hidden::after{ opacity:0; }
           <div class="kpi"><b>5<i>WINS</i></b><span data-t="k2">分站冠军</span></div>
           <div class="kpi"><b>22<i>PODIUMS</i></b><span data-t="k3">登上领奖台</span></div>
         </div>
-        <div class="hint" data-t="scroll">点右下角箭头，或直接点上方章节</div>
+        <div class="hint" data-t="scroll">点击任意处继续 →</div>
       </div>
     </section>
 
@@ -8133,6 +8137,7 @@ const EN = {
   gstate: 'Connecting',
   nav0:'Overview', nav1:'Technical', nav2:'Aero', nav3:'Season', nav4:'Drivers', nav5:'Parts', nav6:'History',
   towork:'Open workspace',
+  'scroll':'Click anywhere to continue →',
   'hero-k':'Scuderia Ferrari · Formula 1 2024',
   'hero-sub':'2024 season car',
   'hero-p':"The 2024 SF-24, cars 16 and 55. Four short chapters: how it is built, how the air moves over it, what it did in the season, and where it sits in the team's history.",
@@ -8375,6 +8380,22 @@ function initSite(){
   if (cw) cw.addEventListener('click', toWork);
   const ts = document.getElementById('to-site');
   if (ts) ts.addEventListener('click', toSite);
+
+  /* 点空白处直接翻到下一页 —— 但按钮/圆点/热区/信息卡这些交互元素要放过 */
+  let lastNav = 0;
+  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide';
+  document.addEventListener('click', (e) => {
+    if (!SITE.on) return;
+    if (!document.body.classList.contains('mode-site')) return;
+    if (document.body.classList.contains('guiding')) return;
+    if (document.body.classList.contains('ui-hidden')) return;
+    if (e.target.closest && e.target.closest(INTERACTIVE)) return;
+    if (document.body.classList.contains('hot-on')) { const tp = document.getElementById('hot-tip'); if (tp && tp.classList.contains('show')) return; }
+    const now = performance.now();
+    if (now - lastNav < 650) return;   /* 连点当成双击，忽略 */
+    lastNav = now;
+    if (SITE.ch < SITE.cams.length - 1) gotoChapter(SITE.ch + 1);
+  });
 
   siteTick();
 }
