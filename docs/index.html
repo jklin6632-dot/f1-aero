@@ -555,6 +555,14 @@ body.ui-hidden::after{ opacity:0; }
   #specs .spec{ width:100%; }
 
   /* ===== V7 操作指南（覆盖层） ===== */
+  #views #to-site{
+    margin:0 0 12px; width:100%; padding:8px 10px; text-align:left;
+    display:flex; align-items:center; gap:8px;
+    font:500 11.5px/1 var(--sans); color:var(--dim);
+    background:transparent; border:1px solid var(--line); border-radius:7px; cursor:pointer;
+  }
+  #views #to-site::before{ content:"←"; font-size:12px; opacity:.6; }
+  #views #to-site:hover{ color:var(--ink); border-color:#cfd6dd; background:#f7f8fa; }
   #views #guide-btn{ margin-top:10px; width:100%; padding:8px 10px; font:500 11.5px/1 var(--sans);
     color:var(--dim); background:#fff; border:1px solid var(--line); border-radius:8px; cursor:pointer; text-align:left; }
   #views #guide-btn:hover{ color:var(--ink); border-color:#cfd6dd; background:#f7f8fa; }
@@ -926,8 +934,9 @@ body.ui-hidden::after{ opacity:0; }
   body.mode-site.tone-dark .specs2 div, body.mode-site.tone-dark .win{ background:rgba(255,255,255,.045); }
 
   /* 工作台顶条改版：返回官网在左，顶栏不压左栏 */
-  body.mode-work #views{ top:44px; padding-top:18px; }
-  body.mode-work #hud{ top:44px; }
+  body.mode-work #views{ top:0; padding-top:14px; }
+  body.mode-work #solve{ top:360px; }
+  body.mode-work #specs{ top:414px; max-height:calc(100vh - 446px); }
   body.mode-work #hud, body.mode-work #specs, body.mode-work #solve, body.mode-work #srcnote{ margin-top:0; }
   #wbar #to-site{
     margin-left:2px; padding:6px 12px; border-radius:6px; font-weight:600;
@@ -1187,13 +1196,6 @@ body.ui-hidden::after{ opacity:0; }
   <div id="hot"></div>
   <div id="hot-tip"><h4></h4><p></p></div>
 
-  <!-- 工作台返回条 -->
-  <div id="wbar">
-    <b data-t="wb">工作台</b>
-    <i class="sep"></i><button id="to-site" data-t="wbb">返回官网</button>
-    <span data-t="wbh" id="wbar-keys" hidden>W·A·S·D 驾驶 · Q 拆解 · Z 动力单元 · ? 操作指南</span>
-  </div>
-
   <header id="hud" class="panel">
     <div class="brand">
       <b>F1 2024</b>
@@ -1224,6 +1226,7 @@ body.ui-hidden::after{ opacity:0; }
   <div id="cap"></div>
 <div id="demoBar"><i id="demoFill"></i></div>
 <nav id="views" class="panel">
+    <button id="to-site" class="back" data-t="wbb">返回官网</button>
     <button class="on" data-view="exterior">外观</button>
     <button data-view="speed">速度场</button>
     <button data-view="cp">表面压力</button>
@@ -2639,6 +2642,7 @@ window.addEventListener('keydown', e => {
         guide.hidden = !on;
         document.body.classList.toggle('guiding', !!on);
       };
+      window.__setGuide = setGuide;
       const gb = $('guide-btn');
       if (gb) gb.addEventListener('click', () => setGuide(guide.hidden));
       const gx = $('guide-x');
@@ -8539,6 +8543,7 @@ function toWork(){
   APP.controls.enabled = true;
   goHome();
   setView('exterior');
+  if (window.__setGuide) window.__setGuide(true);   /* 第一次进来先看一次键位 */
 }
 
 function toSite(){
