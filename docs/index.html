@@ -782,8 +782,12 @@ body.ui-hidden::after{ opacity:0; }
   body.mode-work #wbar{ display:flex; height:44px; }
   #wbar b{ font:600 12px/1 var(--sans); color:var(--ink); }
   #wbar span{ font:500 10px/1 var(--mono); letter-spacing:.1em; color:var(--faint); text-transform:uppercase; }
+  /* 按键提示默认收起，点「?」看操作指南即可 */
+  #wbar span[hidden]{ display:none; }
+  #wbar #to-site{ padding:6px 11px; }
+  #wbar #to-site::before{ content:"←"; margin-right:6px; opacity:.55; }
   #wbar button{
-    margin-left:auto; border:1px solid var(--line); background:var(--canvas); cursor:pointer;
+    border:1px solid var(--line); background:var(--canvas); cursor:pointer;
     padding:7px 12px; border-radius:6px; font:600 11.5px/1 var(--sans); color:var(--ink);
   }
   #wbar button:hover{ border-color:var(--accent); color:var(--accent); }
@@ -920,6 +924,16 @@ body.ui-hidden::after{ opacity:0; }
   body.mode-site.tone-dark .tl .row.now .tx b{ color:#FF6A5A; }
   body.mode-site.tone-dark .drv article{ border-color:rgba(255,255,255,.16); background:rgba(255,255,255,.045); }
   body.mode-site.tone-dark .specs2 div, body.mode-site.tone-dark .win{ background:rgba(255,255,255,.045); }
+
+  /* 工作台顶条改版：返回官网在左，顶栏不压左栏 */
+  body.mode-work #views{ top:44px; padding-top:18px; }
+  body.mode-work #hud{ top:44px; }
+  body.mode-work #hud, body.mode-work #specs, body.mode-work #solve, body.mode-work #srcnote{ margin-top:0; }
+  #wbar #to-site{
+    margin-left:2px; padding:6px 12px; border-radius:6px; font-weight:600;
+  }
+  #wbar #to-site::before{ content:"←"; margin-right:7px; opacity:.5; }
+  #wbar .sep{ display:inline-block; width:1px; height:14px; background:var(--line); margin:0 4px; }
 
   /* ---------- §SITE-10 全站暗场：加载闸门也换成暗色 ---------- */
   #gate{ background:#0a0a0c; }
@@ -1175,8 +1189,9 @@ body.ui-hidden::after{ opacity:0; }
 
   <!-- 工作台返回条 -->
   <div id="wbar">
-    <b data-t="wb">工作台</b><span data-t="wbh">W·A·S·D 驾驶 · Q 拆解 · Z 动力单元 · ? 操作指南</span>
-    <button id="to-site" data-t="wbb">返回官网</button>
+    <b data-t="wb">工作台</b>
+    <i class="sep"></i><button id="to-site" data-t="wbb">返回官网</button>
+    <span data-t="wbh" id="wbar-keys" hidden>W·A·S·D 驾驶 · Q 拆解 · Z 动力单元 · ? 操作指南</span>
   </div>
 
   <header id="hud" class="panel">
