@@ -599,10 +599,453 @@ body.ui-hidden::after{ opacity:0; }
 
   /* 截图模式下连右下角的性能标签一起收掉（想留着就把这行删掉） */
   body.ui-hidden #perf{ opacity:0; pointer-events:none; }
+
+  /* ================= §SITE 官网外壳 ================= */
+  /* 加载闸门 */
+  #gate{
+    position:fixed; inset:0; z-index:200; background:var(--canvas);
+    display:grid; place-items:center; transition:opacity .55s ease, visibility .55s;
+  }
+  #gate.done{ opacity:0; visibility:hidden; pointer-events:none; }
+  .gw{ width:min(540px, 74vw); }
+  .gw .gmark{ display:flex; align-items:baseline; gap:10px; }
+  .gw .gmark b{
+    font:700 40px/1 var(--display); letter-spacing:-.03em; color:var(--ink);
+  }
+  .gw .gmark i{
+    font:600 11px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase;
+    color:var(--faint); font-style:normal;
+  }
+  .gw .gsub{ margin:10px 0 34px; font:400 13px/1.6 var(--sans); color:var(--dim); }
+  .gbar{ height:2px; background:var(--line); overflow:hidden; }
+  .gbar i{ display:block; height:100%; width:0%; background:var(--accent); transition:width .25s ease; }
+  .grow{
+    margin-top:12px; display:flex; justify-content:space-between;
+    font:500 10px/1 var(--mono); letter-spacing:.1em; color:var(--faint); text-transform:uppercase;
+  }
+  .grow #gpct{ color:var(--ink); }
+
+  /* 外壳 */
+  #site{ position:fixed; inset:0; z-index:60; overflow-y:auto; overflow-x:hidden; display:none; }
+  body.mode-site #site{ display:block; }
+  body.mode-site #hud,
+  body.mode-site #views,
+  body.mode-site #solve,
+  body.mode-site #srcnote,
+  body.mode-site #perf,
+  body.mode-site #legend,
+  body.mode-site #card,
+  body.mode-site #cpit,
+  body.mode-site #probe{ display:none !important; }
+  body.mode-site #c{ opacity:1; }
+
+  #sbar{
+    position:fixed; top:0; left:0; right:0; z-index:70; height:64px;
+    display:flex; align-items:center; gap:26px; padding:0 26px;
+    background:rgba(255,255,255,.92); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  #sbar .sb-brand{ display:flex; align-items:baseline; gap:9px; }
+  #sbar .sb-brand b{ font:700 15px/1 var(--display); letter-spacing:-.02em; color:var(--ink); }
+  #sbar .sb-brand span{ font:500 9.5px/1 var(--mono); letter-spacing:.14em; color:var(--faint); text-transform:uppercase; }
+  #sbar nav{ display:flex; gap:2px; margin-left:8px; }
+  #sbar nav button{
+    border:0; background:transparent; cursor:pointer; padding:7px 11px; border-radius:6px;
+    font:500 12px/1 var(--sans); color:var(--dim); transition:.15s;
+  }
+  #sbar nav button:hover{ background:var(--accent-soft); color:var(--ink); }
+  #sbar nav button.on{ color:var(--ink); font-weight:600; background:var(--bg); }
+  #sbar .sb-right{ margin-left:auto; display:flex; align-items:center; gap:10px; }
+  #sbar .lang{
+    display:flex; border:1px solid var(--line); border-radius:6px; overflow:hidden;
+  }
+  #sbar .lang button{
+    border:0; background:transparent; cursor:pointer; padding:6px 9px;
+    font:600 10.5px/1 var(--mono); letter-spacing:.08em; color:var(--faint);
+  }
+  #sbar .lang button.on{ background:var(--ink); color:#fff; }
+  #sbar #to-work{
+    border:1px solid var(--ink); background:var(--ink); color:#fff; cursor:pointer;
+    padding:9px 15px; border-radius:6px; font:600 12px/1 var(--sans); transition:.15s;
+  }
+  #sbar #to-work:hover{ background:var(--accent); border-color:var(--accent); }
+
+  /* 章节 */
+  .ch{ min-height:100vh; display:grid; align-items:center; padding:110px 7vw 90px; position:relative; }
+  .ch-in{ max-width:560px; }
+  .ch.right .ch-in{ margin-left:auto; }
+  .ch.center{ place-items:center; text-align:center; }
+  .ch.center .ch-in{ max-width:760px; }
+  .ch .eyebrow{
+    font:600 10px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:14px;
+  }
+  .ch h2{
+    margin:0 0 14px; font:700 clamp(30px,4vw,52px)/1.06 var(--display);
+    letter-spacing:-.035em; color:var(--ink);
+  }
+  .ch h2 em{ font-style:normal; color:var(--accent); }
+  .ch p{ margin:0 0 12px; font:400 14px/1.75 var(--sans); color:var(--dim); }
+  .ch p b{ color:var(--ink); font-weight:600; }
+  .ch .hint{
+    margin-top:22px; font:500 10px/1 var(--mono); letter-spacing:.12em;
+    color:var(--faint); text-transform:uppercase;
+  }
+
+  /* hero */
+  #ch-hero .ch-in{ max-width:640px; }
+  #ch-hero h1{
+    margin:0; font:700 clamp(64px,11vw,150px)/.9 var(--display);
+    letter-spacing:-.05em; color:var(--ink);
+  }
+  #ch-hero h1 span{ display:block; font-size:.26em; letter-spacing:-.01em; color:var(--ink-2); opacity:.75; margin-top:14px; }
+  #ch-hero .kpis{ display:flex; gap:34px; margin-top:40px; }
+  #ch-hero .kpi b{ display:block; font:700 34px/1 var(--display); letter-spacing:-.03em; color:var(--ink); }
+  #ch-hero .kpi b i{ font:500 10px/1 var(--mono); font-style:normal; letter-spacing:.1em; color:var(--faint); margin-left:5px; }
+  #ch-hero .kpi span{ display:block; margin-top:7px; font:500 9.5px/1 var(--mono); letter-spacing:.14em; color:var(--faint); text-transform:uppercase; }
+
+  /* 规格网格 */
+  .specs2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:26px; }
+  .specs2 div{ background:var(--canvas); padding:14px 16px; }
+  .specs2 u{ display:block; font:500 9.5px/1 var(--mono); letter-spacing:.12em; color:var(--faint); text-transform:uppercase; text-decoration:none; }
+  .specs2 b{ display:block; margin-top:6px; font:600 15px/1.3 var(--sans); color:var(--ink); }
+
+  /* 赛季 */
+  .wins{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:26px; }
+  .win{ background:var(--canvas); padding:16px 14px 18px; position:relative; }
+  .win em{ font:600 9px/1 var(--mono); letter-spacing:.14em; color:var(--faint); font-style:normal; }
+  .win b{ display:block; margin-top:8px; font:700 19px/1.15 var(--display); letter-spacing:-.02em; color:var(--ink); }
+  .win span{ display:block; margin-top:8px; font:400 11.5px/1.5 var(--sans); color:var(--dim); }
+  .win.hot::after{ content:""; position:absolute; left:0; top:0; width:100%; height:2px; background:var(--accent); }
+
+  /* 车手 */
+  .drv{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:26px; }
+  .drv article{ border:1px solid var(--line); padding:22px; background:var(--canvas); }
+  .drv .num{ font:700 44px/.9 var(--display); letter-spacing:-.04em; color:var(--line-2); }
+  .drv h3{ margin:10px 0 2px; font:700 20px/1.2 var(--display); letter-spacing:-.02em; color:var(--ink); }
+  .drv .tag{ font:500 10px/1 var(--mono); letter-spacing:.12em; color:var(--accent); text-transform:uppercase; }
+  .drv p{ margin:12px 0 0; font:400 13px/1.7 var(--sans); color:var(--dim); }
+  .drv .st{ display:flex; gap:18px; margin-top:14px; padding-top:12px; border-top:1px solid var(--line); }
+  .drv .st i{ font-style:normal; font:500 9.5px/1 var(--mono); letter-spacing:.1em; color:var(--faint); }
+  .drv .st b{ display:block; margin-top:5px; font:600 14px/1 var(--display); color:var(--ink); }
+
+  /* 时间线 */
+  .tl{ margin-top:30px; border-top:1px solid var(--line); }
+  .tl .row{ display:grid; grid-template-columns:96px 1fr; gap:22px; padding:13px 0; border-bottom:1px solid var(--line); }
+  .tl .yr{ font:600 13px/1.4 var(--mono); letter-spacing:.04em; color:var(--faint); }
+  .tl .tx{ font:400 13px/1.6 var(--sans); color:var(--dim); }
+  .tl .row.now{ background:var(--accent-soft); margin:0 -14px; padding:16px 14px; border-bottom-color:var(--accent-line); }
+  .tl .row.now .yr{ color:var(--accent); font-weight:700; }
+  .tl .row.now .tx{ color:var(--ink); }
+  .tl .row.now .tx b{ color:var(--accent); }
+
+  /* 3D 热点 */
+  #hot{ position:fixed; inset:0; z-index:62; pointer-events:none; display:none; }
+  body.mode-site.hot-on #hot{ display:block; }
+  .hs{
+    position:absolute; transform:translate(-50%,-50%); pointer-events:auto; cursor:pointer;
+    width:26px; height:26px; border-radius:50%; border:1px solid var(--accent);
+    background:rgba(255,255,255,.9); display:grid; place-items:center; padding:0;
+    transition:transform .18s ease, background .18s;
+  }
+  .hs::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--accent); }
+  .hs:hover{ transform:translate(-50%,-50%) scale(1.18); background:var(--accent); }
+  .hs:hover::before{ background:#fff; }
+  .hs-lbl{
+    position:absolute; left:34px; top:50%; transform:translateY(-50%);
+    white-space:nowrap; font:600 11px/1 var(--sans); color:var(--ink);
+    background:rgba(255,255,255,.94); border:1px solid var(--line);
+    padding:6px 9px; border-radius:5px; opacity:0; transition:opacity .16s; pointer-events:none;
+  }
+  .hs:hover .hs-lbl{ opacity:1; }
+  #hot-tip{
+    position:fixed; z-index:80; max-width:300px; display:none; pointer-events:auto;
+    background:var(--canvas); border:1px solid var(--line); border-radius:8px;
+    padding:14px 16px; box-shadow:0 18px 44px rgba(16,24,40,.14);
+  }
+  #hot-tip.show{ display:block; }
+  #hot-tip h4{ margin:0 0 6px; font:700 14px/1.3 var(--sans); color:var(--ink); }
+  #hot-tip p{ margin:0; font:400 12px/1.65 var(--sans); color:var(--dim); }
+
+  /* 工作台返回条 */
+  #wbar{
+    position:fixed; top:0; left:0; right:0; z-index:75; height:0; overflow:hidden;
+    display:none; align-items:center; gap:14px; padding:0 20px;
+    background:rgba(255,255,255,.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+    transition:height .2s;
+  }
+  body.mode-work #wbar{ display:flex; height:44px; }
+  #wbar b{ font:600 12px/1 var(--sans); color:var(--ink); }
+  #wbar span{ font:500 10px/1 var(--mono); letter-spacing:.1em; color:var(--faint); text-transform:uppercase; }
+  #wbar button{
+    margin-left:auto; border:1px solid var(--line); background:var(--canvas); cursor:pointer;
+    padding:7px 12px; border-radius:6px; font:600 11.5px/1 var(--sans); color:var(--ink);
+  }
+  #wbar button:hover{ border-color:var(--accent); color:var(--accent); }
+
+  @media (max-width:900px){
+    #sbar{ gap:14px; padding:0 16px; }
+    #sbar nav{ display:none; }
+    .ch{ padding:96px 6vw 72px; }
+    .wins{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .drv{ grid-template-columns:1fr; }
+    .specs2{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- §SITE-2 文字可读层：车在背后、文字压一层柔光玻璃 ---------- */
+  .ch-in{
+    position:relative; z-index:2; width:min(560px, 46vw);
+    padding:38px 42px 34px; border-radius:22px;
+    background:rgba(255,255,255,.92);
+    -webkit-backdrop-filter:blur(9px) saturate(1.04);
+    backdrop-filter:blur(9px) saturate(1.04);
+    border:1px solid rgba(15,23,42,.055);
+    box-shadow:0 30px 72px -28px rgba(15,23,42,.28), 0 2px 6px rgba(15,23,42,.04);
+  }
+  .ch.right .ch-in{ margin-left:auto; }
+  .ch.center .ch-in{ width:min(680px, 60vw); }
+  #ch-hero .ch-in{ width:min(600px, 48vw); padding:44px 46px 38px; background:rgba(255,255,255,.95); }
+  .ch.k .ch-in{ padding-top:34px; }
+  #ch-hot .ch-in{ width:min(430px, 38vw); }
+  #ch-cta .ch-in{ text-align:center; }
+  #ch-hero h1{ font-size:clamp(52px, 8.4vw, 112px) !important; }
+  .ch h2{ font-size:clamp(26px, 2.9vw, 40px) !important; line-height:1.16 !important; }
+  .ch p{ max-width:52ch; }
+  @media (max-width:1100px){
+    .ch-in{ width:min(520px, 58vw); }
+    #ch-hero .ch-in{ width:min(560px, 62vw); }
+    #ch-hot .ch-in{ width:min(420px, 52vw); }
+  }
+  @media (max-width:900px){
+    .ch-in, #ch-hero .ch-in, #ch-hot .ch-in, .ch.center .ch-in{ width:100%; padding:26px 22px; }
+  }
+
+  /* §SITE-3 赛季章：五胜卡在窄玻璃卡里要放得下 */
+  #ch-season .ch-in{ width:min(640px,54vw); }
+  #ch-season .win{ padding:14px 10px 16px; }
+  #ch-season .win b{ font-size:15.5px; letter-spacing:-.01em; white-space:nowrap; }
+  #ch-season .win span{ font-size:10.5px; line-height:1.45; }
+  #ch-season .win em{ font-size:8.5px; letter-spacing:.1em; }
+
+  /* §SITE-4 热点更醒目：加大 + 呼吸光环 */
+  #hot .hs{ width:34px; height:34px; }
+  #hot .hs::after{
+    content:""; position:absolute; inset:-6px; border-radius:50%;
+    border:1px solid rgba(225,6,0,.45); animation:hsPulse 2.4s ease-out infinite;
+  }
+  #hot .hs:hover{ transform:scale(1.12); }
+  @keyframes hsPulse{
+    0%{ transform:scale(.72); opacity:.9; }
+    70%{ transform:scale(1.28); opacity:0; }
+    100%{ opacity:0; }
+  }
+
+  /* §SITE-5 车手卡号码：描边幽灵字，白底上才看得见 */
+  .drv .num{ color:transparent; -webkit-text-stroke:1.3px rgba(15,23,42,.26); font-size:46px; }
+  #ch-drivers .ch-in{ width:min(600px,49vw); }
+
+  /* §SITE-6 CTA 不要毛玻璃（背后是车，模糊会糊成一团） */
+  #ch-cta .ch-in{ background:rgba(255,255,255,.97); backdrop-filter:none; -webkit-backdrop-filter:none; width:min(640px,56vw); }
+
+  /* §SITE-7 队史章：俯视全车 + 窄卡，避免卡片吃掉整车 */
+  #ch-history .ch-in{ width:min(470px,40vw); padding:32px 34px 28px; }
+
+  body.lang-en #ch-season .win b{ font-size:14px; letter-spacing:-.02em; }
+  body.lang-en #ch-season .win span{ font-size:9.8px; }
+  /* ---------- §SITE-8 点击翻页（不再用滚动驱动） ---------- */
+  #site{ overflow:hidden !important; }
+  #site .ch{
+    position:absolute; inset:0; min-height:0 !important;
+    display:flex; align-items:center;
+    opacity:0; transform:translateY(16px); pointer-events:none;
+    transition:opacity .5s cubic-bezier(.2,.7,.2,1), transform .5s cubic-bezier(.2,.7,.2,1);
+    padding:88px clamp(40px,7vw,120px) 96px;
+  }
+  #site .ch.right{ justify-content:flex-end; }
+  #site .ch.center{ justify-content:center; text-align:center; }
+  #site .ch.on{ opacity:1; transform:none; pointer-events:auto; }
+  #pager{
+    position:fixed; right:clamp(16px,3vw,40px); bottom:28px; z-index:63;
+    display:none; align-items:center; gap:10px;
+    background:rgba(255,255,255,.92); backdrop-filter:blur(10px);
+    border:1px solid rgba(15,23,42,.08); border-radius:999px;
+    padding:7px 9px; box-shadow:0 14px 34px -18px rgba(15,23,42,.35);
+  }
+  body.mode-site #pager{ display:flex; }
+  #pager button{
+    width:30px; height:30px; border-radius:50%; border:1px solid rgba(15,23,42,.1);
+    background:#fff; color:var(--ink); font:600 15px/1 var(--sans); cursor:pointer;
+    display:grid; place-items:center; padding:0; transition:.18s;
+  }
+  #pager button:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  #pager button:disabled{ opacity:.32; cursor:default; }
+  #pager button:disabled:hover{ background:#fff; color:var(--ink); border-color:rgba(15,23,42,.1); }
+  #dots{ display:flex; gap:7px; padding:0 4px; }
+  #dots i{
+    width:7px; height:7px; border-radius:50%; background:rgba(15,23,42,.18);
+    cursor:pointer; transition:.2s;
+  }
+  #dots i.on{ background:var(--accent); transform:scale(1.28); }
 </style>
 </head>
 <body>
   <canvas id="c"></canvas>
+
+  <!-- 加载闸门：进度条满即淡出，直接进开场 -->
+  <div id="gate">
+    <div class="gw">
+      <div class="gmark"><b>SF-24</b><i>Scuderia Ferrari · 2024</i></div>
+      <div class="gsub" data-t="gsub">正在装载空气动力学模型</div>
+      <div class="gbar"><i id="gfill"></i></div>
+      <div class="grow"><span id="gstate" data-t="gstate">连接中</span><span id="gpct">0%</span></div>
+    </div>
+  </div>
+
+  <!-- 官网外壳 -->
+  <div id="site">
+    <header id="sbar">
+      <div class="sb-brand"><b>SF-24</b><span>Scuderia Ferrari · 2024</span></div>
+      <nav id="snav">
+        <button data-go="0" class="on" data-t="nav0">概览</button>
+        <button data-go="1" data-t="nav1">技术</button>
+        <button data-go="2" data-t="nav2">气动</button>
+        <button data-go="3" data-t="nav3">赛季</button>
+        <button data-go="4" data-t="nav4">车手</button>
+        <button data-go="5" data-t="nav5">部件</button>
+        <button data-go="6" data-t="nav6">队史</button>
+      </nav>
+      <div class="sb-right">
+        <div class="lang">
+          <button data-lang="zh" class="on">中文</button>
+          <button data-lang="en">EN</button>
+        </div>
+        <button id="to-work" data-t="towork">进入工作台</button>
+      </div>
+    </header>
+
+    <section class="ch" id="ch-hero">
+      <div class="ch-in">
+        <div class="eyebrow" data-t="hero-k">Scuderia Ferrari · Formula 1 2024</div>
+        <h1>SF-24<span data-t="hero-sub">2024 season car</span></h1>
+        <p data-t="hero-p">2024 赛季的 SF-24，16 号和 55 号。下面按顺序看它的结构、气动、赛季成绩和队史。</p>
+        <div class="kpis">
+          <div class="kpi"><b>652<i>PTS</i></b><span data-t="k1">车队积分</span></div>
+          <div class="kpi"><b>5<i>WINS</i></b><span data-t="k2">分站冠军</span></div>
+          <div class="kpi"><b>22<i>PODIUMS</i></b><span data-t="k3">登上领奖台</span></div>
+        </div>
+        <div class="hint" data-t="scroll">点右下角箭头，或直接点上方章节</div>
+      </div>
+    </section>
+
+    <section class="ch right" id="ch-spec">
+      <div class="ch-in">
+        <div class="eyebrow" data-t="spec-k">Technical</div>
+        <h2 data-t="spec-h">SF-24 的技术单</h2>
+        <p data-t="spec-p">2022 年地面效应新规之后的第三代车。碳纤维蜂巢单体壳加 Halo，8 速纵置变速箱，前悬推杆、后悬拉杆。下面几项是官方口径的硬指标。</p>
+        <div class="specs2">
+          <div><u data-t="sp1">动力单元</u><b>066/12 · 1600 cc V6 Turbo</b></div>
+          <div><u data-t="sp2">最高转速</u><b>15,000 rpm</b></div>
+          <div><u data-t="sp3">变速箱</u><b data-t="sp3v">8 速纵置 + 倒挡</b></div>
+          <div><u data-t="sp4">悬架</u><b data-t="sp4v">前推杆 / 后拉杆</b></div>
+          <div><u data-t="sp5">整车质量</u><b data-t="sp5v">798 kg（含车手与油水）</b></div>
+          <div><u data-t="sp6">轮辋</u><b data-t="sp6v">18 英寸 · 低扁平比</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ch" id="ch-aero">
+      <div class="ch-in">
+        <div class="eyebrow" data-t="aero-k">Aerodynamics</div>
+        <h2 data-t="aero-h">气流从哪儿走</h2>
+        <p data-t="aero-p">翼面的作用只有一个：把气流加速，往下压。这一页的流场是打开时用涡格法现算的，不是贴图动画；进工作台还能切速度场、表面压力、底板气流三种看法。</p>
+        <p data-t="aero-p2">进入工作台后，可以切到速度场、表面压力与底板气流三视图，边开车边看解在变。</p>
+        <div class="hint" data-t="aero-hint">↓ 继续</div>
+      </div>
+    </section>
+
+    <section class="ch right" id="ch-season">
+      <div class="ch-in">
+        <div class="eyebrow" data-t="sea-k">2024 Season</div>
+        <h2 data-t="sea-h">五场胜利，652 分</h2>
+        <p data-t="sea-p">车队年终第二，落后迈凯伦 14 分。五场胜利是 2018 年以来最多的一年，另有 22 次登台。652 分里还有 Bearman 在吉达替 Sainz 拿的 6 分。</p>
+        <div class="wins">
+          <div class="win"><em>R03 · AUS</em><b data-t="w1">澳大利亚</b><span data-t="w1d">Sainz · 墨尔本</span></div>
+          <div class="win hot"><em>R08 · MON</em><b data-t="w2">摩纳哥</b><span data-t="w2d">Leclerc · 主场首胜</span></div>
+          <div class="win hot"><em>R16 · ITA</em><b data-t="w3">蒙扎</b><span data-t="w3d">Leclerc · 一停战术</span></div>
+          <div class="win"><em>R19 · USA</em><b data-t="w4">美国</b><span data-t="w4d">Leclerc · 奥斯汀</span></div>
+          <div class="win"><em>R20 · MEX</em><b data-t="w5">墨西哥城</b><span data-t="w5d">Sainz · 罗德里格斯兄弟</span></div>
+        </div>
+        <p style="margin-top:16px;font-size:11.5px;opacity:.72" data-t="sea-src">数据来源：Formula 1 官方年终报告、Scuderia Ferrari 2024 赛季页。</p>
+      </div>
+    </section>
+
+    <section class="ch" id="ch-drivers">
+      <div class="ch-in" style="max-width:880px">
+        <div class="eyebrow" data-t="drv-k">Drivers</div>
+        <h2 data-t="drv-h">16 号和 55 号</h2>
+        <div class="drv">
+          <article>
+            <div class="num">16</div>
+            <h3>Charles Leclerc</h3>
+            <div class="tag" data-t="d1t">摩纳哥 · 1997</div>
+            <p data-t="d1p">356 分，年度第三。三场胜利：摩纳哥主场、蒙扎（一停撑到底）、奥斯汀。</p>
+            <div class="st"><div><i>PTS</i><b>356</b></div><div><i>WINS</i><b>3</b></div><div><i>RANK</i><b>P3</b></div></div>
+          </article>
+          <article>
+            <div class="num">55</div>
+            <h3>Carlos Sainz</h3>
+            <div class="tag" data-t="d2t">马德里 · 1994</div>
+            <p data-t="d2p">290 分，年度第五。澳大利亚揭幕战后拿下首胜，墨西哥城再赢一场。赛季中因阑尾炎缺席吉达，由 Bearman 顶替。</p>
+            <div class="st"><div><i>PTS</i><b>290</b></div><div><i>WINS</i><b>2</b></div><div><i>RANK</i><b>P5</b></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="ch right" id="ch-hot">
+      <div class="ch-in">
+        <div class="eyebrow" data-t="hot-k">Anatomy</div>
+        <h2 data-t="hot-h">六处关键结构</h2>
+        <p data-t="hot-p">车上六个红点可以点：前翼、侧箱进气口、底板、扩散器、尾翼、Halo。点开是这块部件的尺寸和它在气动上的作用。</p>
+        <div class="hint" data-t="hot-hint">点击车身圆点查看</div>
+      </div>
+    </section>
+
+    <section class="ch" id="ch-history">
+      <div class="ch-in" style="max-width:720px">
+        <div class="eyebrow" data-t="his-k">History</div>
+        <h2 data-t="his-h">从 1950 到 2024</h2>
+        <div class="tl">
+          <div class="row"><div class="yr">1950</div><div class="tx" data-t="h1">法拉利以厂商车队身份参加首届 F1 世界锦标赛，是至今唯一全勤的车队。</div></div>
+          <div class="row"><div class="yr">1961</div><div class="tx" data-t="h2">156 “Sharknose” 拿下队史首个车手总冠军，V6 时代开启。</div></div>
+          <div class="row"><div class="yr">1979</div><div class="tx" data-t="h3">312 T4 包揽车手与车队双冠，Flat-12 的最后一个辉煌。</div></div>
+          <div class="row"><div class="yr">2000–2004</div><div class="tx" data-t="h4">舒马赫与车队五连冠，F1 历史上最具统治力的一段。</div></div>
+          <div class="row"><div class="yr">2007–2008</div><div class="tx" data-t="h5">莱科宁与马萨先后拿下车手总冠军，2008 年再夺车队冠军。</div></div>
+          <div class="row"><div class="yr">2023</div><div class="tx" data-t="h6">SF-23 挣扎于一致性与轮胎管理，车队年终第三。</div></div>
+          <div class="row now"><div class="yr">2024</div><div class="tx" data-t="h7"><b>SF-24</b>：五胜、22 次登台、652 分，年终第二——本页这台车。</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ch center" id="ch-cta">
+      <div class="ch-in">
+        <div class="eyebrow" data-t="cta-k">Workspace</div>
+        <h2 data-t="cta-h">想看它怎么跑？</h2>
+        <p data-t="cta-p">工作台里能开车、开关 DRS、拆方向盘、看动力单元，顶栏的气动数字会跟着变。</p>
+        <p style="margin-top:26px"><button id="cta-work" style="border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;padding:14px 26px;border-radius:6px;font:600 13px/1 var(--sans)" data-t="cta-b">进入工作台</button></p>
+      </div>
+    </section>
+  </div>
+
+  <!-- 3D 热区 -->
+  <div id="hot"></div>
+  <div id="hot-tip"><h4></h4><p></p></div>
+
+  <!-- 工作台返回条 -->
+  <div id="wbar">
+    <b data-t="wb">工作台</b><span data-t="wbh">W·A·S·D 驾驶 · Q 拆解 · Z 动力单元 · ? 操作指南</span>
+    <button id="to-site" data-t="wbb">返回官网</button>
+  </div>
 
   <header id="hud" class="panel">
     <div class="brand">
@@ -1064,10 +1507,16 @@ function tuneGLBMaterial(mat){
   mat.needsUpdate = true;
 }
 
-async function loadCarGLB(parent){
+async function loadCarGLB(parent, onProgress){
   const loader = new GLTFLoader();
   const url = 'sf25.glb';
-  const gltf = await loader.loadAsync(url);
+  /* 用 load() 而不是 loadAsync()：只有它会在下载过程中反复回调 onProgress，
+     加载页的进度条就靠这个。total 来自 content-length，拿不到时回退成不确定态。 */
+  const gltf = await new Promise((resolve, reject) => {
+    loader.load(url, resolve, (e) => {
+      if (typeof onProgress === 'function' && e) onProgress(e.loaded || 0, e.total || 0);
+    }, reject);
+  });
   const src = gltf.scene;
 
   /* 1) 朝向：模型车头 +Z → 绕 Y 转 180° */
@@ -4532,9 +4981,10 @@ function initScene(){
   APP.controls = controls;
 
   /* ---- 整车（S2）：优先 GLB 原模型，失败回落几何兜底 ---- */
-  loadCarGLB(scene).then(() => {
+  loadCarGLB(scene, siteProgress).then(() => {
     setTimeout(() => {
       try { aeroBoot(); buildSolids(); initFlow(APP.scene); buildDrsPivot(); } catch (e){ console.warn('[aero]', e); }
+      siteReady();
     }, 80);
   }).catch(err => {
     console.warn('[car] GLB 加载失败，回落到几何兜底车:', err && err.message);
@@ -7657,7 +8107,281 @@ window.__T = {
   } : null,
 };
 
+
+/* ================= §SITE 官网外壳 ================= */
+/* 一句话说明：site 模式是「读」的页面（分章叙事 + 相机运动 + 3D 热区），
+   work 模式才是原来的仪表盘（驾驶 / 拆解 / 气动解）。两者共用同一台车、
+   同一个解算器，切模式只切 DOM 与相机控制权。 */
+const SITE = {
+  on: true, lang: 'zh', ch: -1, ready: false, spin: 0, cam: null,
+  cams: [
+    { pos:[ 4.10, 1.78, -5.55], tgt:[0, 0.46, -0.06], sh:-0.10 },  // 0 hero（文字左）
+    { pos: [-4.60, 1.85, -5.20], tgt:[0, 0.50,  0.00], sh: 0.13 },  // 1 技术（文字右）
+    { pos: [ 3.30, 2.85, -6.30], tgt:[0, 0.48,  0.00], sh:-0.11 },  // 2 气动（文字左，俯视 3/4）
+    { pos: [ 1.70, 1.95,  6.95], tgt:[0, 0.52,  0.35], sh: 0.15 },  // 3 赛季（文字右，尾视）
+    { pos: [-4.90, 1.80,  5.55], tgt:[0, 0.50,  0.10], sh:-0.13 },  // 4 车手（文字左，侧后）
+    { pos: [ 2.55, 1.85,  6.60], tgt:[0, 0.52,  0.18], sh: 0.14 },  // 5 热区（文字右，后 3/4）
+    { pos: [ 0.30, 13.60, -9.60], tgt:[0.55, 0.40,  0.00], sh: 0.02 },  // 6 队史（俯视全车）
+    { pos:[ 5.60, 2.55, -7.70], tgt:[-0.10, 0.42,  0.00], sh:-0.02 }   // 7 CTA
+  ],
+  hotIds: ['fw', 'sidepod', 'floor', 'diffuser', 'rw', 'halo'],
+  hot: [], zhText: new Map()
+};
+
+const EN = {
+  gsub: 'Loading aerodynamics model',
+  gstate: 'Connecting',
+  nav0:'Overview', nav1:'Technical', nav2:'Aero', nav3:'Season', nav4:'Drivers', nav5:'Parts', nav6:'History',
+  towork:'Open workspace',
+  'hero-k':'Scuderia Ferrari · Formula 1 2024',
+  'hero-sub':'2024 season car',
+  'hero-p':"The 2024 SF-24, cars 16 and 55. Four short chapters: how it is built, how the air moves over it, what it did in the season, and where it sits in the team's history.",
+  k1:'Constructors points', k2:'Race wins', k3:'Podiums', scroll:'↓ Scroll',
+  'spec-k':'Technical',
+  'spec-h':'SF-24, by the numbers',
+  'spec-p':'Third car of the 2022 ground-effect era. Carbon honeycomb monocoque with halo, eight-speed longitudinal gearbox, push-rod front and pull-rod rear suspension. The figures below are the official ones.',
+  sp1:'Power unit', sp2:'Max rpm', sp3:'Gearbox', sp4:'Suspension', sp5:'Minimum mass', sp6:'Wheels',
+  sp3v:'8-speed longitudinal + reverse', sp4v:'Push-rod front / pull-rod rear',
+  sp5v:'798 kg (car, driver, fluids)', sp6v:'18-inch · low profile',
+  'aero-k':'Aerodynamics',
+  'aero-h':'Where the air goes',
+  'aero-p':'Wings do one thing: speed the air up and push the car down. The flow field on this page is solved in your browser when it loads — a vortex-lattice approximation, not a baked animation. The workspace adds speed, surface pressure and floor views.',
+  'aero-p2':'Inside the workspace you can switch to the velocity field, surface pressure and floor views, and watch the solution react as you drive.',
+  'aero-hint':'↓ Continue',
+  'sea-k':'2024 Season',
+  'sea-h':'Five wins, 652 points',
+  w1d:'Sainz · Melbourne', w2d:'Leclerc · home win', w3d:'Leclerc · one-stop', w4d:'Leclerc · Austin', w5d:'Sainz · Mexico City',
+  'sea-p':'Second in the constructors title, 14 points behind McLaren. Five wins, the most since 2018, plus 22 podiums. Six of those 652 points came from Bearman standing in for Sainz in Jeddah.',
+  w1:'Australia', w2:'Monaco', w3:'Monza', w4:'United States', w5:'Mexico City',
+  'sea-src':'Sources: Formula 1 official end-of-year report, Scuderia Ferrari 2024 season page.',
+  'drv-k':'Drivers', 'drv-h':'Cars 16 and 55',
+  d1t:'Monaco · 1997',
+  d1p:'356 points, third in the championship. Three wins: Monaco at home, Monza on a one-stop, Austin.',
+  d2t:'Madrid · 1994',
+  d2p:'290 points, fifth. First win in Melbourne after the opener, another in Mexico City. Missed Jeddah with appendicitis; Bearman stood in.',
+  'hot-k':'Anatomy', 'hot-h':'Six key structures',
+  'hot-p':'Six dots you can click: front wing, sidepod inlet, floor, diffuser, rear wing, halo. Each opens the part size and what it does aerodynamically.',
+  'hot-hint':'Click a dot on the car',
+  'his-k':'History', 'his-h':'From 1950 to 2024',
+  h1:'Ferrari entered the first F1 World Championship as a works team — still the only team to have contested every season.',
+  h2:'The 156 “Sharknose” took the team’s first drivers’ title, opening the V6 era.',
+  h3:'The 312 T4 swept drivers’ and constructors’ titles — the last glory of the flat-12.',
+  h4:'Schumacher and Ferrari won five consecutive titles, the most dominant run in F1 history.',
+  h5:'Raikkonen and then Massa took the drivers’ crown, with another constructors’ title in 2008.',
+  h6:'The SF-23 struggled with consistency and tyre management, finishing third.',
+  h7:'<b>SF-24</b>: five wins, 22 podiums, 652 points, second overall — the car on this page.',
+  'cta-k':'Workspace', 'cta-h':'Want to see it run?',
+  'cta-p':'In the workspace you can drive, toggle DRS, split the steering wheel and look inside the power unit — the numbers in the header update as you go.',
+  'cta-b':'Open workspace',
+  wb:'Workspace', wbh:'W·A·S·D drive · Q steering · Z power unit · ? guide', wbb:'Back to site'
+};
+
+function siteProgress(loaded, total){
+  const fill = document.getElementById('gfill');
+  if (!fill) return;
+  let pct;
+  if (total > 0) pct = Math.min(100, Math.round(loaded / total * 100));
+  else { SITE.spin = Math.min(92, SITE.spin + 2); pct = SITE.spin; }
+  fill.style.width = pct + '%';
+  const el = document.getElementById('gpct'); if (el) el.textContent = pct + '%';
+  const st = document.getElementById('gstate');
+  if (st){
+    const key = pct >= 100 ? 'gs-done' : pct > 30 ? 'gs-load' : 'gs-conn';
+    const txt = SITE.lang === 'en'
+      ? ({ 'gs-conn':'Connecting', 'gs-load':'Loading model', 'gs-done':'Ready' })[key]
+      : ({ 'gs-conn':'连接中', 'gs-load':'装载模型', 'gs-done':'完成' })[key];
+    if (st.textContent !== txt) st.textContent = txt;
+  }
+}
+
+function siteReady(){
+  if (SITE.ready) return;
+  SITE.ready = true;
+  const fill = document.getElementById('gfill');
+  if (fill) fill.style.width = '100%';
+  const el = document.getElementById('gpct'); if (el) el.textContent = '100%';
+  setTimeout(() => {
+    const gate = document.getElementById('gate');
+    if (gate) gate.classList.add('done');
+    applyChapter(0, true);
+    buildHotspots();
+  }, 260);
+}
+
+function setLang(lang){
+  SITE.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const k = el.dataset.t;
+    if (lang === 'en'){
+      if (!SITE.zhText.has(el)) SITE.zhText.set(el, el.innerHTML);
+      if (EN[k] !== undefined) el.innerHTML = EN[k];
+    } else {
+      const zh = SITE.zhText.get(el);
+      if (zh !== undefined) el.innerHTML = zh;
+    }
+  });
+  document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  document.body.classList.toggle('lang-en', lang === 'en');
+}
+
+
+/* 画面横向平移：不改透视，只把「拍到的内容」在画布里左右推，
+   这样文字压在一边时车不会被裁 —— camera.setViewOffset 的标准用法 */
+function applyViewShift(fr){
+  const w = innerWidth, h = innerHeight;
+  if (!fr){ APP.camera.clearViewOffset(); return; }
+  APP.camera.setViewOffset(w, h, fr * w, 0, w, h);
+}
+
+function gotoChapter(i){
+  if (!SITE.on) return;
+  const n = SITE.cams.length;
+  const k = Math.max(0, Math.min(n - 1, i));
+  if (k === SITE.ch) return;
+  applyChapter(k, true);
+}
+
+function applyChapter(i, force){
+  if (i === SITE.ch && !force) return;
+  SITE.ch = i;
+  const c = SITE.cams[i] || SITE.cams[0];
+  if (!SITE.cam) SITE.cam = { pos: new THREE.Vector3(), tgt: new THREE.Vector3() };
+  SITE.cam.pos.fromArray(c.pos); SITE.cam.tgt.fromArray(c.tgt);
+  camTween(SITE.cam.pos, SITE.cam.tgt, 900);
+  applyViewShift(c.sh || 0);
+  document.querySelectorAll('#snav button').forEach((b, k) => b.classList.toggle('on', k === i));
+  document.querySelectorAll('#site .ch').forEach((el, k) => el.classList.toggle('on', k === i));
+  const dg = document.getElementById('dots');
+  if (dg) [].forEach.call(dg.children, (el, k) => el.classList.toggle('on', k === i));
+  const pv = document.getElementById('pg-prev'), nx = document.getElementById('pg-next');
+  if (pv) pv.disabled = i <= 0;
+  if (nx) nx.disabled = i >= SITE.cams.length - 1;
+  document.body.classList.toggle('hot-on', i === 5);
+  if (i !== 5) hideHotTip();
+}
+
+function buildHotspots(){
+  const box = document.getElementById('hot');
+  if (!box || SITE.hot.length) return;
+  SITE.hotIds.forEach(id => {
+    const p = PARTS.get(id);
+    if (!p) return;
+    const b = document.createElement('button');
+    b.className = 'hs'; b.type = 'button';
+    const lbl = document.createElement('span');
+    lbl.className = 'hs-lbl';
+    lbl.textContent = (PART_META[id] && PART_META[id].cn || id).split(' / ')[0];
+    b.appendChild(lbl);
+    b.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      showHotTip(id, b);
+    });
+    box.appendChild(b);
+    SITE.hot.push({ id, el: b, node: p });
+  });
+  document.addEventListener('click', () => hideHotTip());
+}
+
+function showHotTip(id, anchor){
+  const tip = document.getElementById('hot-tip');
+  const meta = PART_META[id];
+  if (!tip || !meta) return;
+  tip.querySelector('h4').textContent = meta.cn.split(' / ')[0];
+  tip.querySelector('p').textContent = meta.fn;
+  const r = anchor.getBoundingClientRect();
+  tip.classList.add('show');
+  const w = tip.offsetWidth, hgt = tip.offsetHeight;
+  let x = r.right + 14, y = r.top - 8;
+  if (x + w > innerWidth - 16) x = r.left - w - 14;
+  if (y + hgt > innerHeight - 16) y = innerHeight - hgt - 16;
+  tip.style.left = Math.max(12, x) + 'px';
+  tip.style.top = Math.max(70, y) + 'px';
+}
+
+function hideHotTip(){
+  const tip = document.getElementById('hot-tip');
+  if (tip) tip.classList.remove('show');
+}
+
+function siteTick(){
+  requestAnimationFrame(siteTick);
+  if (!SITE.on || !SITE.hot.length) return;
+  const cam = APP.camera;
+  const w = innerWidth, h = innerHeight;
+  SITE.hot.forEach(o => {
+    const v = o.node.center.clone();
+    v.project(cam);
+    const vis = v.z < 1 && Math.abs(v.x) < 1.15 && Math.abs(v.y) < 1.15;
+    o.el.style.display = vis ? 'grid' : 'none';
+    if (!vis) return;
+    o.el.style.left = ((v.x * 0.5 + 0.5) * w).toFixed(1) + 'px';
+    o.el.style.top  = ((-v.y * 0.5 + 0.5) * h).toFixed(1) + 'px';
+  });
+}
+
+function toWork(){
+  SITE.on = false;
+  document.body.classList.remove('mode-site', 'hot-on');
+  document.body.classList.add('mode-work');
+  hideHotTip();
+  APP.controls.enabled = true;
+  goHome();
+  setView('exterior');
+}
+
+function toSite(){
+  SITE.on = true;
+  document.body.classList.add('mode-site');
+  document.body.classList.remove('mode-work');
+  APP.controls.enabled = false;
+  applyChapter(SITE.ch < 0 ? 0 : SITE.ch, true);
+}
+
+function initSite(){
+  document.body.classList.add('mode-site');
+  if (APP.controls) APP.controls.enabled = false;
+
+  /* 翻页器（点击切换章节，不再用滚动） */
+  const pager = document.createElement('div');
+  pager.id = 'pager';
+  pager.innerHTML = '<button id="pg-prev" aria-label="上一章">' + '‹' + '</button><div id="dots"></div><button id="pg-next" aria-label="下一章">' + '›' + '</button>';
+  document.body.appendChild(pager);
+  const dots = pager.querySelector('#dots');
+  SITE.cams.forEach((_, k) => {
+    const d = document.createElement('i');
+    d.dataset.go = k;
+    d.addEventListener('click', () => gotoChapter(k));
+    dots.appendChild(d);
+  });
+
+  const site = document.getElementById('site');
+  document.querySelectorAll('#snav button').forEach(b => {
+    b.addEventListener('click', () => gotoChapter(+b.dataset.go));
+  });
+  pager.querySelector('#pg-prev').addEventListener('click', () => gotoChapter(SITE.ch - 1));
+  pager.querySelector('#pg-next').addEventListener('click', () => gotoChapter(SITE.ch + 1));
+  addEventListener('keydown', (e) => {
+    if (!SITE.on || document.body.classList.contains('guiding')) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); gotoChapter(SITE.ch + 1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'PageUp')   { e.preventDefault(); gotoChapter(SITE.ch - 1); }
+  });
+  document.querySelectorAll('.lang button').forEach(b => {
+    b.addEventListener('click', () => setLang(b.dataset.lang));
+  });
+  const tw = document.getElementById('to-work');
+  if (tw) tw.addEventListener('click', toWork);
+  const cw = document.getElementById('cta-work');
+  if (cw) cw.addEventListener('click', toWork);
+  const ts = document.getElementById('to-site');
+  if (ts) ts.addEventListener('click', toSite);
+
+  siteTick();
+}
+
 main();
+initSite();
+
 </script>
 </body>
 </html>
