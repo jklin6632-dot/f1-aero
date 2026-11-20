@@ -757,7 +757,12 @@ body.ui-hidden::after{ opacity:0; }
     background:rgba(255,255,255,.94); border:1px solid var(--line);
     padding:6px 9px; border-radius:5px; opacity:0; transition:opacity .16s; pointer-events:none;
   }
-  .hs:hover .hs-lbl{ opacity:1; }
+  .hs:hover .hs-lbl{ opacity:0; }
+
+  /* 暗场里的气泡与小标签 */
+  body.mode-site.tone-dark .hs-lbl{
+    background:rgba(20,20,23,.94); border-color:rgba(255,255,255,.16); color:#F5F3EF;
+  }
   #hot-tip{
     position:fixed; z-index:80; max-width:300px; display:none; pointer-events:auto;
     background:var(--canvas); border:1px solid var(--line); border-radius:8px;
@@ -833,7 +838,7 @@ body.ui-hidden::after{ opacity:0; }
     content:""; position:absolute; inset:-6px; border-radius:50%;
     border:1px solid rgba(225,6,0,.45); animation:hsPulse 2.4s ease-out infinite;
   }
-  #hot .hs:hover{ transform:scale(1.12); }
+  #hot .hs:hover{ transform:translate(-50%,-50%) scale(1.12); }
   @keyframes hsPulse{
     0%{ transform:scale(.72); opacity:.9; }
     70%{ transform:scale(1.28); opacity:0; }
@@ -1133,8 +1138,8 @@ body.ui-hidden::after{ opacity:0; }
       <div class="ch-in">
         <div class="eyebrow" data-t="hot-k">Anatomy</div>
         <h2 data-t="hot-h">六处关键结构</h2>
-        <p data-t="hot-p">车上六个红点可以点：前翼、侧箱进气口、底板、扩散器、尾翼、Halo。点开是这块部件的尺寸和它在气动上的作用。</p>
-        <div class="hint" data-t="hot-hint">点击车身圆点查看</div>
+        <p data-t="hot-p">车身上六个红点：前翼、侧箱进气口、底板、扩散器、尾翼、Halo。鼠标移到点上就出这块部件的名称、尺寸和气动作用。</p>
+        <div class="hint" data-t="hot-hint">鼠标移到红点上查看</div>
       </div>
     </section>
 
@@ -8324,8 +8329,8 @@ const EN = {
   d2t:'Madrid · 1994',
   d2p:'290 points, fifth. First win in Melbourne after the opener, another in Mexico City. Missed Jeddah with appendicitis; Bearman stood in.',
   'hot-k':'Anatomy', 'hot-h':'Six key structures',
-  'hot-p':'Six dots you can click: front wing, sidepod inlet, floor, diffuser, rear wing, halo. Each opens the part size and what it does aerodynamically.',
-  'hot-hint':'Click a dot on the car',
+  'hot-p':'Six dots on the car: front wing, sidepod inlet, floor, diffuser, rear wing, halo. Hover one to see the part size and what it does aerodynamically.',
+  'hot-hint':'Hover a dot on the car',
   'his-k':'History', 'his-h':'From 1950 to 2024',
   h1:'Ferrari entered the first F1 World Championship as a works team — still the only team to have contested every season.',
   h2:'The 156 “Sharknose” took the team’s first drivers’ title, opening the V6 era.',
@@ -8442,10 +8447,11 @@ function buildHotspots(){
     lbl.className = 'hs-lbl';
     lbl.textContent = (PART_META[id] && PART_META[id].cn || id).split(' / ')[0];
     b.appendChild(lbl);
-    b.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      showHotTip(id, b);
-    });
+    b.addEventListener('mouseenter', () => { showHotTip(id, b); });
+    b.addEventListener('mouseleave', () => { hideHotTip(); });
+    /* 触屏没有 hover，点一下也出 */
+    b.addEventListener('click', (ev) => { ev.stopPropagation(); showHotTip(id, b); });
+    b.addEventListener('focus', () => { showHotTip(id, b); });
     box.appendChild(b);
     SITE.hot.push({ id, el: b, node: p });
   });
@@ -8478,14 +8484,31 @@ function siteTick(){
   if (!SITE.on || !SITE.hot.length) return;
   const cam = APP.camera;
   const w = innerWidth, h = innerHeight;
+  const pts = [];
   SITE.hot.forEach(o => {
     const v = o.node.center.clone();
     v.project(cam);
     const vis = v.z < 1 && Math.abs(v.x) < 1.15 && Math.abs(v.y) < 1.15;
     o.el.style.display = vis ? 'grid' : 'none';
     if (!vis) return;
-    o.el.style.left = ((v.x * 0.5 + 0.5) * w).toFixed(1) + 'px';
-    o.el.style.top  = ((-v.y * 0.5 + 0.5) * h).toFixed(1) + 'px';
+    pts.push({ o, x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h });
+  });
+  /* 防打架：屏幕上离得太近的两个点，沿连线各退一半 */
+  const MIN = 58;
+  for (let i = 0; i < pts.length; i++){
+    for (let j = i + 1; j < pts.length; j++){
+      const A = pts[i], B = pts[j];
+      let dx = B.x - A.x, dy = B.y - A.y, d = Math.hypot(dx, dy);
+      if (d >= MIN) continue;
+      if (d < 0.001){ dx = 0; dy = -1; d = 1; }
+      const push = (MIN - d) / 2 + 0.5, ux = dx / d, uy = dy / d;
+      A.x -= ux * push; A.y -= uy * push;
+      B.x += ux * push; B.y += uy * push;
+    }
+  }
+  pts.forEach(q => {
+    q.o.el.style.left = q.x.toFixed(1) + 'px';
+    q.o.el.style.top  = q.y.toFixed(1) + 'px';
   });
 }
 
