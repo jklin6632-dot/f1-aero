@@ -923,8 +923,8 @@ body.ui-hidden::after{ opacity:0; }
   }
   body.tone-dark #site::before{
     background:
-      radial-gradient(110% 80% at 20% 10%, rgba(218,41,28,.10), transparent 58%),
-      radial-gradient(140% 120% at 50% 110%, rgba(0,0,0,.55), transparent 66%);
+      radial-gradient(90% 65% at 16% 6%, rgba(218,41,28,.075), transparent 62%),
+      radial-gradient(150% 130% at 50% 115%, rgba(0,0,0,.62), transparent 68%);
   }
   /* 细颗粒，压掉纯色背景的塑料感 */
   #site::after{
@@ -5088,7 +5088,7 @@ function initScene(){
   /* 章节色调：亮 / 暗两套，跟章节一起过渡 */
   APP.tone = { t: 0, target: 0,
     light: { bg: new THREE.Color(0xfbfaf7), ground: new THREE.Color(0xfbfaf7), grid: new THREE.Color(0x0b1b2b), gridOp: 0.06, fogN: 30, fogF: 64 },
-    dark:  { bg: new THREE.Color(0x0d0d10), ground: new THREE.Color(0x0d0d10), grid: new THREE.Color(0x9aa0a8), gridOp: 0.10, fogN: 9,  fogF: 30 }
+    dark:  { bg: new THREE.Color(0x0a0a0c), ground: new THREE.Color(0x0a0a0c), grid: new THREE.Color(0x9aa0a8), gridOp: 0.09, fogN: 13, fogF: 44 }
   };
 
   /* 控制器 */
