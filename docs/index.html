@@ -721,7 +721,7 @@ body.ui-hidden::after{ opacity:0; }
   /* 车手 */
   .drv{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:26px; }
   .drv article{ border:1px solid var(--line); padding:22px; background:var(--canvas); }
-  .drv .num{ font:700 44px/.9 var(--display); letter-spacing:-.04em; color:var(--line-2); }
+  .drv .num{ font:700 46px/.9 var(--display); letter-spacing:-.04em; color:rgba(218,41,28,.15); }
   .drv h3{ margin:10px 0 2px; font:700 20px/1.2 var(--display); letter-spacing:-.02em; color:var(--ink); }
   .drv .tag{ font:500 10px/1 var(--mono); letter-spacing:.12em; color:var(--accent); text-transform:uppercase; }
   .drv p{ margin:12px 0 0; font:400 13px/1.7 var(--sans); color:var(--dim); }
@@ -807,7 +807,7 @@ body.ui-hidden::after{ opacity:0; }
   #ch-hero .ch-in{ width:min(600px, 48vw); padding:44px 46px 38px; background:rgba(255,255,255,.95); }
   .ch.k .ch-in{ padding-top:34px; }
   #ch-hot .ch-in{ width:min(430px, 38vw); }
-  #ch-cta .ch-in{ text-align:center; }
+  #ch-cta .ch-in{ text-align:left; }
   #ch-hero h1{ font-size:clamp(52px, 8.4vw, 112px) !important; }
   .ch h2{ font-size:clamp(26px, 2.9vw, 40px) !important; line-height:1.16 !important; }
   .ch p{ max-width:52ch; }
@@ -845,7 +845,7 @@ body.ui-hidden::after{ opacity:0; }
   #ch-drivers .ch-in{ width:min(600px,49vw); }
 
   /* §SITE-6 CTA 不要毛玻璃（背后是车，模糊会糊成一团） */
-  #ch-cta .ch-in{ background:rgba(255,255,255,.97); backdrop-filter:none; -webkit-backdrop-filter:none; width:min(640px,56vw); }
+  #ch-cta .ch-in{ background:rgba(255,255,255,.97); backdrop-filter:none; -webkit-backdrop-filter:none; width:min(560px,44vw); }
 
   /* §SITE-7 队史章：俯视全车 + 窄卡，避免卡片吃掉整车 */
   #ch-history .ch-in{ width:min(470px,40vw); padding:32px 34px 28px; }
@@ -890,6 +890,110 @@ body.ui-hidden::after{ opacity:0; }
     cursor:pointer; transition:.2s;
   }
   #dots i.on{ background:var(--accent); transform:scale(1.28); }
+
+  .cbtn{
+    border:1px solid var(--ink); background:var(--ink); color:#fff; cursor:pointer;
+    padding:15px 30px; border-radius:0;            /* Ferrari 网站：CTA 一律直角 */
+    font:600 11.5px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase;
+    transition:transform .18s ease, background .4s ease, border-color .4s ease, box-shadow .4s ease;
+  }
+  .cbtn:hover{ transform:translateY(-1px); }
+  body.mode-site.tone-dark .cbtn{
+    background:#DA291C; border-color:#DA291C; color:#fff;
+    box-shadow:0 18px 40px -18px rgba(218,41,28,.75);
+  }
+  body.mode-site.tone-dark .cbtn:hover{ background:#B01E0A; border-color:#B01E0A; }
+
+  body.mode-site.tone-dark .ch-in::before{
+    content:""; position:absolute; left:24px; right:24px; top:0; height:1px;
+    background:linear-gradient(90deg, rgba(218,41,28,0), rgba(218,41,28,.75), rgba(218,41,28,0));
+  }
+
+  /* ---------- §SITE-9 章节配色：亮/暗交替 + Rosso Corsa + 金发丝 ---------- */
+  /* 参考 ferrari.com：近黑画布(#0D0D10 / #181818)、白字、Rosso Corsa #DA291C 只在少数地方出现 */
+  body.mode-site{ --accent:#DA291C; --bg:#F7F5F1; --canvas:#fff; }
+
+  /* 亮章的空气感：极淡的暖晕 + 底部暗角，避免大面积纯白的廉价感 */
+  #site::before{
+    content:""; position:fixed; inset:0; z-index:1; pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 18% 8%, rgba(218,41,28,.045), transparent 55%),
+      radial-gradient(120% 100% at 50% 100%, rgba(15,23,42,.05), transparent 62%);
+    opacity:1; transition:opacity .6s ease;
+  }
+  body.tone-dark #site::before{
+    background:
+      radial-gradient(110% 80% at 20% 10%, rgba(218,41,28,.10), transparent 58%),
+      radial-gradient(140% 120% at 50% 110%, rgba(0,0,0,.55), transparent 66%);
+  }
+  /* 细颗粒，压掉纯色背景的塑料感 */
+  #site::after{
+    content:""; position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.5;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='.16'/></svg>");
+    mix-blend-mode:multiply;
+  }
+  body.tone-dark #site::after{ mix-blend-mode:screen; opacity:.28; }
+
+  /* 暗章：整页色板反转 */
+  body.tone-dark{
+    --ink:#F5F3EF; --ink-2:#E2DED7; --dim:#B5B1AA; --faint:#8A867F;
+    --line:rgba(255,255,255,.13); --line-2:rgba(255,255,255,.08);
+    --canvas:#121214; --bg:#0D0D10; --panel:#141416;
+  }
+  body.mode-site.tone-dark #sbar{
+    background:rgba(10,10,12,.72); border-bottom-color:rgba(255,255,255,.10);
+  }
+  body.mode-site.tone-dark #sbar .sb-brand b{ color:#F5F3EF; }
+  body.mode-site.tone-dark #sbar nav button{ color:#BEBAB3; }
+  body.mode-site.tone-dark #sbar nav button:hover{ background:rgba(255,255,255,.07); color:#fff; }
+  body.mode-site.tone-dark #sbar nav button.on{ background:rgba(255,255,255,.11); color:#fff; }
+  body.mode-site.tone-dark #sbar .lang button{ color:#BEBAB3; }
+  body.mode-site.tone-dark #sbar .lang button.on{ background:#F5F3EF; color:#0D0D10; }
+  body.mode-site.tone-dark #sbar #to-work{
+    background:transparent; border-color:rgba(255,255,255,.26); color:#F5F3EF;
+  }
+  body.mode-site.tone-dark #sbar #to-work:hover{ background:#DA291C; border-color:#DA291C; }
+
+  /* 暗章文字卡：深色玻璃 + 顶部金发丝 */
+  body.mode-site.tone-dark .ch-in{
+    background:linear-gradient(180deg, rgba(24,24,27,.88) 0%, rgba(13,13,15,.82) 100%);
+    border-color:rgba(255,255,255,.12);
+    box-shadow:0 44px 96px -34px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.07);
+  }
+  body.mode-site.tone-dark #ch-hero .ch-in{ background:linear-gradient(180deg, rgba(24,24,27,.9) 0%, rgba(13,13,15,.84) 100%); }
+  body.mode-site.tone-dark #ch-cta .ch-in{ background:linear-gradient(180deg, rgba(28,18,17,.90) 0%, rgba(13,13,15,.84) 100%); }
+
+  /* 暗章里的表格类面板：压暗、细白线 */
+  body.mode-site.tone-dark .specs2, body.mode-site.tone-dark .wins{ background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.12); }
+  body.mode-site.tone-dark .specs2 div, body.mode-site.tone-dark .win{ background:rgba(255,255,255,.035); }
+  body.mode-site.tone-dark .drv article{ background:rgba(255,255,255,.035); border-color:rgba(255,255,255,.12); }
+  body.mode-site.tone-dark .drv .num{ color:rgba(255,255,255,.14); -webkit-text-stroke:0; }
+  body.mode-site.tone-dark .timeline .row, body.mode-site.tone-dark .timeline div{ border-color:rgba(255,255,255,.10); }
+  body.mode-site.tone-dark #hist-2024, body.mode-site.tone-dark .row.now{
+    background:rgba(218,41,28,.14); border-color:rgba(218,41,28,.5);
+  }
+
+  /* 翻页器 / 热区气泡 跟着换 */
+  body.mode-site.tone-dark #pager{
+    background:rgba(13,13,15,.82); border-color:rgba(255,255,255,.12);
+    box-shadow:0 18px 44px -18px rgba(0,0,0,.7);
+  }
+  body.mode-site.tone-dark #pager button{ color:#F5F3EF; background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.16); }
+  body.mode-site.tone-dark #pager button:disabled{ color:rgba(255,255,255,.22); }
+  body.mode-site.tone-dark #dots i{ background:rgba(255,255,255,.22); }
+  body.mode-site.tone-dark #dots i.on{ background:#DA291C; }
+  body.mode-site.tone-dark #hot-tip{
+    background:rgba(18,18,20,.95); border-color:rgba(255,255,255,.14); color:#F5F3EF;
+    box-shadow:0 24px 60px -20px rgba(0,0,0,.8);
+  }
+  body.mode-site.tone-dark #hot-tip h4{ color:#F5F3EF; }
+  body.mode-site.tone-dark #hot-tip p{ color:#B5B1AA; }
+  body.mode-site.tone-dark .hs{ border-color:rgba(255,255,255,.5); }
+
+  /* 过渡：切章时不要硬跳 */
+  body.mode-site #sbar, body.mode-site .ch-in, body.mode-site #pager{
+    transition:background .55s ease, border-color .55s ease, box-shadow .55s ease, color .4s ease;
+  }
 </style>
 </head>
 <body>
@@ -1031,12 +1135,12 @@ body.ui-hidden::after{ opacity:0; }
       </div>
     </section>
 
-    <section class="ch center" id="ch-cta">
+    <section class="ch" id="ch-cta">
       <div class="ch-in">
         <div class="eyebrow" data-t="cta-k">Workspace</div>
         <h2 data-t="cta-h">想看它怎么跑？</h2>
         <p data-t="cta-p">工作台里能开车、开关 DRS、拆方向盘、看动力单元，顶栏的气动数字会跟着变。</p>
-        <p style="margin-top:26px"><button id="cta-work" style="border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;padding:14px 26px;border-radius:6px;font:600 13px/1 var(--sans)" data-t="cta-b">进入工作台</button></p>
+        <p style="margin-top:26px"><button id="cta-work" class="cbtn" data-t="cta-b">进入工作台</button></p>
       </div>
     </section>
   </div>
@@ -4917,7 +5021,9 @@ function initScene(){
   APP.renderer = renderer;
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xffffff);
+  scene.background = new THREE.Color(0xfbfaf7);
+  /* 雾：让远处地面和背景无缝接上，暗章尤其需要 */
+  scene.fog = new THREE.Fog(0xfbfaf7, 30, 64);
   APP.scene = scene;
 
   const camera = new THREE.PerspectiveCamera(35, innerWidth/innerHeight, 0.1, 120);
@@ -4949,9 +5055,15 @@ function initScene(){
   const fill = new THREE.DirectionalLight(0xffffff, 0.45); fill.position.set(-5, 3, -4); scene.add(fill);
   const rim  = new THREE.DirectionalLight(0xffffff, 0.35); rim.position.set(0, 4, -7);  scene.add(rim);
 
+  /* 暗章专用：背后的红色轮廓光，让车身边缘泛一点 Rosso Corsa */
+  const kick = new THREE.DirectionalLight(0xff3a24, 0);
+  kick.position.set(-6.2, 2.4, 5.2);
+  scene.add(kick);
+  APP.kick = kick;
+
   /* 地面 + 网格 */
   const ground = new THREE.Mesh(
-    new THREE.CircleGeometry(9, 96),
+    new THREE.CircleGeometry(40, 128),
     new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.95, metalness:0 })
   );
   ground.rotation.x = -Math.PI/2;
@@ -4968,13 +5080,19 @@ function initScene(){
   scene.add(underLight.target);
   APP.underLight = underLight;
 
-  const grid = new THREE.GridHelper(18, 36, 0x0b1b2b, 0x0b1b2b);
+  const grid = new THREE.GridHelper(44, 88, 0x0b1b2b, 0x0b1b2b);
   grid.position.y = 0.001;
   grid.material.transparent = true;
   grid.material.opacity = 0.06;
   grid.material.depthWrite = false;
   scene.add(grid);
   APP.grid = grid;
+
+  /* 章节色调：亮 / 暗两套，跟章节一起过渡 */
+  APP.tone = { t: 0, target: 0,
+    light: { bg: new THREE.Color(0xfbfaf7), ground: new THREE.Color(0xfbfaf7), grid: new THREE.Color(0x0b1b2b), gridOp: 0.06, fogN: 30, fogF: 64 },
+    dark:  { bg: new THREE.Color(0x0d0d10), ground: new THREE.Color(0x0d0d10), grid: new THREE.Color(0x9aa0a8), gridOp: 0.10, fogN: 9,  fogF: 30 }
+  };
 
   /* 控制器 */
   const controls = new OrbitControls(camera, DOM.canvas);
@@ -5351,6 +5469,28 @@ function frame(){
   const now = performance.now();
   const dtMs = lastFrameT ? Math.min(now - lastFrameT, 250) : 16.7;
   lastFrameT = now;
+
+  /* 色调过渡（官网亮/暗章节） */
+  if (APP.tone){
+    const T = APP.tone;
+    if (Math.abs(T.t - T.target) > 0.002){
+      T.t += (T.target - T.t) * Math.min(1, dtMs / 260);
+      const k = T.t;
+      const sc = APP.scene;
+      if (sc && sc.background && sc.background.isColor) sc.background.lerpColors(T.light.bg, T.dark.bg, k);
+      if (APP.ground) APP.ground.material.color.lerpColors(T.light.ground, T.dark.ground, k);
+      if (APP.grid){
+        APP.grid.material.color.lerpColors(T.light.grid, T.dark.grid, k);
+        APP.grid.material.opacity = T.light.gridOp + (T.dark.gridOp - T.light.gridOp) * k;
+      }
+      if (APP.kick) APP.kick.intensity = 1.25 * k;
+      if (sc && sc.fog){
+        sc.fog.color.lerpColors(T.light.bg, T.dark.bg, k);
+        sc.fog.near = T.light.fogN + (T.dark.fogN - T.light.fogN) * k;
+        sc.fog.far  = T.light.fogF + (T.dark.fogF - T.light.fogF) * k;
+      }
+    }
+  }
 
   /* 1 C 状态推进 */
   govTick(dtMs, now);
@@ -8122,14 +8262,14 @@ window.__T = {
 const SITE = {
   on: true, lang: 'zh', ch: -1, ready: false, spin: 0, cam: null,
   cams: [
-    { pos:[ 4.10, 1.78, -5.55], tgt:[0, 0.46, -0.06], sh:-0.10 },  // 0 hero（文字左）
-    { pos: [-4.60, 1.85, -5.20], tgt:[0, 0.50,  0.00], sh: 0.13 },  // 1 技术（文字右）
-    { pos: [ 3.30, 2.85, -6.30], tgt:[0, 0.48,  0.00], sh:-0.11 },  // 2 气动（文字左，俯视 3/4）
-    { pos: [ 1.70, 1.95,  6.95], tgt:[0, 0.52,  0.35], sh: 0.15 },  // 3 赛季（文字右，尾视）
-    { pos: [-4.90, 1.80,  5.55], tgt:[0, 0.50,  0.10], sh:-0.13 },  // 4 车手（文字左，侧后）
-    { pos: [ 2.55, 1.85,  6.60], tgt:[0, 0.52,  0.18], sh: 0.14 },  // 5 热区（文字右，后 3/4）
-    { pos: [ 0.30, 13.60, -9.60], tgt:[0.55, 0.40,  0.00], sh: 0.02 },  // 6 队史（俯视全车）
-    { pos:[ 5.60, 2.55, -7.70], tgt:[-0.10, 0.42,  0.00], sh:-0.02 }   // 7 CTA
+    { pos:[ 4.10, 1.78, -5.55], tgt:[0, 0.46, -0.06], sh:-0.10, tone:1 },  // 0 hero（文字左）
+    { pos: [-4.60, 1.85, -5.20], tgt:[0, 0.50,  0.00], sh: 0.13, tone:0 },  // 1 技术（文字右）
+    { pos: [ 3.30, 2.85, -6.30], tgt:[0, 0.48,  0.00], sh:-0.11, tone:1 },  // 2 气动（文字左，俯视 3/4）
+    { pos: [ 1.70, 1.95,  6.95], tgt:[0, 0.52,  0.35], sh: 0.15, tone:0 },  // 3 赛季（文字右，尾视）
+    { pos: [-4.90, 1.80,  5.55], tgt:[0, 0.50,  0.10], sh:-0.13, tone:0 },  // 4 车手（文字左，侧后）
+    { pos: [ 2.55, 1.85,  6.60], tgt:[0, 0.52,  0.18], sh: 0.14, tone:1 },  // 5 热区（文字右，后 3/4）
+    { pos: [ 0.30, 13.60, -9.60], tgt:[0.55, 0.40,  0.00], sh: 0.02, tone:0 },  // 6 队史（俯视全车）
+    { pos:[ 4.55, 1.62, -5.05], tgt:[0, 0.44,  0.02], sh:-0.10, tone:1 }   // 7 CTA
   ],
   hotIds: ['fw', 'sidepod', 'floor', 'diffuser', 'rw', 'halo'],
   hot: [], zhText: new Map()
@@ -8262,6 +8402,11 @@ function applyChapter(i, force){
   document.querySelectorAll('#site .ch').forEach((el, k) => el.classList.toggle('on', k === i));
   const dg = document.getElementById('dots');
   if (dg) [].forEach.call(dg.children, (el, k) => el.classList.toggle('on', k === i));
+  /* 章节色调：车在暗场里像棚拍，亮章回到白棚 —— 交替出现才有层次 */
+  const dark = !!(SITE.cams[i] && SITE.cams[i].tone);
+  document.body.classList.toggle('tone-dark', dark);
+  if (APP.tone) APP.tone.target = dark ? 1 : 0;
+
   const pv = document.getElementById('pg-prev'), nx = document.getElementById('pg-next');
   if (pv) pv.disabled = i <= 0;
   if (nx) nx.disabled = i >= SITE.cams.length - 1;
@@ -8330,8 +8475,9 @@ function siteTick(){
 
 function toWork(){
   SITE.on = false;
-  document.body.classList.remove('mode-site', 'hot-on');
+  document.body.classList.remove('mode-site', 'hot-on', 'tone-dark');
   document.body.classList.add('mode-work');
+  if (APP.tone) APP.tone.target = 0;      /* 工作台永远是白棚 */
   hideHotTip();
   APP.controls.enabled = true;
   goHome();
