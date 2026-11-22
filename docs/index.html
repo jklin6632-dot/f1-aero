@@ -8534,10 +8534,10 @@ function histShow(i, fromClick){
   const d = HIST_PHOTOS[i];
   const img = document.getElementById('hp-img');
   if (img){
-    const pre = new Image();
-    pre.onload = () => { img.src = d.src; img.alt = d.alt; };
-    pre.src = d.src;
-    if (img.getAttribute('src') === d.src) { img.alt = d.alt; }
+    /* 图必须同步换，否则慢网下会出现「说明已经是 1979、图还是 1961」 */
+    if (img.getAttribute('src') !== d.src) img.src = d.src;
+    img.alt = d.alt;
+    const pre = new Image(); pre.src = d.src;   /* 只是预热缓存，不影响当前帧 */
   }
   const y = document.getElementById('hp-year'), t = document.getElementById('hp-text'), a = document.getElementById('hp-src');
   if (y) y.textContent = d.y;
