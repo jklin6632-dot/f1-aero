@@ -1173,6 +1173,63 @@ body.ui-hidden::after{ opacity:0; }
     color:#f5f3ef; font-size:15px; line-height:1; cursor:pointer;
   }
   #racebox .rb-x:hover{ background:rgba(225,6,0,.85); border-color:transparent; }
+  /* 车手生涯弹层 */
+  #drvbox{
+    position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
+    background:rgba(6,7,10,.74); opacity:0; pointer-events:none; transition:opacity .3s ease;
+  }
+  #drvbox.on{ opacity:1; pointer-events:auto; }
+  #drvbox .db-back{ position:absolute; inset:0; cursor:pointer; }
+  #drvbox .db-card{
+    position:relative; display:grid; grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr);
+    width:min(980px,94vw); max-height:86vh; overflow:hidden;
+    background:#0f1013; border:1px solid rgba(255,255,255,.10);
+    transform:translateY(16px) scale(.985); transition:transform .32s cubic-bezier(.2,.7,.2,1);
+  }
+  #drvbox.on .db-card{ transform:none; }
+  #drvbox .db-side{
+    position:relative; display:flex; flex-direction:column; padding:30px 26px 24px;
+    background:linear-gradient(158deg, rgba(225,6,0,.16), rgba(18,19,23,0) 58%), #121317;
+    border-right:1px solid rgba(255,255,255,.08);
+  }
+  #drvbox .db-num{ font:700 clamp(48px,6vw,74px)/.84 var(--display); letter-spacing:-.05em; color:rgba(255,255,255,.15); }
+  #drvbox h3.db-name{ margin:12px 0 0; font:700 clamp(20px,2.4vw,28px)/1.1 var(--display); letter-spacing:-.02em; color:#f5f3ef; }
+  #drvbox .db-tag{ margin-top:8px; font:400 11px/1.5 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.5); }
+  #drvbox .db-bio{ margin:16px 0 0; font:400 12.5px/1.8 var(--sans); color:rgba(255,255,255,.72); }
+  #drvbox .db-st{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; margin-top:22px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.10); }
+  #drvbox .db-st div{ background:#15161a; padding:10px 10px 11px; }
+  #drvbox .db-st u{ display:block; font:600 8.5px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.42); text-decoration:none; }
+  #drvbox .db-st b{ display:block; margin-top:6px; font:700 16px/1 var(--display); color:#f5f3ef; letter-spacing:-.01em; }
+  #drvbox .db-main{ overflow:auto; padding:28px 30px 30px; }
+  #drvbox .db-k{ font:600 9px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
+  #drvbox .db-tl{ margin-top:20px; }
+  #drvbox .tl-i{ position:relative; padding-left:86px; padding-bottom:24px; }
+  #drvbox .tl-i::before{ content:''; position:absolute; left:63px; top:16px; bottom:0; width:1px; background:rgba(255,255,255,.11); }
+  #drvbox .tl-i:last-child{ padding-bottom:0; }
+  #drvbox .tl-i:last-child::before{ display:none; }
+  #drvbox .tl-y{ position:absolute; left:0; top:1px; width:56px; font:700 11px/1.6 var(--mono); color:var(--accent); letter-spacing:0; }
+  #drvbox .tl-y::after{ content:''; position:absolute; left:60px; top:6px; width:7px; height:7px; border-radius:999px; background:var(--accent); box-shadow:0 0 0 3px rgba(225,6,0,.15); }
+  #drvbox .tl-i h4{ margin:0; font:600 13.5px/1.4 var(--sans); color:#f5f3ef; letter-spacing:.01em; }
+  #drvbox .tl-i p{ margin:6px 0 0; font:400 12px/1.75 var(--sans); color:rgba(255,255,255,.66); }
+  #drvbox .tl-ph{ margin:12px 0 0; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.10); background:#15161a; }
+  #drvbox .tl-ph img{ display:block; width:100%; height:186px; object-fit:cover; object-position:50% 26%; }
+  #drvbox .tl-ph figcaption{ position:absolute; inset:auto 0 0 0; padding:9px 11px; font:400 9.5px/1.45 var(--sans); color:rgba(255,255,255,.7); background:linear-gradient(to top, rgba(6,7,10,.88), rgba(6,7,10,0)); }
+  #drvbox .tl-ph figcaption a{ color:rgba(255,255,255,.84); text-decoration:underline; text-underline-offset:2px; }
+  #drvbox .db-x{ position:absolute; right:12px; top:12px; z-index:4; width:32px; height:32px; display:flex; align-items:center; justify-content:center; background:rgba(10,11,14,.6); border:1px solid rgba(255,255,255,.14); border-radius:999px; color:#f5f3ef; font-size:15px; line-height:1; cursor:pointer; }
+  #drvbox .db-x:hover{ background:rgba(225,6,0,.85); border-color:transparent; }
+  .drv article{ cursor:pointer; transition:border-color .25s ease, transform .25s ease; }
+  .drv article:hover{ transform:translateY(-2px); }
+  .drv article:focus-visible{ outline:2px solid rgba(225,6,0,.75); outline-offset:3px; }
+  .drv-hint{ margin:14px 0 0; font:400 11.5px/1.6 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.44); }
+  @media (max-width:900px){
+    #drvbox .db-card{ grid-template-columns:1fr; max-height:90vh; }
+    #drvbox .db-side{ border-right:none; border-bottom:1px solid rgba(255,255,255,.08); padding:26px 22px 20px; }
+    #drvbox .db-main{ padding:22px 22px 26px; }
+    #drvbox .tl-i{ padding-left:72px; }
+    #drvbox .tl-i::before{ left:53px; }
+    #drvbox .tl-y::after{ left:50px; }
+    #drvbox .tl-ph img{ height:150px; }
+  }
   @media (max-width:900px){
     #racebox .rb-card{ grid-template-columns:1fr; max-height:88vh; }
     #racebox .rb-ph{ min-height:180px; }
@@ -1301,12 +1358,32 @@ body.ui-hidden::after{ opacity:0; }
       </div>
     </div>
 
+    <!-- 车手生涯弹层：点车手卡打开 -->
+    <div id="drvbox" aria-hidden="true">
+      <div class="db-back" id="db-back"></div>
+      <div class="db-card" role="dialog" aria-modal="true" aria-labelledby="db-name">
+        <button class="db-x" id="db-close" aria-label="关闭">×</button>
+        <div class="db-side">
+          <div class="db-num" id="db-num">16</div>
+          <h3 class="db-name" id="db-name">Charles Leclerc</h3>
+          <div class="db-tag" id="db-tag"></div>
+          <p class="db-bio" id="db-bio"></p>
+          <div class="db-st" id="db-st"></div>
+        </div>
+        <div class="db-main">
+          <div class="db-k" data-t="db-k">生涯节点</div>
+          <div class="db-tl" id="db-tl"></div>
+        </div>
+      </div>
+    </div>
+
     <section class="ch" id="ch-drivers">
       <div class="ch-in" style="max-width:880px">
         <div class="eyebrow" data-t="drv-k">Drivers</div>
         <h2 data-t="drv-h">16 号和 44 号</h2>
+        <p class="drv-hint" data-t="drv-hint">点车手卡，看生涯时间轴</p>
         <div class="drv">
-          <article>
+          <article class="drv-card" data-drv="0" role="button" tabindex="0" aria-label="Charles Leclerc 生涯时间轴">
             <div class="num">16</div>
             <h3>Charles Leclerc</h3>
             <div class="tag" data-t="d1t">摩纳哥 · 1997</div>
@@ -1314,7 +1391,7 @@ body.ui-hidden::after{ opacity:0; }
             <p data-t="d1p">242 分，年度第五。全年 7 次登台、1 个杆位，是队内唯一上过领奖台的人；赛季中段连续四站进前三。</p>
             <div class="st"><div><i>PTS</i><b>242</b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P5</b></div></div>
           </article>
-          <article>
+          <article class="drv-card" data-drv="1" role="button" tabindex="0" aria-label="Lewis Hamilton 生涯时间轴">
             <div class="num">44</div>
             <h3>Lewis Hamilton</h3>
             <div class="tag" data-t="d2t">斯蒂夫尼奇 · 1985</div>
@@ -8536,6 +8613,8 @@ const EN = {
   w1:'Saudi Arabia', w2:'Monaco', w3:'Spain', w4:'United States', w5:'Mexico City',
   'sea-src':'Sources: Formula 1 official end-of-year report, Scuderia Ferrari 2025 season page.',
   'drv-k':'Drivers', 'drv-h':'Cars 16 and 44',
+  'drv-hint':'Tap a driver card for the career timeline',
+  'db-k':'Career timeline',
   d1t:'Monaco · 1997',
   d1p:'242 points, fifth in the championship. Seven podiums and one pole, the only Ferrari driver to reach the rostrum all year.',
   d2t:'Stevenage · 1985',
@@ -8652,6 +8731,130 @@ function renderWins(){
   if (RB.idx >= 0) openRace(RB.idx, true);
 }
 
+/* ---------- 车手生涯（点卡片打开） ---------- */
+const DRIVERS = [
+  {
+    num: 16, name: 'Charles Leclerc',
+    tag: '摩纳哥 · 1997', tagE: 'Monaco · 1997',
+    bio: '2018 年在索伯起步，2019 年进法拉利，同年拿下斯帕与蒙扎。以单圈速度和街道赛见长，2024 年在摩纳哥拿下主场首胜。',
+    bioE: 'Debuted with Sauber in 2018, joined Ferrari in 2019 and won at Spa and Monza that same year. Known for his single-lap speed and street-circuit form; took his first home win in Monaco in 2024.',
+    st: [['车号', 'Car', '16'], ['生涯胜场', 'Wins', '8'], ['世界冠军', 'Titles', '0'], ['首胜', 'First win', '2019']],
+    nodes: [
+      { y: '2016', t: 'GP3 冠军', tE: 'GP3 champion',
+        d: 'ART 车队，新秀年拿下年度冠军，3 场胜利。',
+        dE: 'Took the title with ART in his rookie year, three wins.' },
+      { y: '2017', t: 'F2 冠军', tE: 'Formula 2 champion',
+        d: '升上 F2 的第一年就夺冠，7 场胜利，是那几年最干净的升级路径。',
+        dE: 'Won the title in his first F2 season with seven wins — the cleanest junior ladder of the era.' },
+      { y: '2018', t: 'F1 首秀：索伯', tE: 'F1 debut with Sauber',
+        d: '39 分、年度第 13，处子赛季就压过队友。',
+        dE: '39 points and 13th in the standings, ahead of his team mate in his first season.',
+        ph: 'img/d-lc18.jpg', by: 'Jen Ross', lic: 'CC BY 2.0', cap: '2018 英国站，索伯时期为车迷签名', capE: 'Silverstone 2018, signing autographs in his Sauber year',
+        page: 'https://commons.wikimedia.org/wiki/File:Charles_LeClerc,_British_GP_2018_(43025921904).jpg' },
+      { y: '2019', t: '法拉利第一年：两连胜', tE: 'First Ferrari year: back-to-back wins',
+        d: '斯帕拿下生涯首胜，一周后在蒙扎替法拉利赢下主场；全年 7 个杆位，年度第 4。',
+        dE: 'A first win at Spa, then Ferrari’s home race at Monza a week later; seven poles and fourth overall.',
+        ph: 'img/d-lc19.jpg', by: 'Eustace Bagge', lic: 'CC BY-SA 4.0', cap: '2019 意大利站，蒙扎 Ascari 弯', capE: 'Monza 2019, Ascari corner',
+        page: 'https://commons.wikimedia.org/wiki/File:Charles_Leclerc_2019_Italian_Grand_Prix.jpg' },
+      { y: '2020–21', t: '车队低谷', tE: 'The lean years',
+        d: '2020 年两次登台，2021 年整季没有领奖台，赛车跟不上。',
+        dE: 'Two podiums in 2020, none in 2021 — the car simply was not there.' },
+      { y: '2022', t: '争冠赛季', tE: 'Title fight',
+        d: '开季三胜（巴林、澳大利亚、奥地利），9 个杆位，一度领跑积分榜，最终年度亚军。',
+        dE: 'Three wins early on (Bahrain, Australia, Austria) and nine poles, led the standings at one point, finished runner-up.',
+        ph: 'img/d-lc22.jpg', by: '観光庁', lic: 'CC BY 4.0', cap: '2022 日本站颁奖台', capE: 'Suzuka 2022, podium ceremony',
+        page: 'https://commons.wikimedia.org/wiki/File:2022_Japanese_Grand_Prix_Award_Ceremony_1.jpg' },
+      { y: '2024', t: '主场首胜，三站称王', tE: 'Home win, three victories',
+        d: '摩纳哥主场首胜，蒙扎和奥斯汀再下两城，年度第 3。',
+        dE: 'A first home win in Monaco, plus Monza and Austin; third in the championship.',
+        ph: 'img/d-lc24.jpg', by: 'Jen Ross', lic: 'CC BY 2.0', cap: '2024 英国站，SF-24', capE: 'Silverstone 2024, SF-24',
+        page: 'https://commons.wikimedia.org/wiki/File:2024_British_Grand_Prix,_Leclerc_(1).jpg' },
+      { y: '2025', t: '搭档汉密尔顿', tE: 'Alongside Hamilton',
+        d: '7 次登台、242 分，年度第 5；全年是队内唯一上过领奖台的人。',
+        dE: 'Seven podiums and 242 points, fifth overall — the only Ferrari driver to reach the rostrum all year.' }
+    ]
+  },
+  {
+    num: 44, name: 'Lewis Hamilton',
+    tag: '斯蒂夫尼奇 · 1985', tagE: 'Stevenage · 1985',
+    bio: '2007 年进 F1，2008 年成为当时最年轻的世界冠军。2014 年起在梅赛德斯拿下六个冠军，2025 年转会法拉利。',
+    bioE: 'Arrived in F1 in 2007 and became the youngest world champion a year later. Six more titles at Mercedes from 2014, then Ferrari in 2025.',
+    st: [['车号', 'Car', '44'], ['生涯胜场', 'Wins', '105'], ['世界冠军', 'Titles', '7'], ['首胜', 'First win', '2007']],
+    nodes: [
+      { y: '2007', t: '迈凯伦首季', tE: 'Rookie year at McLaren',
+        d: '处子年 4 胜、9 次登台，以 1 分之差丢掉年度冠军。',
+        dE: 'Four wins and nine podiums in his debut season; lost the title by a single point.' },
+      { y: '2008', t: '最年轻世界冠军', tE: 'Youngest world champion',
+        d: '巴西站最后一圈超车拿到第 5，以 1 分优势夺冠，23 岁的纪录保持了十余年。',
+        dE: 'Passed for fifth on the final lap in Brazil to win by a point at 23 — a record that stood for over a decade.',
+        ph: 'img/d-lh08.jpg', by: 'diogo dubiella', lic: 'CC BY-SA 2.0', cap: '2008 巴西站，夺冠后的迈凯伦车库', capE: 'Interlagos 2008, the McLaren garage after the title',
+        page: 'https://commons.wikimedia.org/wiki/File:Hamilton_Brazil_2008_celebrations.jpg' },
+      { y: '2013', t: '转会梅赛德斯', tE: 'Move to Mercedes',
+        d: '离开迈凯伦加入梅赛德斯，接下来十年拿下六个世界冠军。',
+        dE: 'Left McLaren for Mercedes, and the next decade brought six more titles.' },
+      { y: '2014–15', t: '两连冠', tE: 'Back-to-back titles',
+        d: '梅赛德斯时代的前两冠，2015 年在蒙扎拿下意大利站。',
+        dE: 'The first two titles of the Mercedes era, including Monza in 2015.',
+        ph: 'img/d-lh15.jpg', by: 'Amy huby', lic: 'CC BY-SA 2.0', cap: '2015 意大利站领奖台', capE: 'Monza 2015, podium celebrations',
+        page: 'https://commons.wikimedia.org/wiki/File:Podium_Italian_Grand_Prix_2015.jpg' },
+      { y: '2017–20', t: '四连冠 · 第七冠', tE: 'Four more, then seven',
+        d: '2017 至 2020 连续四年世界冠军，2020 年第七冠追平舒马赫。',
+        dE: 'Four straight titles from 2017 to 2020; the seventh in 2020 equalled Schumacher.' },
+      { y: '2024', t: '银石第九胜', tE: 'A ninth Silverstone win',
+        d: '英国站雨战夺冠，生涯第 104 胜，也是他在梅赛德斯的最后一场胜利。',
+        dE: 'Won a wet British Grand Prix for a ninth time at Silverstone — career win 104 and his last for Mercedes.',
+        ph: 'img/d-lh24.jpg', by: 'Jen Ross', lic: 'CC BY 2.0', cap: '2024 英国站，W15', capE: 'Silverstone 2024, W15',
+        page: 'https://commons.wikimedia.org/wiki/File:2024_British_Grand_Prix,_Hamilton_(3).jpg' },
+      { y: '2025', t: '转会法拉利', tE: 'Ferrari',
+        d: '44 号 SF-25 的第一年：156 分、年度第 6，中国站冲刺赛拿下最快圈。',
+        dE: 'First year in car 44: 156 points, sixth overall, fastest lap in the China sprint.',
+        ph: 'img/d-lh25.jpg', by: 'Lukas Raich', lic: 'CC BY-SA 4.0', cap: '2025 奥地利站，44 号 SF-25', capE: 'Austria 2025, car 44 SF-25',
+        page: 'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2025_Nr._44_Hamilton.jpg' }
+    ]
+  }
+];
+
+const DB = { idx: -1 };
+function drvT(o, k){ return SITE.lang === 'en' ? o[k + 'E'] : o[k]; }
+
+function renderDrvPanel(){
+  const o = DRIVERS[DB.idx]; if (!o) return;
+  const en = SITE.lang === 'en';
+  document.getElementById('db-num').textContent = o.num;
+  document.getElementById('db-name').textContent = o.name;
+  document.getElementById('db-tag').textContent = en ? o.tagE : o.tag;
+  document.getElementById('db-bio').textContent = en ? o.bioE : o.bio;
+  document.getElementById('db-st').innerHTML = o.st.map(s =>
+    '<div><u>' + s[en ? 1 : 0] + '</u><b>' + s[2] + '</b></div>').join('');
+  document.getElementById('db-tl').innerHTML = o.nodes.map(n => {
+    let x = '<div class="tl-i"><div class="tl-y">' + n.y + '</div>' +
+      '<h4>' + drvT(n, 't') + '</h4><p>' + drvT(n, 'd') + '</p>';
+    if (n.ph){
+      x += '<figure class="tl-ph"><img src="' + n.ph + '" alt="' + drvT(n, 'cap') + '" loading="lazy">' +
+        '<figcaption>' + drvT(n, 'cap') + ' · ' + (en ? 'Photo: ' : '摄影：') + n.by +
+        ' / <a href="' + n.page + '" target="_blank" rel="noopener">' + n.lic + '</a></figcaption></figure>';
+    }
+    return x + '</div>';
+  }).join('');
+  document.querySelector('.db-main').scrollTop = 0;
+}
+
+function openDriver(i, quiet){
+  const o = DRIVERS[i]; if (!o) return;
+  DB.idx = i;
+  renderDrvPanel();
+  const box = document.getElementById('drvbox');
+  box.classList.add('on'); box.setAttribute('aria-hidden', 'false');
+  if (!quiet){ const b = document.getElementById('db-close'); if (b) b.focus({ preventScroll: true }); }
+}
+
+function closeDriver(){
+  const box = document.getElementById('drvbox');
+  if (!box || !box.classList.contains('on')) return;
+  box.classList.remove('on'); box.setAttribute('aria-hidden', 'true');
+  DB.idx = -1;
+}
+
 function openRace(i, quiet){
   const o = RACES[i]; if (!o) return;
   RB.idx = i;
@@ -8749,13 +8952,21 @@ document.addEventListener('click', (e) => {
   const w = e.target.closest('#wins .win');
   if (w){ openRace(+w.dataset.i); return; }
   if (e.target.id === 'rb-back' || e.target.id === 'rb-close') closeRace();
+  const d = e.target.closest('#ch-drivers .drv article');
+  if (d){ openDriver(+d.dataset.drv); return; }
+  if (e.target.id === 'db-back' || e.target.id === 'db-close') closeDriver();
 });
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === ' '){
     const w = document.activeElement && document.activeElement.closest && document.activeElement.closest('#wins .win');
     if (w){ e.preventDefault(); openRace(+w.dataset.i); }
   }
+  if (e.key === 'Enter' || e.key === ' '){
+    const a = document.activeElement;
+    if (a && a.matches && a.matches('#ch-drivers .drv article')){ e.preventDefault(); openDriver(+a.dataset.drv); }
+  }
   if (e.key === 'Escape' && RB.idx >= 0){ e.stopPropagation(); closeRace(); }
+  if (e.key === 'Escape' && DB.idx >= 0){ e.stopPropagation(); closeDriver(); }
 }, true);
 
 function setLang(lang){
@@ -8774,6 +8985,7 @@ function setLang(lang){
   document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
   document.body.classList.toggle('lang-en', lang === 'en');
   renderWins();
+  if (DB.idx >= 0) openDriver(DB.idx, true);
 }
 
 
@@ -9085,7 +9297,7 @@ function initSite(){
 
   /* 点空白处直接翻到下一页 —— 但按钮/圆点/热区/信息卡这些交互元素要放过 */
   let lastNav = 0;
-  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide,#wins,#racebox';
+  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide,#wins,#racebox,#drvbox,#ch-drivers .drv article';
   document.addEventListener('click', (e) => {
     if (!SITE.on) return;
     if (!document.body.classList.contains('mode-site')) return;

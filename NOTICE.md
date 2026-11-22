@@ -29,7 +29,7 @@
 - 说明：两个可变字体 woff2 已按 latin 子集自托管，OFL 允许嵌入与再分发，
   但**不得单独售卖字体本身**，修改后也不得沿用原字体名（Reserved Font Name）。
 
-## 4. 照片（`img/` 与 `docs/img/`，共 18 张）
+## 4. 照片（`img/` 与 `docs/img/`，共 26 张）
 
 全部取自 **Wikimedia Commons**，逐张列明作者与许可证。
 **图面上没有添加任何水印**；署名统一放在每张图下方的图注里（队史小窗在右下角、
@@ -56,10 +56,20 @@
 | `pod_c.jpg` | Charles Leclerc 正面，2024 荷兰站领奖台 | Steffen Prößdorf | CC BY-SA 4.0 |
 | `ham25.jpg` | Lewis Hamilton，2025 日本站车迷区（车手卡） | Liauzh | CC BY-SA 4.0 |
 | `lec25.jpg` | Charles Leclerc，2025 艾米利亚-罗马涅站（墨西哥城站卡片） | Buczkowiak94 | CC BY 4.0 |
+| `d-lc18.jpg` | Charles Leclerc，2018 英国站索伯时期为车迷签名（生涯 2018） | Jen Ross | CC BY 2.0 |
+| `d-lc19.jpg` | Charles Leclerc，2019 意大利站蒙扎 Ascari 弯（生涯 2019） | Eustace Bagge | CC BY-SA 4.0 |
+| `d-lc22.jpg` | 2022 日本站颁奖台（生涯 2022） | 観光庁 | CC BY 4.0 |
+| `d-lc24.jpg` | Charles Leclerc，2024 英国站 SF-24（生涯 2024） | Jen Ross | CC BY 2.0 |
+| `d-lh08.jpg` | Lewis Hamilton，2008 巴西站夺冠后的车库（生涯 2008） | diogo dubiella | CC BY-SA 2.0 |
+| `d-lh15.jpg` | 2015 意大利站领奖台，Hamilton 在喷香槟（生涯 2014–15） | Amy huby | CC BY-SA 2.0 |
+| `d-lh24.jpg` | Lewis Hamilton，2024 英国站 W15（生涯 2024） | Jen Ross | CC BY 2.0 |
+| `d-lh25.jpg` | Lewis Hamilton，2025 奥地利站 44 号 SF-25（生涯 2025） | Lukas Raich | CC BY-SA 4.0 |
 
 `pod_a/pod_b/pod_c` 是 **2022 / 2024 年的领奖台照**，`ham25.jpg` 是 2025 日本站车迷区照，
 都不是 2025 赛季那 7 次登台的现场图（Commons 上没有其中 4 站的现场照）——页面里凡是用到
 它们的卡片和图注都标了「示意图（非本站实拍）」，没有把它们说成当站实拍。
+
+`d-*.jpg` 八张只在「车手 → 生涯时间轴」弹层里使用，按各自年份署名，和车手卡片主图不重复。
 
 CC BY-SA 的要求是 **署名 + 许可证 + 标明是否修改**：
 本项目只做了等比缩放与 JPEG 重压缩（长边 ≤1600 px、q78–84），没有裁剪内容、没有加滤镜、没有加水印。
