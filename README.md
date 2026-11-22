@@ -97,6 +97,7 @@ Third-party assets and trademark notes: **`NOTICE.md`**.
 | `SDS-v1.0.md` | 最初的需求版 SDS，留档 |
 | `PLAN-next.md` | 阶段计划与完成状态（H/D/E/I/J/F/G） |
 | `_probe/` | 自动化验收探针（开发期工具，**非运行必需**），见 `_probe/README.md` |
+| `img/` | 官网用的 11 张实拍照片（Wikimedia Commons，见 NOTICE 第 4 节） |
 
 ---
 

@@ -29,7 +29,31 @@
 - 说明：两个可变字体 woff2 已按 latin 子集自托管，OFL 允许嵌入与再分发，
   但**不得单独售卖字体本身**，修改后也不得沿用原字体名（Reserved Font Name）。
 
-## 4. 商标与赛事素材（重要）
+## 4. 照片（`img/` 与 `docs/img/`，共 11 张）
+
+全部取自 **Wikimedia Commons**，逐张列明作者与许可证。
+**图面上没有添加任何水印**；署名统一放在每张图下方的图注里（队史小窗在右下角、
+车手/赛季在卡片内），可点击跳到对应的 Commons 文件页。
+
+| 文件 | 内容 | 作者 | 许可证 |
+|---|---|---|---|
+| `h1950.jpg` | 1949 罗马大奖赛，Ferrari 166 F2 双车 | Unknown photographer | Public domain |
+| `h1961.jpg` | Ferrari 156（伦敦 F1 展览） | Hullian111 | CC BY-SA 4.0 |
+| `h1979.jpg` | Ferrari 312 T4，Scheckter，1979 比利时站 | Martin Lee | CC BY-SA 2.0 |
+| `h2004.jpg` | Ferrari F2004 | emperornie | CC BY-SA 2.0 |
+| `h2008.jpg` | Ferrari F2008 | Calreyn88 | CC BY-SA 4.0 |
+| `h2023.jpg` | Carlos Sainz，2023 意大利站 | Eustace Bagge | CC BY-SA 4.0 |
+| `h2024.jpg` | SF-24，2024 日本站 | Cineyas | CC BY-SA 4.0 |
+| `p16.jpg` | Leclerc，2024 奥地利站 | Lukas Raich | CC BY-SA 4.0 |
+| `p55.jpg` | Sainz，2024 奥地利站 | Lukas Raich | CC BY-SA 4.0 |
+| `s1.jpg` | 2024 中国站发车格 | Liauzh | CC BY-SA 4.0 |
+| `s2.jpg` | 2024 西班牙站 | emperornie | CC BY-SA 2.0 |
+
+CC BY-SA 的要求是 **署名 + 许可证 + 标明是否修改**：
+本项目只做了等比缩放与 JPEG 重压缩（≤1400 px、q84），没有裁剪内容、没有加滤镜、没有加水印。
+如果转发或再发布这些照片，请沿用上表的署名与许可证，并保留 CC BY-SA 的传染性条款。
+
+## 5. 商标与赛事素材（重要）
 
 `sf25.glb` 的贴图里包含法拉利车队标识、跃马盾徽、车号 16/44、赞助商 logo
 （Shell、Pirelli、AWS、HP、Richard Mille、UniCredit、V-Power、Puma、Brembo、Mahle 等），
@@ -41,7 +65,7 @@
   或替换为自建模型 / 无标识素材；
 - 页面里的气动数值是 VLM 涡格法近似解，**不是 CFD 结果**，不能作为工程依据。
 
-## 5. 一个提醒
+## 6. 一个提醒
 
 开源不等于放弃署名：别人用你的代码时，MIT 要求保留你的版权声明；
 用这个模型时，CC BY 要求署名 Abu Saif。两边都请照做。

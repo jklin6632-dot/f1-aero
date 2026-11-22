@@ -873,6 +873,44 @@ body.ui-hidden::after{ opacity:0; }
   body.mode-site #site, body.mode-site #c3d canvas{ cursor:pointer; }
   body.mode-site #site button, body.mode-site #site a,
   body.mode-site #pager, body.mode-site #pager *, body.mode-site #snav button{ cursor:pointer; }
+  /* ---------- §SITE-9 队史照片小窗 ---------- */
+  #hphoto{
+    position:absolute; right:5vw; bottom:9vh; width:420px; margin:0;
+    z-index:3;
+  }
+  .hp-frame{
+    width:420px; height:315px; border-radius:14px; overflow:hidden;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
+  }
+  .hp-frame img{ width:100%; height:100%; object-fit:cover; display:block; transition:opacity .28s ease; }
+  .hp-frame img.fade{ opacity:0; }
+  .hp-cap{
+    margin-top:10px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+    font-size:10.5px; letter-spacing:.04em; color:rgba(255,255,255,.52);
+  }
+  .hp-cap b{ font-size:12px; color:rgba(255,255,255,.9); letter-spacing:.02em; }
+  .hp-cap a{ color:inherit; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.22); }
+  .hp-cap a:hover{ color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.5); }
+  #ch-history .tl .row{ cursor:pointer; transition:background .2s ease; }
+  #ch-history .tl .row:hover{ background:rgba(255,255,255,.04); }
+  #ch-history .tl .row.on{ background:rgba(255,255,255,.05); box-shadow:inset 2px 0 0 rgba(255,255,255,.72); }
+
+  /* 卡片内的小图（车手 / 赛季） */
+  .pw{ margin:0 0 12px; }
+  .pw img{
+    width:100%; aspect-ratio:16/10; object-fit:cover; display:block;
+    border-radius:10px; border:1px solid rgba(255,255,255,.10);
+  }
+  .pwrow{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 12px; }
+  .pwrow .pw{ margin:0; }
+  .pwrow .pw img{ aspect-ratio:4/3; }
+  .pw figcaption{
+    margin-top:6px; font-size:9.5px; letter-spacing:.04em; color:rgba(255,255,255,.42);
+  }
+  .pw figcaption a{ color:inherit; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.2); }
+
   /* ---------- §SITE-8 点击翻页（不再用滚动驱动） ---------- */
   #site{ overflow:hidden !important; }
   #site .ch{
@@ -1130,6 +1168,10 @@ body.ui-hidden::after{ opacity:0; }
           <div class="win"><em>R19 · USA</em><b data-t="w4">美国</b><span data-t="w4d">Leclerc · 奥斯汀</span></div>
           <div class="win"><em>R20 · MEX</em><b data-t="w5">墨西哥城</b><span data-t="w5d">Sainz · 罗德里格斯兄弟</span></div>
         </div>
+        <div class="pwrow">
+          <figure class="pw"><img src="img/s1.jpg" alt="2024 中国大奖赛发车格" loading="lazy"><figcaption>上海发车格 · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:Leclerc_%26_Sainz_on_the_grid_-_2024_Chinese_GP.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
+          <figure class="pw"><img src="img/s2.jpg" alt="2024 西班牙大奖赛" loading="lazy"><figcaption>巴塞罗那 · emperornie / <a href="https://commons.wikimedia.org/wiki/File:2024_Spanish_Grand_Prix_(53811382510).jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a></figcaption></figure>
+        </div>
         <p style="margin-top:16px;font-size:11.5px;opacity:.72" data-t="sea-src">数据来源：Formula 1 官方年终报告、Scuderia Ferrari 2024 赛季页。</p>
       </div>
     </section>
@@ -1143,6 +1185,7 @@ body.ui-hidden::after{ opacity:0; }
             <div class="num">16</div>
             <h3>Charles Leclerc</h3>
             <div class="tag" data-t="d1t">摩纳哥 · 1997</div>
+            <figure class="pw"><img src="img/p16.jpg" alt="Leclerc 驾驶 SF-24" loading="lazy"><figcaption>奥地利站 · Lukas Raich / <a href="https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2024_Nr._16_Leclerc_(misc).jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
             <p data-t="d1p">356 分，年度第三。三场胜利：摩纳哥主场、蒙扎（一停撑到底）、奥斯汀。</p>
             <div class="st"><div><i>PTS</i><b>356</b></div><div><i>WINS</i><b>3</b></div><div><i>RANK</i><b>P3</b></div></div>
           </article>
@@ -1150,6 +1193,7 @@ body.ui-hidden::after{ opacity:0; }
             <div class="num">55</div>
             <h3>Carlos Sainz</h3>
             <div class="tag" data-t="d2t">马德里 · 1994</div>
+            <figure class="pw"><img src="img/p55.jpg" alt="Sainz 驾驶 SF-24" loading="lazy"><figcaption>奥地利站 · Lukas Raich / <a href="https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2024_Nr._55_Sainz_(misc).jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
             <p data-t="d2p">290 分，年度第五。澳大利亚揭幕战后拿下首胜，墨西哥城再赢一场。赛季中因阑尾炎缺席吉达，由 Bearman 顶替。</p>
             <div class="st"><div><i>PTS</i><b>290</b></div><div><i>WINS</i><b>2</b></div><div><i>RANK</i><b>P5</b></div></div>
           </article>
@@ -1170,16 +1214,25 @@ body.ui-hidden::after{ opacity:0; }
       <div class="ch-in" style="max-width:720px">
         <div class="eyebrow" data-t="his-k">History</div>
         <h2 data-t="his-h">从 1950 到 2024</h2>
-        <div class="tl">
-          <div class="row"><div class="yr">1950</div><div class="tx" data-t="h1">法拉利以厂商车队身份参加首届 F1 世界锦标赛，是至今唯一全勤的车队。</div></div>
-          <div class="row"><div class="yr">1961</div><div class="tx" data-t="h2">156 “Sharknose” 拿下队史首个车手总冠军，V6 时代开启。</div></div>
-          <div class="row"><div class="yr">1979</div><div class="tx" data-t="h3">312 T4 包揽车手与车队双冠，Flat-12 的最后一个辉煌。</div></div>
-          <div class="row"><div class="yr">2000–2004</div><div class="tx" data-t="h4">舒马赫与车队五连冠，F1 历史上最具统治力的一段。</div></div>
-          <div class="row"><div class="yr">2007–2008</div><div class="tx" data-t="h5">莱科宁与马萨先后拿下车手总冠军，2008 年再夺车队冠军。</div></div>
-          <div class="row"><div class="yr">2023</div><div class="tx" data-t="h6">SF-23 挣扎于一致性与轮胎管理，车队年终第三。</div></div>
-          <div class="row now"><div class="yr">2024</div><div class="tx" data-t="h7"><b>SF-24</b>：五胜、22 次登台、652 分，年终第二——本页这台车。</div></div>
+        <div class="tl" id="tl-hist">
+          <div class="row" data-hy="h1950"><div class="yr">1950</div><div class="tx" data-t="h1">法拉利以厂商车队身份参加首届 F1 世界锦标赛，是至今唯一全勤的车队。</div></div>
+          <div class="row" data-hy="h1961"><div class="yr">1961</div><div class="tx" data-t="h2">156 “Sharknose” 拿下队史首个车手总冠军，V6 时代开启。</div></div>
+          <div class="row" data-hy="h1979"><div class="yr">1979</div><div class="tx" data-t="h3">312 T4 包揽车手与车队双冠，Flat-12 的最后一个辉煌。</div></div>
+          <div class="row" data-hy="h2004"><div class="yr">2000–2004</div><div class="tx" data-t="h4">舒马赫与车队五连冠，F1 历史上最具统治力的一段。</div></div>
+          <div class="row" data-hy="h2008"><div class="yr">2007–2008</div><div class="tx" data-t="h5">莱科宁与马萨先后拿下车手总冠军，2008 年再夺车队冠军。</div></div>
+          <div class="row" data-hy="h2023"><div class="yr">2023</div><div class="tx" data-t="h6">SF-23 挣扎于一致性与轮胎管理，车队年终第三。</div></div>
+          <div class="row now" data-hy="h2024"><div class="yr">2024</div><div class="tx" data-t="h7"><b>SF-24</b>：五胜、22 次登台、652 分，年终第二——本页这台车。</div></div>
         </div>
       </div>
+      <!-- 年份照片：小窗 + 图注（署名在图外，不压在画面上） -->
+      <figure id="hphoto" aria-live="polite">
+        <div class="hp-frame"><img id="hp-img" alt=""></div>
+        <figcaption class="hp-cap">
+          <b id="hp-year">1950</b>
+          <span id="hp-text"></span>
+          <a id="hp-src" href="#" target="_blank" rel="noopener">Wikimedia Commons ↗</a>
+        </figcaption>
+      </figure>
     </section>
 
     <section class="ch" id="ch-cta">
@@ -8444,6 +8497,94 @@ function gotoChapter(i){
   applyChapter(k, true);
 }
 
+/* ---------- 队史照片（Wikimedia Commons，CC / 公有领域；署名放在图外） ---------- */
+const HIST_PHOTOS = [
+  { y: '1950', k: 'h1950', src: 'img/h1950.jpg', alt: '1949 年罗马大奖赛上的法拉利 166 F2',
+    cap: '法拉利 166 F2 · 1949 罗马大奖赛', by: 'Unknown photographer', lic: 'Public domain',
+    page: 'https://commons.wikimedia.org/wiki/File:1949-06-02_GP_Roma_Ferrari_166_F2_Taruffi+Villoresi.jpg' },
+  { y: '1961', k: 'h1961', src: 'img/h1961.jpg', alt: 'Ferrari 156 Sharknose 展车',
+    cap: 'Ferrari 156 “Sharknose” · 伦敦 F1 展', by: 'Hullian111', lic: 'CC BY-SA 4.0',
+    page: 'https://commons.wikimedia.org/wiki/File:Ferrari_156_at_Formula_1_Exhibition,_London_01.jpg' },
+  { y: '1979', k: 'h1979', src: 'img/h1979.jpg', alt: 'Scheckter 驾驶 312 T4 于 1979 比利时站',
+    cap: 'Scheckter · 312 T4 · 1979 比利时站', by: 'Martin Lee', lic: 'CC BY-SA 2.0',
+    page: 'https://commons.wikimedia.org/wiki/File:Ferrari_312T4_-_Jody_Scheckter_at_the_1979_Belgian_Grand_Prix,_Zolder_(51632958993).jpg' },
+  { y: '2000–2004', k: 'h2004', src: 'img/h2004.jpg', alt: 'Ferrari F2004',
+    cap: 'F2004 · 舒马赫年代的收官之作', by: 'emperornie', lic: 'CC BY-SA 2.0',
+    page: 'https://commons.wikimedia.org/wiki/File:Ferrari_F2004_(8925316574).jpg' },
+  { y: '2007–2008', k: 'h2008', src: 'img/h2008.jpg', alt: 'Ferrari F2008',
+    cap: 'F2008 · 2008 年车队总冠军', by: 'Calreyn88', lic: 'CC BY-SA 4.0',
+    page: 'https://commons.wikimedia.org/wiki/File:2008_Ferrari_F2008.jpg' },
+  { y: '2023', k: 'h2023', src: 'img/h2023.jpg', alt: 'Sainz 驾驶 SF-23 于 2023 意大利站',
+    cap: 'Sainz · SF-23 · 2023 蒙扎', by: 'Eustace Bagge', lic: 'CC BY-SA 4.0',
+    page: 'https://commons.wikimedia.org/wiki/File:Carlos_Sainz_-_2023_Italian_Grand_Prix.jpg' },
+  { y: '2024', k: 'h2024', src: 'img/h2024.jpg', alt: 'SF-24 于 2024 日本大奖赛',
+    cap: 'SF-24 · 2024 日本大奖赛', by: 'Cineyas', lic: 'CC BY-SA 4.0',
+    page: 'https://commons.wikimedia.org/wiki/File:SF-24_at_the_Japanese_GP.jpg' },
+];
+
+const HP = { i: -1, timer: 0, on: false };
+
+function histShow(i, fromClick){
+  if (!HIST_PHOTOS.length) return;
+  i = ((i % HIST_PHOTOS.length) + HIST_PHOTOS.length) % HIST_PHOTOS.length;
+  HP.i = i;
+  const d = HIST_PHOTOS[i];
+  const img = document.getElementById('hp-img');
+  if (img){
+    const pre = new Image();
+    pre.onload = () => { img.src = d.src; img.alt = d.alt; };
+    pre.src = d.src;
+    if (img.getAttribute('src') === d.src) { img.alt = d.alt; }
+  }
+  const y = document.getElementById('hp-year'), t = document.getElementById('hp-text'), a = document.getElementById('hp-src');
+  if (y) y.textContent = d.y;
+  if (t) t.textContent = d.cap + ' · © ' + d.by + ' / ' + d.lic;
+  if (a) a.href = d.page;
+  document.querySelectorAll('#tl-hist .row').forEach((r) => r.classList.toggle('on', r.dataset.hy === d.k));
+  if (fromClick) histRestart();
+}
+
+function histRestart(){
+  clearInterval(HP.timer);
+  if (!HP.on) return;
+  HP.timer = setInterval(() => histShow(HP.i + 1), 2000);   /* 2 秒一张 */
+}
+
+function histStart(){
+  if (HP.on) return;
+  HP.on = true;
+  if (HP.i < 0) histShow(0);
+  histRestart();
+}
+
+function histStop(){
+  HP.on = false;
+  clearInterval(HP.timer); HP.timer = 0;
+}
+
+function initHistoryPhotos(){
+  const rows = document.querySelectorAll('#tl-hist .row');
+  rows.forEach((r) => {
+    r.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const k = r.dataset.hy;
+      const idx = HIST_PHOTOS.findIndex((d) => d.k === k);
+      if (idx >= 0) histShow(idx, true);
+    });
+  });
+  const fig = document.getElementById('hphoto');
+  if (fig){
+    fig.addEventListener('mouseenter', () => clearInterval(HP.timer));
+    fig.addEventListener('mouseleave', () => histRestart());
+  }
+  const tl = document.getElementById('tl-hist');
+  if (tl){
+    tl.addEventListener('mouseenter', () => clearInterval(HP.timer));
+    tl.addEventListener('mouseleave', () => histRestart());
+  }
+  histShow(0);
+}
+
 function applyChapter(i, force){
   if (i === SITE.ch && !force) return;
   SITE.ch = i;
@@ -8466,6 +8607,7 @@ function applyChapter(i, force){
   if (nx) nx.disabled = i >= SITE.cams.length - 1;
   document.body.classList.toggle('hot-on', i === 5);
   if (i !== 5) hideHotTip();
+  if (i === 6) histStart(); else histStop();
 }
 
 function buildHotspots(){
@@ -8604,6 +8746,7 @@ function toSite(){
 }
 
 function initSite(){
+  initHistoryPhotos();
   document.body.classList.add('mode-site');
   if (APP.controls) APP.controls.enabled = false;
 
