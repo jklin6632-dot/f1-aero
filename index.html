@@ -8540,7 +8540,16 @@ function toWork(){
   APP.controls.enabled = true;
   goHome();
   setView('exterior');
-  if (window.__setGuide) window.__setGuide(true);   /* 第一次进来先看一次键位 */
+  /* 只有第一次进工作台时自动弹操作指南，之后靠侧栏按钮或 ? */
+  try {
+    if (!localStorage.getItem('f1aero.guideSeen')){
+      localStorage.setItem('f1aero.guideSeen', '1');
+      if (window.__setGuide) window.__setGuide(true);
+    }
+  } catch (_) {
+    /* 隐私模式下 localStorage 会抛错：那就每次都弹，别让功能挂掉 */
+    if (window.__setGuide) window.__setGuide(true);
+  }
 }
 
 function toSite(){
