@@ -8324,7 +8324,7 @@ const SITE = {
     { pos: [ 3.30, 2.85, -6.30], tgt:[0, 0.48,  0.00], sh:-0.11, tone:1 },  // 2 气动（文字左，俯视 3/4）
     { pos: [ 1.70, 1.95,  6.95], tgt:[0, 0.52,  0.35], sh: 0.15, tone:1 },  // 3 赛季（文字右，尾视）
     { pos: [-4.90, 1.80,  5.55], tgt:[0, 0.50,  0.10], sh:-0.13, tone:1 },  // 4 车手（文字左，侧后）
-    { pos: [ 2.55, 1.85,  6.60], tgt:[0, 0.52,  0.18], sh: 0.14, tone:1 },  // 5 热区（文字右，后 3/4）
+    { pos: [-7.90, 1.78,  2.40], tgt:[0, 0.50,  0.20], sh: 0.14, tone:1 },  // 5 热区（文字右，左后 3/4：六件都能看见）
     { pos: [ 0.30, 13.60, -9.60], tgt:[0.55, 0.40,  0.00], sh: 0.02, tone:1 },  // 6 队史（俯视全车）
     { pos:[ 4.55, 1.62, -5.05], tgt:[0, 0.44,  0.02], sh:-0.10, tone:1 }   // 7 CTA
   ],
@@ -8522,24 +8522,53 @@ function siteTick(){
   const w = innerWidth, h = innerHeight;
   const pts = [];
   SITE.hot.forEach(o => {
-    const v = o.node.center.clone();
+    /* 锚点别用包围盒中心：大件（侧箱/底板）的中心在车体内部，
+       投影出来会飘到别处。取「中心 → 相机」这条线与包围盒的出射点，
+       也就是朝向我们的那一面表面。 */
+    const c0 = o.node.center, bx = o.node.box;
+    const FIXED = {
+      fw:       [-0.86, 0.42, -2.34],   /* 前翼左端板（相机这一侧） */
+      sidepod:  [-0.76, 0.44,  0.55],   /* 左侧箱外壁，Ray-Ban 那一段 */
+      floor:    [-0.79, 0.16,  0.52],   /* 底板左缘，前后轴之间 */
+      diffuser: [-0.30, 0.22,  1.70],   /* 扩散器入口左缘，后轮之前下方 */
+      rw:       [-0.58, 0.80,  2.52],   /* 后翼左端板 */
+      halo:     [-0.36, 0.90, -0.42],   /* Halo 左侧立柱上方 */
+    };
+    const fx = FIXED[o.id];
+    if (fx){ o.el.style.left = ''; o.el.style.top = ''; }
+    const v = fx ? new THREE.Vector3(fx[0], fx[1], fx[2]) : c0.clone();
+    if (!fx && bx){
+      const d = cam.position.clone().sub(c0);
+      let tExit = Infinity;
+      for (const ax of ['x','y','z']){
+        const dv = d[ax];
+        if (Math.abs(dv) < 1e-6) continue;
+        const t = ((dv > 0 ? bx.max[ax] : bx.min[ax]) - c0[ax]) / dv;
+        if (t > 0 && t < tExit) tExit = t;
+      }
+      if (isFinite(tExit)) v.copy(c0).addScaledVector(d, tExit * 0.97);
+    }
     v.project(cam);
     const vis = v.z < 1 && Math.abs(v.x) < 1.15 && Math.abs(v.y) < 1.15;
     o.el.style.display = vis ? 'grid' : 'none';
     if (!vis) return;
     pts.push({ o, x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h });
   });
-  /* 防打架：屏幕上离得太近的两个点，沿连线各退一半 */
-  const MIN = 58;
+  /* 防打架：屏幕上靠太近时轻微错开，位移封顶 16px，别把点推离自己的部件 */
+  const MIN = 46, CAP = 16;
   for (let i = 0; i < pts.length; i++){
     for (let j = i + 1; j < pts.length; j++){
       const A = pts[i], B = pts[j];
       let dx = B.x - A.x, dy = B.y - A.y, d = Math.hypot(dx, dy);
       if (d >= MIN) continue;
       if (d < 0.001){ dx = 0; dy = -1; d = 1; }
-      const push = (MIN - d) / 2 + 0.5, ux = dx / d, uy = dy / d;
-      A.x -= ux * push; A.y -= uy * push;
-      B.x += ux * push; B.y += uy * push;
+      const push = Math.min((MIN - d) / 2 + 0.5, 6), ux = dx / d, uy = dy / d;
+      const ax = (A.ox === undefined ? (A.ox = A.x) : A.ox), ay = (A.oy === undefined ? (A.oy = A.y) : A.oy);
+      const bx2 = (B.ox === undefined ? (B.ox = B.x) : B.ox), by2 = (B.oy === undefined ? (B.oy = B.y) : B.oy);
+      A.x = Math.max(ax - CAP, Math.min(ax + CAP, A.x - ux * push));
+      A.y = Math.max(ay - CAP, Math.min(ay + CAP, A.y - uy * push));
+      B.x = Math.max(bx2 - CAP, Math.min(bx2 + CAP, B.x + ux * push));
+      B.y = Math.max(by2 - CAP, Math.min(by2 + CAP, B.y + uy * push));
     }
   }
   pts.forEach(q => {
