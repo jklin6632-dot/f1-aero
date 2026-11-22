@@ -8685,11 +8685,17 @@ function openRace(i, quiet){
   const fitImg = () => {
     img.style.objectPosition = (img.naturalHeight > img.naturalWidth * 1.12) ? '50% 14%' : '50% 50%';
   };
-  img.onload = () => { clearPh(); fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); img.style.display = ''; fitImg(); };
-  /* 慢网下先给个「载入中」，否则第一次点开是一块黑框（图还没下完） */
+  let loadTimer = 0;
+  img.onload = () => { clearTimeout(loadTimer); clearPh(); fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); img.style.display = ''; fitImg(); };
+  /* 慢网下先给个「载入中」，否则第一次点开是一块黑框（图还没下完）。
+     延迟 320ms 才显示，缓存命中时不闪一下 */
   const loading = () => {
-    phBox().innerHTML = '<em>' + (en ? 'LOADING' : '载入中') + '</em><span>' +
-      (en ? 'Fetching the photo…' : '正在载入照片…') + '</span>';
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(() => {
+      if (img.complete && img.naturalWidth > 0) return;
+      phBox().innerHTML = '<em>' + (en ? 'LOADING' : '载入中') + '</em><span>' +
+        (en ? 'Fetching the photo…' : '正在载入照片…') + '</span>';
+    }, 320);
   };
   fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); clearPh();
   if (!o.ph){
