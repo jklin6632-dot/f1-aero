@@ -1237,8 +1237,34 @@ body.ui-hidden::after{ opacity:0; }
   .drv article:hover{ transform:translateY(-2px); }
   .drv article:focus-visible{ outline:2px solid rgba(225,6,0,.75); outline-offset:3px; }
   .drv-hint{ margin:14px 0 0; font:400 11.5px/1.6 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.44); }
-  .ch-hint{ margin:14px 0 0; font:400 11.5px/1.6 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.44); }
-  .ch-hint b{ color:rgba(225,6,0,.92); font-weight:600; }
+  .ch-hint{
+    display:inline-flex; align-items:center; gap:9px; margin:16px 0 0; padding:8px 14px 8px 12px;
+    font:400 11.5px/1.55 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.62);
+    border:1px solid rgba(255,255,255,.20); border-radius:999px; background:rgba(255,255,255,.045);
+    cursor:default;
+  }
+  .ch-hint b{ color:rgba(255,255,255,.95); font-weight:600; }
+  .ch-hint .dot{
+    width:7px; height:7px; border-radius:999px; background:#e10600; flex:0 0 auto;
+    box-shadow:0 0 0 3px rgba(225,6,0,.16); animation:hintpulse 2.4s ease-in-out infinite;
+  }
+  .ch-hint.live{ cursor:pointer; }
+  .ch-hint.live:hover{ border-color:rgba(225,6,0,.55); background:rgba(225,6,0,.08); }
+  @keyframes hintpulse{ 0%,100%{ transform:scale(.86); opacity:.55 } 50%{ transform:scale(1.28); opacity:1 } }
+  @keyframes winflash{ 0%,100%{ box-shadow:inset 0 0 0 1px rgba(255,255,255,.06) } 50%{ box-shadow:inset 0 0 0 1px rgba(225,6,0,.85) } }
+  .wins.flash .win{ animation:winflash .6s ease 3; }
+
+  /* 可点卡片：右上角一颗呼吸的红点，和部件热点是同一套语言 */
+  #wins .win, #ch-drivers .drv article{ position:relative; }
+  #wins .win::before, #ch-drivers .drv article::before{
+    content:""; position:absolute; right:9px; top:9px; width:6px; height:6px; border-radius:999px;
+    background:#e10600; box-shadow:0 0 0 3px rgba(225,6,0,.15);
+    animation:hintpulse 2.4s ease-in-out infinite; pointer-events:none;
+  }
+  #wins .win:hover::before, #ch-drivers .drv article:hover::before{ animation:none; opacity:1; }
+  @media (prefers-reduced-motion: reduce){
+    .ch-hint .dot, #wins .win::before, #ch-drivers .drv article::before{ animation:none; opacity:.9; }
+  }
 
   /* 可点卡片的角标：鼠标移上去才出现，触摸屏常显但更淡（赛季卡太窄，靠悬停底色即可） */
   #ch-drivers .drv article{ position:relative; }
@@ -1387,7 +1413,7 @@ body.ui-hidden::after{ opacity:0; }
       <div class="ch-in" id="tspec" role="button" tabindex="0" aria-label="打开 2025 规则与 SF-25 设计理念">
         <div class="eyebrow" data-t="spec-k">Technical</div>
         <h2 data-t="spec-h">SF-25 的技术单</h2>
-        <p class="specs-hint" data-t="spec-hint"><b>点这块</b>，看 2025 规则与 SF-25 的设计理念</p>
+        <p class="ch-hint live" id="hint-spec"><i class="dot"></i><span data-t="spec-hint"><b>点这块</b>，看 2025 规则与 SF-25 的设计理念</span></p>
         <p data-t="spec-p">2022 年地面效应新规之后的第四代车。碳纤维蜂巢单体壳加 Halo，8 速纵置变速箱；这一年前悬从推杆改成拉杆、后悬仍是拉杆。下面几项是官方口径的硬指标。</p>
         <div class="specs2">
           <div><u data-t="sp1">动力单元</u><b>066/12 · 1600 cc V6 Turbo</b></div>
@@ -1415,7 +1441,7 @@ body.ui-hidden::after{ opacity:0; }
         <div class="eyebrow" data-t="sea-k">2025 Season</div>
         <h2 data-t="sea-h">七次登台，398 分</h2>
         <p data-t="sea-p">车队年终第四，落后迈凯伦 435 分。全年没有胜利，7 次登台全部来自 Leclerc——沙特、摩纳哥、西班牙、奥地利、比利时、美国、墨西哥城。398 分里，Hamilton 在 44 号车上贡献 156 分。</p>
-        <p class="ch-hint" data-t="sea-hint"><b>点赛道卡</b>，看那站的战报</p>
+        <p class="ch-hint live" id="hint-season"><i class="dot"></i><span data-t="sea-hint"><b>点赛道卡</b>，看那站的战报</span></p>
         <div class="wins" id="wins"></div>
         <div class="pwrow">
           <figure class="pw"><img src="img/s1.jpg" alt="2025 新加坡大奖赛 Leclerc" loading="lazy"><figcaption>新加坡 · Leclerc · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_Ferrari_-_Charles_Leclerc_-_FP2.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
@@ -1479,7 +1505,7 @@ body.ui-hidden::after{ opacity:0; }
       <div class="ch-in" style="max-width:880px">
         <div class="eyebrow" data-t="drv-k">Drivers</div>
         <h2 data-t="drv-h">16 号和 44 号</h2>
-        <p class="drv-hint" data-t="drv-hint">点车手卡，看生涯时间轴</p>
+        <p class="ch-hint live" id="hint-drv"><i class="dot"></i><span data-t="drv-hint"><b>点车手卡</b>，看生涯时间轴</span></p>
         <div class="drv">
           <article class="drv-card" data-drv="0" role="button" tabindex="0" aria-label="Charles Leclerc 生涯时间轴">
             <div class="num">16</div>
@@ -1506,7 +1532,7 @@ body.ui-hidden::after{ opacity:0; }
         <div class="eyebrow" data-t="hot-k">Anatomy</div>
         <h2 data-t="hot-h">六处关键结构</h2>
         <p data-t="hot-p">车身上六个红点：前翼、侧箱进气口、底板、扩散器、尾翼、Halo。鼠标移到点上就出这块部件的名称、尺寸和气动作用。</p>
-        <p class="ch-hint" data-t="hot-hint"><b>鼠标移到红点</b>上，看这块部件的名称、尺寸和气动作用</p>
+        <p class="ch-hint"><i class="dot"></i><span data-t="hot-hint"><b>鼠标移到红点</b>上，看这块部件的名称、尺寸和气动作用</span></p>
       </div>
     </section>
 
@@ -1514,7 +1540,7 @@ body.ui-hidden::after{ opacity:0; }
       <div class="ch-in" style="max-width:720px">
         <div class="eyebrow" data-t="his-k">History</div>
         <h2 data-t="his-h">从 1950 到 2025</h2>
-        <p class="ch-hint" data-t="his-hint"><b>点年份</b>看那年的照片，每 2 秒自动播下一张</p>
+        <p class="ch-hint"><i class="dot"></i><span data-t="his-hint"><b>点年份</b>看那年的照片，每 2 秒自动播下一张</span></p>
         <div class="tl" id="tl-hist">
           <div class="row" data-hy="h1950"><div class="yr">1950</div><div class="tx" data-t="h1">法拉利以厂商车队身份参加首届 F1 世界锦标赛，是至今唯一全勤的车队。</div></div>
           <div class="row" data-hy="h1961"><div class="yr">1961</div><div class="tx" data-t="h2">156 “Sharknose” 拿下队史首个车手总冠军，V6 时代开启。</div></div>
@@ -9167,6 +9193,14 @@ function closeRace(){
 }
 
 document.addEventListener('click', (e) => {
+  if (e.target.closest('#hint-spec')){ openTech(); return; }
+  if (e.target.closest('#hint-drv')){ openDriver(0); return; }
+  if (e.target.closest('#hint-season')){
+    const g = document.getElementById('wins');
+    g.classList.remove('flash'); void g.offsetWidth; g.classList.add('flash');
+    setTimeout(() => g.classList.remove('flash'), 1800);
+    return;
+  }
   const w = e.target.closest('#wins .win');
   if (w){ openRace(+w.dataset.i); return; }
   if (e.target.id === 'rb-back' || e.target.id === 'rb-close') closeRace();
