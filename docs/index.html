@@ -1120,6 +1120,7 @@ body.ui-hidden::after{ opacity:0; }
   }
   #racebox .rb-card{
     position:relative; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);
+    grid-template-rows:minmax(0,1fr);
     width:min(920px,92vw); max-height:84vh; overflow:hidden;
     background:#0f1013; border:1px solid rgba(255,255,255,.10);
     transform:translateY(14px) scale(.985); transition:transform .32s cubic-bezier(.2,.7,.2,1);
@@ -1139,7 +1140,7 @@ body.ui-hidden::after{ opacity:0; }
     background:linear-gradient(to top, rgba(6,7,10,.86), rgba(6,7,10,0));
   }
   #racebox .rb-ph figcaption a{ color:rgba(255,255,255,.86); text-decoration:underline; text-underline-offset:2px; }
-  #racebox .rb-body{ padding:30px 30px 26px; overflow:auto; }
+  #racebox .rb-body{ padding:30px 30px 26px; overflow:auto; min-height:0; overscroll-behavior:contain; }
   #racebox .rb-k{
     font:600 9px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--accent);
   }
@@ -1182,13 +1183,14 @@ body.ui-hidden::after{ opacity:0; }
   #drvbox .db-back{ position:absolute; inset:0; cursor:pointer; }
   #drvbox .db-card{
     position:relative; display:grid; grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr);
+    grid-template-rows:minmax(0,1fr);
     width:min(980px,94vw); max-height:86vh; overflow:hidden;
     background:#0f1013; border:1px solid rgba(255,255,255,.10);
     transform:translateY(16px) scale(.985); transition:transform .32s cubic-bezier(.2,.7,.2,1);
   }
   #drvbox.on .db-card{ transform:none; }
   #drvbox .db-side{
-    position:relative; display:flex; flex-direction:column; padding:30px 26px 24px;
+    position:relative; display:flex; flex-direction:column; min-height:0; overflow:auto; padding:30px 26px 24px;
     background:linear-gradient(158deg, rgba(225,6,0,.16), rgba(18,19,23,0) 58%), #121317;
     border-right:1px solid rgba(255,255,255,.08);
   }
@@ -1200,7 +1202,7 @@ body.ui-hidden::after{ opacity:0; }
   #drvbox .db-st div{ background:#15161a; padding:10px 10px 11px; }
   #drvbox .db-st u{ display:block; font:600 8.5px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.42); text-decoration:none; }
   #drvbox .db-st b{ display:block; margin-top:6px; font:700 16px/1 var(--display); color:#f5f3ef; letter-spacing:-.01em; }
-  #drvbox .db-main{ overflow:auto; padding:28px 30px 30px; }
+  #drvbox .db-main{ overflow:auto; min-height:0; overscroll-behavior:contain; padding:28px 30px 30px; }
   #drvbox .db-k{ font:600 9px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
   #drvbox .db-tl{ margin-top:20px; }
   #drvbox .tl-i{ position:relative; padding-left:86px; padding-bottom:24px; }
@@ -1217,6 +1219,9 @@ body.ui-hidden::after{ opacity:0; }
   #drvbox .tl-ph img{ position:relative; z-index:1; display:block; width:100%; height:186px; object-fit:cover; object-position:50% 26%; }
   #drvbox .tl-ph figcaption{ position:absolute; inset:auto 0 0 0; z-index:2; padding:9px 11px; font:400 9.5px/1.45 var(--sans); color:rgba(255,255,255,.7); background:linear-gradient(to top, rgba(6,7,10,.88), rgba(6,7,10,0)); }
   #drvbox .tl-ph figcaption a{ color:rgba(255,255,255,.84); text-decoration:underline; text-underline-offset:2px; }
+  #drvbox .db-main::-webkit-scrollbar, #racebox .rb-body::-webkit-scrollbar{ width:8px; height:8px; }
+  #drvbox .db-main::-webkit-scrollbar-thumb, #racebox .rb-body::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.18); border-radius:99px; }
+  #drvbox .db-main::-webkit-scrollbar-track, #racebox .rb-body::-webkit-scrollbar-track{ background:transparent; }
   #drvbox .db-x{ position:absolute; right:12px; top:12px; z-index:4; width:32px; height:32px; display:flex; align-items:center; justify-content:center; background:rgba(10,11,14,.6); border:1px solid rgba(255,255,255,.14); border-radius:999px; color:#f5f3ef; font-size:15px; line-height:1; cursor:pointer; }
   #drvbox .db-x:hover{ background:rgba(225,6,0,.85); border-color:transparent; }
   .drv article{ cursor:pointer; transition:border-color .25s ease, transform .25s ease; }
@@ -1224,7 +1229,7 @@ body.ui-hidden::after{ opacity:0; }
   .drv article:focus-visible{ outline:2px solid rgba(225,6,0,.75); outline-offset:3px; }
   .drv-hint{ margin:14px 0 0; font:400 11.5px/1.6 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.44); }
   @media (max-width:900px){
-    #drvbox .db-card{ grid-template-columns:1fr; max-height:90vh; }
+    #drvbox .db-card{ grid-template-columns:1fr; grid-template-rows:auto minmax(0,1fr); max-height:90vh; }
     #drvbox .db-side{ border-right:none; border-bottom:1px solid rgba(255,255,255,.08); padding:26px 22px 20px; }
     #drvbox .db-main{ padding:22px 22px 26px; }
     #drvbox .tl-i{ padding-left:72px; }
