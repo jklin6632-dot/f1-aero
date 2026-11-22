@@ -9337,6 +9337,7 @@ function histStart(){
   HP.on = true;
   if (HP.i < 0) histShow(0);
   histRestart();
+  hpBarStart();      /* 进来时第一张也要有进度条（HP.i 已经被初始化成 0，不会重走 histShow） */
 }
 
 function histStop(){
