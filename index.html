@@ -8595,7 +8595,8 @@ const RACES = [
   { r:5,  code:'SAU', zh:'沙特',     en:'Saudi Arabia', gp:'沙特阿拉伯大奖赛', gpE:'Saudi Arabian Grand Prix',
     date:'2025-04-20', circ:'吉达滨海赛道', circE:'Jeddah Corniche Circuit',
     grid:4, pos:3, pts:15, hg:7, hp:7, hpts:6, nth:1,
-    ph:'', by:'', lic:'', page:'',
+    ph:'img/s1.jpg', by:'Liauzh', lic:'CC BY-SA 4.0',
+page:'https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_Ferrari_-_Charles_Leclerc_-_FP2.jpg', demo:true,
     note:'赛季第一次登台，也是全年唯一一次在吉达上台', noteE:'First podium of the season, and his only one in Jeddah' },
   { r:8,  code:'MON', zh:'摩纳哥',   en:'Monaco',       gp:'摩纳哥大奖赛',     gpE:'Monaco Grand Prix',
     date:'2025-05-25', circ:'摩纳哥赛道', circE:'Circuit de Monaco',
@@ -8605,7 +8606,8 @@ const RACES = [
   { r:9,  code:'ESP', zh:'西班牙',   en:'Spain',        gp:'西班牙大奖赛',     gpE:'Spanish Grand Prix',
     date:'2025-06-01', circ:'巴塞罗那-加泰罗尼亚赛道', circE:'Circuit de Barcelona-Catalunya',
     grid:7, pos:3, pts:15, hg:5, hp:6, hpts:8, nth:3,
-    ph:'', by:'', lic:'', page:'',
+    ph:'img/h2025.jpg', by:'Liauzh', lic:'CC BY-SA 4.0',
+page:'https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Charles_Leclerc_-_FP1.jpg', demo:true,
     note:'第 7 位发车，一路追到 P3', noteE:'Started seventh, came through to P3' },
   { r:11, code:'AUT', zh:'奥地利',   en:'Austria',      gp:'奥地利大奖赛',     gpE:'Austrian Grand Prix',
     date:'2025-06-29', circ:'红牛环', circE:'Red Bull Ring',
@@ -8620,12 +8622,14 @@ const RACES = [
   { r:19, code:'USA', zh:'美国',     en:'United States',gp:'美国大奖赛',       gpE:'United States Grand Prix',
     date:'2025-10-19', circ:'美洲赛道', circE:'Circuit of the Americas',
     grid:3, pos:3, pts:15, hg:5, hp:4, hpts:12, nth:6,
-    ph:'', by:'', lic:'', page:'',
+    ph:'img/p16.jpg', by:'Lukas Raich', lic:'CC BY-SA 4.0',
+page:'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2025_Nr._16_Leclerc.jpg', demo:true,
     note:'奥斯汀，发车位与完赛位都是 P3', noteE:'Austin: started and finished P3' },
   { r:20, code:'MEX', zh:'墨西哥城', en:'Mexico City',  gp:'墨西哥城大奖赛',   gpE:'Mexico City Grand Prix',
     date:'2025-10-26', circ:'罗德里格斯兄弟赛道', circE:'Autódromo Hermanos Rodríguez',
     grid:2, pos:2, pts:18, hg:3, hp:8, hpts:4, nth:7,
-    ph:'', by:'', lic:'', page:'',
+    ph:'img/s2.jpg', by:'Liauzh', lic:'CC BY-SA 4.0',
+page:'https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_Ferrari_-_Lewis_Hamilton_-_FP2.jpg', demo:true,
     note:'赛季最后一次登台，也是第 7 次', noteE:'Seventh and final podium of the season' },
 ];
 
@@ -8675,7 +8679,7 @@ function openRace(i, quiet){
   img.onload = () => { clearPh(); fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); img.style.display = ''; };
   fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); clearPh();
   if (!o.ph){
-    img.alt = (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp');
+    img.alt = (o.demo ? (en ? 'Reference photo of the 2025 SF-25' : '2025 赛季 SF-25 示意照') : (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp'));
     noPhoto();
   } else {
     img.style.display = '';
@@ -8684,7 +8688,8 @@ function openRace(i, quiet){
   }
   /* 有署名才写图注；无图站由 noPhoto() 自己写「该站暂无实拍图」，别在这里覆盖成「摄影：—」 */
   if (o.by && o.ph){
-    cap.innerHTML = (en ? 'Photo: ' : '摄影：') + o.by + ' / <a href="' + o.page +
+    const pre = o.demo ? (en ? 'Reference shot · not from this round · ' : '示意图（非本站实拍）· ') : '';
+    cap.innerHTML = pre + (en ? 'Photo: ' : '摄影：') + o.by + ' / <a href="' + o.page +
       '" target="_blank" rel="noopener">' + o.lic + '</a>';
   }
   document.getElementById('rb-k').textContent =
