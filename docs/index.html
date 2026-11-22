@@ -8633,8 +8633,8 @@ page:'https://commons.wikimedia.org/wiki/File:2024-08-25_Motorsport,_Formel_1,_G
   { r:20, code:'MEX', zh:'墨西哥城', en:'Mexico City',  gp:'墨西哥城大奖赛',   gpE:'Mexico City Grand Prix',
     date:'2025-10-26', circ:'罗德里格斯兄弟赛道', circE:'Autódromo Hermanos Rodríguez',
     grid:2, pos:2, pts:18, hg:3, hp:8, hpts:4, nth:7,
-    ph:'img/pod_a.jpg', by:'Lukas Raich', lic:'CC BY-SA 4.0', cap:'2022 奥地利站领奖台', capE:'2022 Austrian GP podium',
-page:'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2022_Podium_Race_Winner_Leclerc.jpg', demo:true,
+    ph:'img/ham25.jpg', by:'Liauzh', lic:'CC BY-SA 4.0', cap:'铃鹿 2025 车迷区', capE:'Suzuka 2025 fan zone',
+page:'https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_Fanzone_Stage_(cropped).jpg', demo:true,
     note:'赛季最后一次登台，也是第 7 次', noteE:'Seventh and final podium of the season' },
 ];
 
@@ -8705,7 +8705,7 @@ function openRace(i, quiet){
     img.style.display = '';
     img.src = o.ph;
     img.alt = o.demo
-      ? (en ? 'Podium reference photo of Charles Leclerc' : 'Leclerc 领奖台示意照')
+      ? (en ? ('Reference photo · ' + (o.capE || '')) : ('示意图：' + (o.cap || '领奖台照')))
       : (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp');
     if (img.complete && img.naturalWidth > 0){ fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); fitImg(); }
     else { loading(); }
