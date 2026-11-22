@@ -6615,11 +6615,11 @@ const SW_SUB_SKIP = {
 const SW_SUB_GROUP = {
   spoke: [[15,19],[23,24,25],[28,29,30],[45,46,47,48]],
   /* 轮辋：4/6/7/11/12/16/25 合并成一颗，编号取 04 */
-  rim: [[4,6,7,11,12,16,25]],
+  rim: [[4,6,7,11,12,16,25],[18,22]],
 };
 const SW_SUB_PREFIX = { spoke: '按钮', rim: '轮辋' };
 const SW_RIM_TO45 = [3, 13];
-const SW_RIM_TO_PANEL = [5, 8, 9, 10, 14, 18, 19, 20, 21, 22, 23, 24];
+const SW_RIM_TO_PANEL = [5, 8, 9, 10, 14, 18, 19, 20, 21, 23, 24];   /* 22 不单列：并入 18 的「方向盘接口（XW）」 */
 /* 提升到主列表的子件：不再出现在「面板」展开列表里，而是和 12 个部件并列成一张卡 */
 const SW_SUB_PROMOTE = { spoke: [45] };
 
@@ -6649,11 +6649,11 @@ const SW_NAME = {
     9:  ['步进开关 -2/+3', '-2/+3', '步进开关：左右各一档，快速微调选定参数'],
     10: ['SAT 旋钮', '1–12', '左下 SAT 旋钮：1–12 档，黄→橙刻度，按赛道预设分配（差速器、能量部署、制动平衡）'],
     14: ['步进开关 1/3', '1/3', '步进开关：三档位版本，常用于制动平衡或差速器'],
-    18: ['方向盘接口（XW）', 'XW · INTERS', '12 针圆形插头：方向盘与车载线束的连接口，换盘时脱开；旁边 INTERS 是车队通讯接口'],
+    18: ['方向盘接口（XW）', 'XW · INTERS', '12 针圆形插头：方向盘与车载线束的连接口，换盘时脱开。模型里它被拆成前后两段（插头端 + 后端护套），实物是同一个部件；旁边 INTERS 是车队通讯接口'],
     19: ['确认键', 'OK', '确认键：LCD 菜单里的「确定」'],
     20: ['握把内侧按钮', '——', '握把内侧指尖位的小按键：左右成对，常分配给饮水、闪灯（flash）或无线电切换'],
     21: ['握把内侧按钮', '——', '与左侧那颗对称的同款小按键：指尖直接触及，具体分配按车手习惯'],
-    22: ['小按钮', '——', '小按钮：握把上的微动键，用于快捷确认或临时覆盖某个模式'],
+    22: ['方向盘接口（XW）', 'XW · INTERS', '同一接口的后端：12 针插头后面的护套与释放结构。模型把它和插头端拆成了两段，实物是同一个部件，拆装方向盘时先脱这里'],
     23: ['PHASE 旋钮', 'T1 · T2 · S', '中下 PHASE 旋钮：三档 T1 / T2 / S 加 1–12 细档，调能量回收的相位与强度'],
     24: ['ENG 旋钮', '1–12', '右下 ENG 旋钮：1–12 档，蓝→绿渐变，发动机图（喷油、点火、增压）的细分档位'],
   },
@@ -6733,8 +6733,22 @@ function swCrossLists(){
     e45.desc = '合并 ' + e45.blocks + ' 块 · 约 ' + Math.round(e45.maxSide * 1000) + ' mm';
   }
   SW_RIM_TO_PANEL.forEach((n) => {
-    const x = rimAll[n - 1];
+    let x = rimAll[n - 1];
     if (!x) return;
+    /* 同一实物的多段（如 XW 插头端 + 后端护套）在这里并成一条 */
+    const grp = (SW_SUB_GROUP.rim || []).find((g) => g.indexOf(n) >= 0) || [n];
+    const members = grp.map((m) => rimAll[m - 1]).filter(Boolean);
+    if (members.length > 1){
+      const box = new THREE.Box3();
+      members.forEach((m) => box.union(m.box));
+      const sz = box.getSize(new THREE.Vector3());
+      x = Object.assign({}, x, {
+        objs: [].concat.apply([], members.map((m) => m.objs)),
+        tris: members.reduce((a, m) => a + m.tris, 0),
+        box, size: sz, c: box.getCenter(new THREE.Vector3()),
+        maxSide: Math.max(sz.x, sz.y, sz.z), blocks: members.length,
+      });
+    }
     const nn = String(n).padStart(2, '0');
     cs.spoke.vis.push(Object.assign({}, x, {
       key: 'spokeR' + nn,
