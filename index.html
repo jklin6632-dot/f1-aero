@@ -1372,7 +1372,7 @@ body.ui-hidden::after{ opacity:0; }
         <h2 data-t="spec-h">SF-25 的技术单</h2>
         <p class="specs-hint" data-t="spec-hint"><b>点技术单</b>，看 2025 规则与 SF-25 的设计理念</p>
         <p data-t="spec-p">2022 年地面效应新规之后的第四代车。碳纤维蜂巢单体壳加 Halo，8 速纵置变速箱；这一年前悬从推杆改成拉杆、后悬仍是拉杆。下面几项是官方口径的硬指标。</p>
-        <div class="specs2" id="specs" role="button" tabindex="0" aria-label="打开 2025 规则与 SF-25 设计理念">
+        <div class="specs2" id="tspec" role="button" tabindex="0" aria-label="打开 2025 规则与 SF-25 设计理念">
           <div><u data-t="sp1">动力单元</u><b>066/12 · 1600 cc V6 Turbo</b></div>
           <div><u data-t="sp2">最高转速</u><b>15,000 rpm</b></div>
           <div><u data-t="sp3">变速箱</u><b data-t="sp3v">8 速纵置 + 倒挡</b></div>
@@ -9148,7 +9148,7 @@ document.addEventListener('click', (e) => {
   const d = e.target.closest('#ch-drivers .drv article');
   if (d){ openDriver(+d.dataset.drv); return; }
   if (e.target.id === 'db-back' || e.target.id === 'db-close') closeDriver();
-  const sp = e.target.closest('#specs');
+  const sp = e.target.closest('#tspec');
   if (sp){ openTech(); return; }
   if (e.target.id === 'tb-back' || e.target.id === 'tb-close') closeTech();
 });
@@ -9163,7 +9163,7 @@ window.addEventListener('keydown', (e) => {
   }
   if (e.key === 'Escape' && RB.idx >= 0){ e.stopPropagation(); closeRace(); }
   if (e.key === 'Escape' && DB.idx >= 0){ e.stopPropagation(); closeDriver(); }
-  if ((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.id === 'specs'){
+  if ((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.id === 'tspec'){
     e.preventDefault(); openTech();
   }
   if (e.key === 'Escape' && TB.on){ e.stopPropagation(); closeTech(); }
@@ -9498,7 +9498,7 @@ function initSite(){
 
   /* 点空白处直接翻到下一页 —— 但按钮/圆点/热区/信息卡这些交互元素要放过 */
   let lastNav = 0;
-  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide,#wins,#racebox,#drvbox,#ch-drivers .drv article,#specs,#techbox';
+  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide,#wins,#racebox,#drvbox,#ch-drivers .drv article,#tspec,#techbox';
   document.addEventListener('click', (e) => {
     if (!SITE.on) return;
     if (!document.body.classList.contains('mode-site')) return;
