@@ -717,10 +717,12 @@ body.ui-hidden::after{ opacity:0; }
   .specs2 div{ background:var(--canvas); padding:14px 16px; }
   .specs2 u{ display:block; font:500 9.5px/1 var(--mono); letter-spacing:.12em; color:var(--faint); text-transform:uppercase; text-decoration:none; }
   .specs2 b{ display:block; margin-top:6px; font:600 15px/1.3 var(--sans); color:var(--ink); }
-  .specs2{ cursor:pointer; }
-  .specs2 div{ transition:background .22s ease; }
-  .specs2:hover div{ background:rgba(225,6,0,.055); }
-  .specs2:focus-visible{ outline:2px solid rgba(225,6,0,.75); outline-offset:3px; }
+  #tspec{ cursor:pointer; outline:none; }
+  .specs2 div{ transition:background .22s ease, border-color .22s ease; }
+  #tspec:hover .specs2{ border-color:rgba(225,6,0,.45); }
+  #tspec:hover .specs2 div{ background:rgba(225,6,0,.055); }
+  #tspec:hover .specs-hint b{ color:#ff2d20; }
+  #tspec:focus-visible{ outline:2px solid rgba(225,6,0,.75); outline-offset:6px; border-radius:2px; }
   .specs-hint{ margin:14px 0 0; font:400 11.5px/1.6 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.44); }
   .specs-hint b{ color:rgba(225,6,0,.92); font-weight:600; }
 
@@ -1367,12 +1369,12 @@ body.ui-hidden::after{ opacity:0; }
     </section>
 
     <section class="ch right" id="ch-spec">
-      <div class="ch-in">
+      <div class="ch-in" id="tspec" role="button" tabindex="0" aria-label="打开 2025 规则与 SF-25 设计理念">
         <div class="eyebrow" data-t="spec-k">Technical</div>
         <h2 data-t="spec-h">SF-25 的技术单</h2>
-        <p class="specs-hint" data-t="spec-hint"><b>点技术单</b>，看 2025 规则与 SF-25 的设计理念</p>
+        <p class="specs-hint" data-t="spec-hint"><b>点这块</b>，看 2025 规则与 SF-25 的设计理念</p>
         <p data-t="spec-p">2022 年地面效应新规之后的第四代车。碳纤维蜂巢单体壳加 Halo，8 速纵置变速箱；这一年前悬从推杆改成拉杆、后悬仍是拉杆。下面几项是官方口径的硬指标。</p>
-        <div class="specs2" id="tspec" role="button" tabindex="0" aria-label="打开 2025 规则与 SF-25 设计理念">
+        <div class="specs2">
           <div><u data-t="sp1">动力单元</u><b>066/12 · 1600 cc V6 Turbo</b></div>
           <div><u data-t="sp2">最高转速</u><b>15,000 rpm</b></div>
           <div><u data-t="sp3">变速箱</u><b data-t="sp3v">8 速纵置 + 倒挡</b></div>
@@ -8695,7 +8697,7 @@ const EN = {
   'drv-k':'Drivers', 'drv-h':'Cars 16 and 44',
   'drv-hint':'Tap a driver card for the career timeline',
   'db-k':'Career timeline',
-  'spec-hint':'<b>Tap the spec sheet</b> for the 2025 rules and the SF-25 design story',
+  'spec-hint':'<b>Tap this card</b> for the 2025 rules and the SF-25 design story',
   'tb-k':'Regulations · Design',
   'tb-h':'Beyond the spec sheet',
   'tb-p':'2025 closed out the current ground-effect rules with only small tweaks — the big reset comes in 2026. That is why the SF-25 is an evolution of the SF-24 rather than a clean-sheet car.',
