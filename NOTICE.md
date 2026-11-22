@@ -54,7 +54,8 @@
 | `pod_a.jpg` | Charles Leclerc 举奖杯，2022 奥地利站领奖台 | Lukas Raich | CC BY-SA 4.0 |
 | `pod_b.jpg` | 领奖台喷香槟，2024 荷兰站（Leclerc 在左） | Steffen Prößdorf | CC BY-SA 4.0 |
 | `pod_c.jpg` | Charles Leclerc 正面，2024 荷兰站领奖台 | Steffen Prößdorf | CC BY-SA 4.0 |
-| `ham25.jpg` | Lewis Hamilton，2025 日本站车迷区（车手卡 + 墨西哥城站卡片） | Liauzh | CC BY-SA 4.0 |
+| `ham25.jpg` | Lewis Hamilton，2025 日本站车迷区（车手卡） | Liauzh | CC BY-SA 4.0 |
+| `lec25.jpg` | Charles Leclerc，2025 艾米利亚-罗马涅站（墨西哥城站卡片） | Buczkowiak94 | CC BY 4.0 |
 
 `pod_a/pod_b/pod_c` 是 **2022 / 2024 年的领奖台照**，`ham25.jpg` 是 2025 日本站车迷区照，
 都不是 2025 赛季那 7 次登台的现场图（Commons 上没有其中 4 站的现场照）——页面里凡是用到
