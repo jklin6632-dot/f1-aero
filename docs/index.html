@@ -717,6 +717,12 @@ body.ui-hidden::after{ opacity:0; }
   .specs2 div{ background:var(--canvas); padding:14px 16px; }
   .specs2 u{ display:block; font:500 9.5px/1 var(--mono); letter-spacing:.12em; color:var(--faint); text-transform:uppercase; text-decoration:none; }
   .specs2 b{ display:block; margin-top:6px; font:600 15px/1.3 var(--sans); color:var(--ink); }
+  .specs2{ cursor:pointer; }
+  .specs2 div{ transition:background .22s ease; }
+  .specs2:hover div{ background:rgba(225,6,0,.055); }
+  .specs2:focus-visible{ outline:2px solid rgba(225,6,0,.75); outline-offset:3px; }
+  .specs-hint{ margin:14px 0 0; font:400 11.5px/1.6 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.44); }
+  .specs-hint b{ color:rgba(225,6,0,.92); font-weight:600; }
 
   /* 赛季 */
   .wins{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:26px; }
@@ -1237,6 +1243,57 @@ body.ui-hidden::after{ opacity:0; }
     #drvbox .tl-y::after{ left:50px; }
     #drvbox .tl-ph img{ height:150px; }
   }
+
+  /* ---------- 2025 规则 / SF-25 设计理念弹层 ---------- */
+  #techbox{ position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity .28s ease; }
+  #techbox.on{ opacity:1; pointer-events:auto; }
+  #techbox .tb-back{ position:absolute; inset:0; background:rgba(6,7,10,.66); backdrop-filter:blur(7px) saturate(.9); -webkit-backdrop-filter:blur(7px) saturate(.9); }
+  #techbox .tb-card{
+    position:relative; display:grid; grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
+    grid-template-rows:minmax(0,1fr);
+    width:min(980px,94vw); max-height:86vh; overflow:hidden;
+    background:#0f1013; border:1px solid rgba(255,255,255,.10);
+    transform:translateY(14px) scale(.985); transition:transform .32s cubic-bezier(.2,.7,.2,1);
+  }
+  #techbox.on .tb-card{ transform:none; }
+  #techbox .tb-x{ position:absolute; right:12px; top:12px; z-index:4; width:32px; height:32px; display:flex; align-items:center; justify-content:center; background:rgba(10,11,14,.6); border:1px solid rgba(255,255,255,.14); border-radius:999px; color:#f5f3ef; font-size:15px; line-height:1; cursor:pointer; }
+  #techbox .tb-x:hover{ background:rgba(225,6,0,.85); border-color:transparent; }
+  #techbox .tb-side{ padding:34px 30px 26px; min-height:0; overflow:auto; background:linear-gradient(160deg, rgba(225,6,0,.10), rgba(15,16,19,0) 62%); border-right:1px solid rgba(255,255,255,.08); }
+  #techbox .tb-k{ font:600 9.5px/1 var(--mono); letter-spacing:.16em; color:rgba(225,6,0,.92); text-transform:uppercase; }
+  #techbox .tb-h{ margin:14px 0 0; font:700 26px/1.2 var(--display); letter-spacing:-.02em; color:#f5f3ef; }
+  #techbox .tb-p{ margin:14px 0 0; font:400 12.5px/1.75 var(--sans); color:rgba(255,255,255,.62); }
+  #techbox .tb-st{ margin-top:22px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.10); }
+  #techbox .tb-st div{ background:#0f1013; padding:12px 13px; }
+  #techbox .tb-st u{ display:block; font:500 9px/1.2 var(--mono); letter-spacing:.1em; color:rgba(255,255,255,.40); text-transform:uppercase; text-decoration:none; }
+  #techbox .tb-st b{ display:block; margin-top:6px; font:600 18px/1.1 var(--display); letter-spacing:-.01em; color:#f5f3ef; }
+  #techbox .tb-st i{ display:block; margin-top:4px; font:400 9.5px/1.4 var(--sans); font-style:normal; color:rgba(255,255,255,.42); }
+  #techbox .tb-main{ padding:34px 34px 40px; min-height:0; overflow:auto; overscroll-behavior:contain; }
+  #techbox .tb-main::-webkit-scrollbar{ width:8px; }
+  #techbox .tb-main::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.18); border-radius:99px; }
+  #techbox .tb-main::-webkit-scrollbar-track{ background:transparent; }
+  #techbox .tb-sec + .tb-sec{ margin-top:34px; padding-top:26px; border-top:1px solid rgba(255,255,255,.08); }
+  #techbox .tb-sec h4{ margin:0 0 16px; font:600 10px/1 var(--mono); letter-spacing:.16em; color:rgba(255,255,255,.44); text-transform:uppercase; }
+  #techbox .tb-i{ padding:0 0 18px 86px; position:relative; }
+  #techbox .tb-i + .tb-i{ margin-top:6px; }
+  #techbox .tb-i::before{ content:''; position:absolute; left:64px; top:6px; bottom:0; width:1px; background:rgba(255,255,255,.10); }
+  #techbox .tb-i::after{ content:''; position:absolute; left:61px; top:5px; width:7px; height:7px; border-radius:999px; background:#e10600; }
+  #techbox .tb-i:last-child::before{ display:none; }
+  #techbox .tb-i em{ position:absolute; left:0; top:0; width:56px; text-align:right; font:600 10px/1.55 var(--mono); font-style:normal; letter-spacing:.02em; color:rgba(225,6,0,.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #techbox .tb-i b{ display:block; font:600 14px/1.4 var(--sans); color:#f5f3ef; }
+  #techbox .tb-i p{ margin:6px 0 0; font:400 12px/1.75 var(--sans); color:rgba(255,255,255,.60); }
+  #techbox .tb-ph{ margin:12px 0 0; border:1px solid rgba(255,255,255,.10); position:relative; }
+  #techbox .tb-ph img{ display:block; width:100%; height:190px; object-fit:cover; object-position:50% 62%; }
+  #techbox .tb-ph figcaption{ padding:8px 11px; font:400 9.5px/1.45 var(--mono); color:rgba(255,255,255,.5); background:rgba(255,255,255,.03); }
+  @media (max-width:900px){
+    #techbox .tb-card{ grid-template-columns:1fr; grid-template-rows:auto minmax(0,1fr); max-height:90vh; }
+    #techbox .tb-side{ border-right:none; border-bottom:1px solid rgba(255,255,255,.08); padding:26px 22px 20px; }
+    #techbox .tb-main{ padding:24px 22px 30px; }
+    #techbox .tb-i{ padding-left:78px; }
+    #techbox .tb-i em{ width:52px; }
+    #techbox .tb-i::before{ left:58px; }
+    #techbox .tb-i::after{ left:55px; }
+    #techbox .tb-ph img{ height:150px; }
+  }
   @media (max-width:900px){
     #racebox .rb-card{ grid-template-columns:1fr; max-height:88vh; }
     #racebox .rb-ph{ min-height:180px; }
@@ -1313,8 +1370,9 @@ body.ui-hidden::after{ opacity:0; }
       <div class="ch-in">
         <div class="eyebrow" data-t="spec-k">Technical</div>
         <h2 data-t="spec-h">SF-25 的技术单</h2>
+        <p class="specs-hint" data-t="spec-hint"><b>点技术单</b>，看 2025 规则与 SF-25 的设计理念</p>
         <p data-t="spec-p">2022 年地面效应新规之后的第四代车。碳纤维蜂巢单体壳加 Halo，8 速纵置变速箱；这一年前悬从推杆改成拉杆、后悬仍是拉杆。下面几项是官方口径的硬指标。</p>
-        <div class="specs2">
+        <div class="specs2" id="specs" role="button" tabindex="0" aria-label="打开 2025 规则与 SF-25 设计理念">
           <div><u data-t="sp1">动力单元</u><b>066/12 · 1600 cc V6 Turbo</b></div>
           <div><u data-t="sp2">最高转速</u><b>15,000 rpm</b></div>
           <div><u data-t="sp3">变速箱</u><b data-t="sp3v">8 速纵置 + 倒挡</b></div>
@@ -1362,6 +1420,21 @@ body.ui-hidden::after{ opacity:0; }
           <div class="rb-stats" id="rb-stats"></div>
           <p class="rb-txt" id="rb-txt"></p>
         </div>
+      </div>
+    </div>
+
+    <!-- 技术单弹层：点技术单打开 -->
+    <div id="techbox" aria-hidden="true">
+      <div class="tb-back" id="tb-back"></div>
+      <div class="tb-card" role="dialog" aria-modal="true" aria-labelledby="tb-h">
+        <button class="tb-x" id="tb-close" aria-label="关闭">×</button>
+        <div class="tb-side">
+          <div class="tb-k" data-t="tb-k">Regulations · Design</div>
+          <h3 class="tb-h" id="tb-h" data-t="tb-h">技术单之外</h3>
+          <p class="tb-p" data-t="tb-p">2025 是这套地面效应规则的收官年，改动很小；真正大改在 2026。SF-25 因此是 SF-24 的进化，而不是重新设计。</p>
+          <div class="tb-st" id="tb-st"></div>
+        </div>
+        <div class="tb-main" id="tb-main"></div>
       </div>
     </div>
 
@@ -8625,6 +8698,10 @@ const EN = {
   'drv-k':'Drivers', 'drv-h':'Cars 16 and 44',
   'drv-hint':'Tap a driver card for the career timeline',
   'db-k':'Career timeline',
+  'spec-hint':'<b>Tap the spec sheet</b> for the 2025 rules and the SF-25 design story',
+  'tb-k':'Regulations · Design',
+  'tb-h':'Beyond the spec sheet',
+  'tb-p':'2025 closed out the current ground-effect rules with only small tweaks — the big reset comes in 2026. That is why the SF-25 is an evolution of the SF-24 rather than a clean-sheet car.',
   d1t:'Monaco · 1997',
   d1p:'242 points, fifth in the championship. Seven podiums and one pole, the only Ferrari driver to reach the rostrum all year.',
   d2t:'Stevenage · 1985',
@@ -8865,6 +8942,115 @@ function closeDriver(){
   DB.idx = -1;
 }
 
+/* ---------- 2025 规则 / SF-25 设计理念（点技术单打开） ---------- */
+const TECH = {
+  st: [
+    { v: '800', u: 'kg', k: '最低质量', kE: 'Minimum mass',
+      d: '798 → 800 kg，车手最低 80 → 82 kg', dE: '798 → 800 kg; driver minimum 80 → 82 kg' },
+    { v: '31', u: '°C', k: 'Heat Hazard 阈值', kE: 'Heat hazard threshold',
+      d: '超过即允许装车手冷却系统', dE: 'Above this, cooling systems may be fitted' },
+    { v: '10', u: 'mm', k: '前翼形变上限', kE: 'Front wing deflection',
+      d: '1000 N 载荷下，2024 年是 15 mm', dE: 'Under 1000 N; it was 15 mm in 2024' },
+    { v: '+5', u: 'kg', k: '正赛冷却配额', kE: 'Race cooling allowance',
+      d: '冲刺/正赛 +5，练习与排位 +2', dE: '+5 kg for Sprint/GP, +2 kg practice & qualifying' }
+  ],
+  secs: [
+    { k: '2025 技术规则', kE: '2025 technical regulations', items: [
+      { tag: '收官年', tagE: 'Last year',
+        t: '这套规则的最后一年', tE: 'The last year of this ruleset',
+        d: '2022 年的地面效应规则用到 2025 为止，2026 换电油比 50:50、主动气动的整车。所以 2025 的改动是补丁式：只动安全、散热和边缘气动，不动大架构。',
+        dE: 'The 2022 ground-effect rules ran through 2025; 2026 brings a 50:50 power split and active aero. So 2025 was patchwork: safety, cooling and marginal aero only.' },
+      { tag: '800 kg', tagE: '800 kg',
+        t: '最低质量提高到 800 kg', tE: 'Minimum mass up to 800 kg',
+        d: '涨的 2 kg 全部来自车手最低质量（80 → 82 kg），让高个子车手不必靠极端减重。整车口径统一为 800 kg，含车手与油水。',
+        dE: 'The 2 kg came entirely from the driver minimum (80 → 82 kg) so taller drivers need not starve. The car is 800 kg all-in, driver and fluids included.' },
+      { tag: '31 °C', tagE: '31 °C',
+        t: '高温站可以宣布 Heat Hazard', tE: 'A Heat Hazard can be declared',
+        d: '赛前气温预测超过 31 °C 就触发：车队可装车手冷却系统，冲刺/正赛的车重上限相应加 5 kg，练习与排位加 2 kg；选择不穿冷却衣的车手要在座舱里补 0.5 kg 配重。2025 新加坡站是第一个。',
+        dE: 'Triggered when the forecast tops 31 °C: teams may fit cooling systems, with +5 kg on the car for a Sprint/GP and +2 kg in practice and qualifying; drivers who opt out carry 0.5 kg of ballast in the cockpit. Singapore 2025 was the first.' },
+      { tag: '10 mm', tagE: '10 mm',
+        t: '前翼柔性测试收紧', tE: 'Stiffer front wing tests',
+        d: '技术规则 3.15.4 / 3.15.5 改了两条：1000 N 载荷下主翼形变上限由 15 mm 降到 10 mm，单侧由 20 mm 降到 15 mm；襟翼后缘允许形变从 5 mm 收到 3 mm（巴塞罗那站起）。尾翼那套测试在 2024 年中国、日本站已经先收紧过。',
+        dE: 'Articles 3.15.4 / 3.15.5: under a 1000 N load the mainplane may deflect 10 mm instead of 15 mm, and 15 mm per side instead of 20 mm; flap trailing edges drop from 5 mm to 3 mm from Barcelona. The rear-wing tests were already tightened in China and Japan 2024.' },
+      { tag: '轮胎', tagE: 'Tyres',
+        t: '18 英寸轮辋沿用，没有新轮胎规则', tE: '18-inch rims carry over',
+        d: '低扁平比、18 英寸轮辋与倍耐力 2025 规格全部延续，轮胎规则在这一年是静止的。',
+        dE: 'Low-profile 18-inch rims and the 2025 Pirelli spec carry over unchanged; the tyre rules were static this year.' },
+      { tag: '混动', tagE: 'Hybrid',
+        t: '动力单元一毫米没动', tE: 'Power unit untouched',
+        d: '1.6 升 V6 涡轮混动沿用，燃油流量仍是 100 kg/h，ERS 的功率与每圈回收上限不变。引擎的冻结让 2025 成了纯底盘与轮胎的较量。',
+        dE: 'The 1.6-litre V6 turbo-hybrid carries over: fuel flow still 100 kg/h, same ERS limits. The engine freeze made 2025 a chassis-and-tyre fight.' }
+    ]},
+    { k: 'SF-25 设计理念', kE: 'SF-25 design thinking', items: [
+      { tag: '进化', tagE: 'Evolution',
+        t: '是 SF-24 的进化，不是重画', tE: 'An evolution of the SF-24',
+        d: '技术总监 Loïc Serra 的说法是 SF-24 的进化版。原因是 2026 新规则要重新设计整车，资源必须留一部分给新项目，所以 2025 把"已知好的地方"留下、把去年暴露的问题逐个改掉。',
+        dE: 'Technical director Loïc Serra called it an evolution of the SF-24. With 2026 demanding a clean-sheet car, resources had to be split, so 2025 kept what worked and fixed what did not.' },
+      { tag: '前拉杆', tagE: 'Pull-rod',
+        t: '前悬从推杆改成拉杆', tE: 'Front suspension switched to pull-rod',
+        d: '法拉利传统是前推杆，SF-25 第一次改成前拉杆：目的是把前轮内侧的气流清干净、给前翼与底板前端更多开发空间，同时拉杆几何能塞进更大的抗俯冲（anti-dive）。后悬仍是拉杆——和迈凯伦、红牛前后都拉杆的路线正好相反。',
+        dE: 'Ferrari traditionally ran push-rod at the front; the SF-25 switched to pull-rod to clean up the airflow inboard of the front wheels, free up development room around the front wing and floor leading edge, and package more anti-dive. The rear stays pull-rod — the opposite of McLaren and Red Bull.' },
+      { tag: '侧箱', tagE: 'Sidepods',
+        t: '散热进气口加大，侧箱改 overbite', tE: 'Bigger inlets, overbite sidepods',
+        d: '侧箱与散热器是重做的：进气口比 SF-24 更大，侧箱采用 overbite 小翼、导流板尾缘重新设计。散热能力换来的阻力，靠尾部收窄补回来。',
+        dE: 'Sidepods and radiators were reworked: larger inlets, overbite winglets and new bargeboard trailing edges. The drag cost of extra cooling is clawed back by tightening the rear.' },
+      { tag: '尾部', tagE: 'Rear end',
+        t: '发动机盖开 gully，把热气送到尾翼下', tE: 'A gully in the engine cover',
+        d: '尾部收窄，发动机盖上走一条"沟"把内部热气引到尾翼下方，减少它对梁翼与扩散器上游的干扰；高温站还能在侧箱上表面加百叶窗散热口。',
+        dE: 'A tighter rear with a gully down the engine cover routes hot air under the rear wing, away from the beam wing and diffuser feed. Extra louvred panels can be added on the sidepod tops for hot races.' },
+      { tag: '机械', tagE: 'Mechanical',
+        t: '为了气动，先把机械布局改掉', tE: 'Aero first, mechanics second',
+        d: '拉杆前悬把减震器总成整体上移，重心与前部机械布局都跟着变；换来的是更大的机械平衡调整窗口——这是"先定气动、再排机械"的典型一步。',
+        dE: 'Pull-rod moves the damper assemblies up, shifting the front mechanical layout; the payoff is a wider window for tuning mechanical balance. Aerodynamics set the architecture, mechanics follow.' },
+      { tag: '44 号', tagE: 'Car 44',
+        t: '座舱按 Hamilton 重做', tE: 'A cockpit rebuilt for Hamilton',
+        d: 'Hamilton 的第一个法拉利赛季，44 号车的座舱、踏板与转向柱按他的坐姿与习惯重新做了一遍——两辆车的车架相同，人机界面不同。',
+        dE: 'In Hamilton\'s first Ferrari season the cockpit, pedals and steering column of car 44 were rebuilt around his posture. Same chassis, different human-machine interface.',
+        ph: 'img/p16.jpg', cap: '2025 奥地利站，16 号 SF-25', capE: 'Austria 2025, car 16 SF-25' },
+      { tag: '结果', tagE: 'Outcome',
+        t: '一年下来：7 次登台，0 胜', tE: 'One season on: seven podiums, no wins',
+        d: 'SF-25 的单圈够快（全年 5 个前排发车），但比赛里的轮胎退化与高温表现拖后腿：车队年终第四，7 次登台全部来自 Leclerc。',
+        dE: 'Quick over one lap — five front-row starts — but race-pace tyre degradation and heat held it back: fourth in the constructors, all seven podiums from Leclerc.',
+        ph: 'img/h2025.jpg', cap: '2025 日本站，SF-25', capE: 'Japan 2025, SF-25' }
+    ]}
+  ]
+};
+const TB = { on: false };
+
+function renderTech(){
+  const en = SITE.lang === 'en';
+  document.getElementById('tb-st').innerHTML = TECH.st.map(s =>
+    '<div><u>' + (en ? s.kE : s.k) + '</u><b>' + s.v + ' <span style="font-size:11px;opacity:.6">' + s.u + '</span></b><i>' +
+    (en ? s.dE : s.d) + '</i></div>').join('');
+  document.getElementById('tb-main').innerHTML = TECH.secs.map(sec =>
+    '<section class="tb-sec"><h4>' + (en ? sec.kE : sec.k) + '</h4>' + sec.items.map(it => {
+      let x = '<div class="tb-i"><em>' + (en ? it.tagE : it.tag) + '</em><b>' + (en ? it.tE : it.t) + '</b><p>' +
+        (en ? it.dE : it.d) + '</p>';
+      if (it.ph){
+        x += '<figure class="tb-ph"><img src="' + it.ph + '" alt="' + (en ? it.capE : it.cap) + '" decoding="async">' +
+          '<figcaption>' + (en ? it.capE : it.cap) + '</figcaption></figure>';
+      }
+      return x + '</div>';
+    }).join('') + '</section>').join('');
+  const m = document.querySelector('#techbox .tb-main');
+  if (m) m.scrollTop = 0;
+}
+
+function openTech(quiet){
+  renderTech();
+  const box = document.getElementById('techbox');
+  box.classList.add('on'); box.setAttribute('aria-hidden', 'false');
+  TB.on = true;
+  if (!quiet){ const b = document.getElementById('tb-close'); if (b) b.focus({ preventScroll: true }); }
+}
+
+function closeTech(){
+  const box = document.getElementById('techbox');
+  if (!box || !box.classList.contains('on')) return;
+  box.classList.remove('on'); box.setAttribute('aria-hidden', 'true');
+  TB.on = false;
+}
+
 function openRace(i, quiet){
   const o = RACES[i]; if (!o) return;
   RB.idx = i;
@@ -8965,6 +9151,9 @@ document.addEventListener('click', (e) => {
   const d = e.target.closest('#ch-drivers .drv article');
   if (d){ openDriver(+d.dataset.drv); return; }
   if (e.target.id === 'db-back' || e.target.id === 'db-close') closeDriver();
+  const sp = e.target.closest('#specs');
+  if (sp){ openTech(); return; }
+  if (e.target.id === 'tb-back' || e.target.id === 'tb-close') closeTech();
 });
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === ' '){
@@ -8977,6 +9166,10 @@ window.addEventListener('keydown', (e) => {
   }
   if (e.key === 'Escape' && RB.idx >= 0){ e.stopPropagation(); closeRace(); }
   if (e.key === 'Escape' && DB.idx >= 0){ e.stopPropagation(); closeDriver(); }
+  if ((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.id === 'specs'){
+    e.preventDefault(); openTech();
+  }
+  if (e.key === 'Escape' && TB.on){ e.stopPropagation(); closeTech(); }
 }, true);
 
 function setLang(lang){
@@ -8996,6 +9189,7 @@ function setLang(lang){
   document.body.classList.toggle('lang-en', lang === 'en');
   renderWins();
   if (DB.idx >= 0) openDriver(DB.idx, true);
+  if (TB.on) renderTech();
 }
 
 
@@ -9307,7 +9501,7 @@ function initSite(){
 
   /* 点空白处直接翻到下一页 —— 但按钮/圆点/热区/信息卡这些交互元素要放过 */
   let lastNav = 0;
-  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide,#wins,#racebox,#drvbox,#ch-drivers .drv article';
+  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide,#wins,#racebox,#drvbox,#ch-drivers .drv article,#specs,#techbox';
   document.addEventListener('click', (e) => {
     if (!SITE.on) return;
     if (!document.body.classList.contains('mode-site')) return;
