@@ -8686,6 +8686,11 @@ function openRace(i, quiet){
     img.style.objectPosition = (img.naturalHeight > img.naturalWidth * 1.12) ? '50% 14%' : '50% 50%';
   };
   img.onload = () => { clearPh(); fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); img.style.display = ''; fitImg(); };
+  /* 慢网下先给个「载入中」，否则第一次点开是一块黑框（图还没下完） */
+  const loading = () => {
+    phBox().innerHTML = '<em>' + (en ? 'LOADING' : '载入中') + '</em><span>' +
+      (en ? 'Fetching the photo…' : '正在载入照片…') + '</span>';
+  };
   fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); clearPh();
   if (!o.ph){
     img.alt = (o.demo ? (en ? 'Reference photo of the 2025 SF-25' : '2025 赛季 SF-25 示意照') : (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp'));
@@ -8697,6 +8702,7 @@ function openRace(i, quiet){
       ? (en ? 'Podium reference photo of Charles Leclerc' : 'Leclerc 领奖台示意照')
       : (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp');
     if (img.complete && img.naturalWidth > 0){ fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); fitImg(); }
+    else { loading(); }
   }
   /* 有署名才写图注；无图站由 noPhoto() 自己写「该站暂无实拍图」，别在这里覆盖成「摄影：—」 */
   if (o.by && o.ph){
