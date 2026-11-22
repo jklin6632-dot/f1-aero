@@ -903,6 +903,8 @@ body.ui-hidden::after{ opacity:0; }
     width:100%; aspect-ratio:16/10; object-fit:cover; display:block;
     border-radius:10px; border:1px solid rgba(255,255,255,.10);
   }
+  /* 车手卡是竖拍人像，16/10 会把脸裁掉 —— 单独给 4/5，视线压在上部 */
+  .drv .pw img{ aspect-ratio:4/5; object-position:50% 12%; }
   .pwrow{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 12px; }
   .pwrow .pw{ margin:0; }
   .pwrow .pw img{ aspect-ratio:4/3; }
@@ -1308,7 +1310,7 @@ body.ui-hidden::after{ opacity:0; }
             <div class="num">16</div>
             <h3>Charles Leclerc</h3>
             <div class="tag" data-t="d1t">摩纳哥 · 1997</div>
-            <figure class="pw"><img src="img/p16.jpg" alt="Leclerc 驾驶 SF-25" loading="lazy"><figcaption>奥地利站 2025 · Lukas Raich / <a href="https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2025_Nr._16_Leclerc.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
+            <figure class="pw"><img src="img/pod_c.jpg" alt="Charles Leclerc 在 2024 荷兰站领奖台" loading="lazy"><figcaption>2024 荷兰站领奖台 · Steffen Prößdorf / <a href="https://commons.wikimedia.org/wiki/File:2024-08-25_Motorsport,_Formel_1,_Großer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_(cropped2).jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
             <p data-t="d1p">242 分，年度第五。全年 7 次登台、1 个杆位，是队内唯一上过领奖台的人；赛季中段连续四站进前三。</p>
             <div class="st"><div><i>PTS</i><b>242</b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P5</b></div></div>
           </article>
@@ -1316,7 +1318,7 @@ body.ui-hidden::after{ opacity:0; }
             <div class="num">44</div>
             <h3>Lewis Hamilton</h3>
             <div class="tag" data-t="d2t">斯蒂夫尼奇 · 1985</div>
-            <figure class="pw"><img src="img/p44.jpg" alt="Hamilton 驾驶 SF-25" loading="lazy"><figcaption>铃鹿 2025 · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
+            <figure class="pw"><img src="img/ham25.jpg" alt="Lewis Hamilton 在 2025 铃鹿站车迷区" loading="lazy"><figcaption>铃鹿 2025 车迷区 · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_Fanzone_Stage_(cropped).jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
             <p data-t="d2p">156 分，年度第六。转会法拉利的第一年：中国站冲刺赛拿下全场最快单圈，全年最接近领奖台的一次是迈阿密第四。</p>
             <div class="st"><div><i>PTS</i><b>156</b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P6</b></div></div>
           </article>
@@ -8595,41 +8597,44 @@ const RACES = [
   { r:5,  code:'SAU', zh:'沙特',     en:'Saudi Arabia', gp:'沙特阿拉伯大奖赛', gpE:'Saudi Arabian Grand Prix',
     date:'2025-04-20', circ:'吉达滨海赛道', circE:'Jeddah Corniche Circuit',
     grid:4, pos:3, pts:15, hg:7, hp:7, hpts:6, nth:1,
-    ph:'img/s1.jpg', by:'Liauzh', lic:'CC BY-SA 4.0',
-page:'https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_Ferrari_-_Charles_Leclerc_-_FP2.jpg', demo:true,
+    ph:'img/pod_a.jpg', by:'Lukas Raich', lic:'CC BY-SA 4.0', cap:'2022 奥地利站领奖台', capE:'2022 Austrian GP podium',
+page:'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2022_Podium_Race_Winner_Leclerc.jpg', demo:true,
     note:'赛季第一次登台，也是全年唯一一次在吉达上台', noteE:'First podium of the season, and his only one in Jeddah' },
   { r:8,  code:'MON', zh:'摩纳哥',   en:'Monaco',       gp:'摩纳哥大奖赛',     gpE:'Monaco Grand Prix',
     date:'2025-05-25', circ:'摩纳哥赛道', circE:'Circuit de Monaco',
     grid:2, pos:2, pts:18, hg:7, hp:5, hpts:10, nth:2,
-    ph:'img/r08.jpg', by:'Riottoso', lic:'CC BY 4.0', page:'https://commons.wikimedia.org/wiki/File:Hamilton_FP2_Monaco_GP.jpg',
+    ph:'img/pod_b.jpg', by:'Steffen Prößdorf', lic:'CC BY-SA 4.0', cap:'2024 荷兰站领奖台', capE:'2024 Dutch GP podium',
+page:'https://commons.wikimedia.org/wiki/File:2024-08-25_Motorsport,_Formel_1,_Großer_Preis_der_Niederlande_2024_STP_3999_by_Stepro.jpg', demo:true,
     note:'主场头排起跑，带回 P2——全年最好完赛名次', noteE:'Front-row start at home, P2 at the flag — his best finish of the year' },
   { r:9,  code:'ESP', zh:'西班牙',   en:'Spain',        gp:'西班牙大奖赛',     gpE:'Spanish Grand Prix',
     date:'2025-06-01', circ:'巴塞罗那-加泰罗尼亚赛道', circE:'Circuit de Barcelona-Catalunya',
     grid:7, pos:3, pts:15, hg:5, hp:6, hpts:8, nth:3,
-    ph:'img/h2025.jpg', by:'Liauzh', lic:'CC BY-SA 4.0',
-page:'https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Charles_Leclerc_-_FP1.jpg', demo:true,
+    ph:'img/pod_c.jpg', by:'Steffen Prößdorf', lic:'CC BY-SA 4.0', cap:'2024 荷兰站领奖台', capE:'2024 Dutch GP podium',
+page:'https://commons.wikimedia.org/wiki/File:2024-08-25_Motorsport,_Formel_1,_Großer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_(cropped2).jpg', demo:true,
     note:'第 7 位发车，一路追到 P3', noteE:'Started seventh, came through to P3' },
   { r:11, code:'AUT', zh:'奥地利',   en:'Austria',      gp:'奥地利大奖赛',     gpE:'Austrian Grand Prix',
     date:'2025-06-29', circ:'红牛环', circE:'Red Bull Ring',
     grid:2, pos:3, pts:15, hg:4, hp:4, hpts:12, nth:4,
-    ph:'img/p16.jpg', by:'Lukas Raich', lic:'CC BY-SA 4.0', page:'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2025_Nr._16_Leclerc.jpg',
+    ph:'img/pod_a.jpg', by:'Lukas Raich', lic:'CC BY-SA 4.0', cap:'2022 奥地利站领奖台', capE:'2022 Austrian GP podium',
+page:'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2022_Podium_Race_Winner_Leclerc.jpg', demo:true,
     note:'头排起跑，两台法拉利都进前四', noteE:'Front row, both Ferraris inside the top four' },
   { r:13, code:'BEL', zh:'比利时',   en:'Belgium',      gp:'比利时大奖赛',     gpE:'Belgian Grand Prix',
     date:'2025-07-27', circ:'斯帕-弗朗科尔尚', circE:'Spa-Francorchamps',
     grid:3, pos:3, pts:15, hg:18, hp:7, hpts:6, nth:5,
-    ph:'img/r13.jpg', by:'Skyebble', lic:'CC BY 4.0', page:'https://commons.wikimedia.org/wiki/File:Lewis_Hamilton_during_the_2025_Belgian_Grand_Prix_weekend.jpg',
+    ph:'img/pod_b.jpg', by:'Steffen Prößdorf', lic:'CC BY-SA 4.0', cap:'2024 荷兰站领奖台', capE:'2024 Dutch GP podium',
+page:'https://commons.wikimedia.org/wiki/File:2024-08-25_Motorsport,_Formel_1,_Großer_Preis_der_Niederlande_2024_STP_3999_by_Stepro.jpg', demo:true,
     note:'Hamilton 从第 18 位一路追到第 7', noteE:'Hamilton climbed from P18 to P7' },
   { r:19, code:'USA', zh:'美国',     en:'United States',gp:'美国大奖赛',       gpE:'United States Grand Prix',
     date:'2025-10-19', circ:'美洲赛道', circE:'Circuit of the Americas',
     grid:3, pos:3, pts:15, hg:5, hp:4, hpts:12, nth:6,
-    ph:'img/p16.jpg', by:'Lukas Raich', lic:'CC BY-SA 4.0',
-page:'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2025_Nr._16_Leclerc.jpg', demo:true,
+    ph:'img/pod_c.jpg', by:'Steffen Prößdorf', lic:'CC BY-SA 4.0', cap:'2024 荷兰站领奖台', capE:'2024 Dutch GP podium',
+page:'https://commons.wikimedia.org/wiki/File:2024-08-25_Motorsport,_Formel_1,_Großer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_(cropped2).jpg', demo:true,
     note:'奥斯汀，发车位与完赛位都是 P3', noteE:'Austin: started and finished P3' },
   { r:20, code:'MEX', zh:'墨西哥城', en:'Mexico City',  gp:'墨西哥城大奖赛',   gpE:'Mexico City Grand Prix',
     date:'2025-10-26', circ:'罗德里格斯兄弟赛道', circE:'Autódromo Hermanos Rodríguez',
     grid:2, pos:2, pts:18, hg:3, hp:8, hpts:4, nth:7,
-    ph:'img/s2.jpg', by:'Liauzh', lic:'CC BY-SA 4.0',
-page:'https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_Ferrari_-_Lewis_Hamilton_-_FP2.jpg', demo:true,
+    ph:'img/pod_a.jpg', by:'Lukas Raich', lic:'CC BY-SA 4.0', cap:'2022 奥地利站领奖台', capE:'2022 Austrian GP podium',
+page:'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2022_Podium_Race_Winner_Leclerc.jpg', demo:true,
     note:'赛季最后一次登台，也是第 7 次', noteE:'Seventh and final podium of the season' },
 ];
 
@@ -8676,20 +8681,28 @@ function openRace(i, quiet){
     cap.innerHTML = (en ? 'No photo for this round yet · ' : '该站暂无实拍图 · ') + 'Ferrari SF-25';
   };
   img.onerror = noPhoto;
-  img.onload = () => { clearPh(); fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); img.style.display = ''; };
+  /* 竖拍人像在横框里 cover 会切到脸，取景压到上部；横图照旧居中 */
+  const fitImg = () => {
+    img.style.objectPosition = (img.naturalHeight > img.naturalWidth * 1.12) ? '50% 14%' : '50% 50%';
+  };
+  img.onload = () => { clearPh(); fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); img.style.display = ''; fitImg(); };
   fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); clearPh();
   if (!o.ph){
     img.alt = (o.demo ? (en ? 'Reference photo of the 2025 SF-25' : '2025 赛季 SF-25 示意照') : (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp'));
     noPhoto();
   } else {
     img.style.display = '';
-    img.src = o.ph; img.alt = (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp');
-    if (img.complete && img.naturalWidth > 0){ fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); }
+    img.src = o.ph;
+    img.alt = o.demo
+      ? (en ? 'Podium reference photo of Charles Leclerc' : 'Leclerc 领奖台示意照')
+      : (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp');
+    if (img.complete && img.naturalWidth > 0){ fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); fitImg(); }
   }
   /* 有署名才写图注；无图站由 noPhoto() 自己写「该站暂无实拍图」，别在这里覆盖成「摄影：—」 */
   if (o.by && o.ph){
     const pre = o.demo ? (en ? 'Reference shot · not from this round · ' : '示意图（非本站实拍）· ') : '';
-    cap.innerHTML = pre + (en ? 'Photo: ' : '摄影：') + o.by + ' / <a href="' + o.page +
+    const what = o.demo && o.cap ? ((en ? o.capE : o.cap) + ' · ') : '';
+    cap.innerHTML = pre + what + (en ? 'Photo: ' : '摄影：') + o.by + ' / <a href="' + o.page +
       '" target="_blank" rel="noopener">' + o.lic + '</a>';
   }
   document.getElementById('rb-k').textContent =
