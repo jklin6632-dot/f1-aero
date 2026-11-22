@@ -1079,6 +1079,111 @@ body.ui-hidden::after{ opacity:0; }
   body.mode-site #sbar, body.mode-site .ch-in, body.mode-site #pager{
     transition:background .55s ease, border-color .55s ease, box-shadow .55s ease, color .4s ease;
   }
+  /* ── 赛季：7 张领奖台卡（可点开战报）+ 战报弹层 ───────────────── */
+  #ch-season .wins{
+    display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:1px;
+    background:var(--line); border:1px solid var(--line); margin-top:24px;
+  }
+  #ch-season .wins .win{
+    cursor:pointer; text-align:center; padding:13px 4px 14px; position:relative;
+    transition:background .18s ease;
+  }
+  #ch-season .wins .win em{
+    display:block; font:600 8px/1 var(--mono); letter-spacing:.1em;
+    color:var(--faint); font-style:normal;
+  }
+  #ch-season .wins .win b{
+    display:block; margin-top:7px; font:700 12.5px/1.2 var(--display);
+    letter-spacing:-.01em; color:var(--ink); white-space:nowrap;
+  }
+  #ch-season .wins .win i{
+    display:block; margin-top:7px; font:700 10px/1 var(--mono);
+    letter-spacing:.06em; color:#ff3a24; font-style:normal;
+  }
+  #ch-season .wins .win:hover{ background:rgba(255,255,255,.055); }
+  #ch-season .wins .win.on{ background:rgba(255,255,255,.085); box-shadow:inset 0 0 0 1px rgba(255,255,255,.24); }
+  #ch-season .wins .win.on::after{
+    content:""; position:absolute; left:0; right:0; top:0; height:2px; background:var(--accent);
+  }
+  body.mode-site:not(.tone-dark) #ch-season .wins .win:hover{ background:rgba(15,23,42,.05); }
+
+  #racebox{
+    position:fixed; inset:0; z-index:88; display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .28s ease;
+  }
+  #racebox.on{ opacity:1; pointer-events:auto; }
+  #racebox .rb-back{
+    position:absolute; inset:0; background:rgba(6,7,10,.62);
+    backdrop-filter:blur(6px) saturate(.9); -webkit-backdrop-filter:blur(6px) saturate(.9);
+  }
+  #racebox .rb-card{
+    position:relative; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);
+    width:min(920px,92vw); max-height:84vh; overflow:hidden;
+    background:#0f1013; border:1px solid rgba(255,255,255,.10);
+    transform:translateY(14px) scale(.985); transition:transform .32s cubic-bezier(.2,.7,.2,1);
+  }
+  #racebox.on .rb-card{ transform:none; }
+  #racebox .rb-ph{
+    margin:0; position:relative; background:#15161a; min-height:300px;
+    display:flex; flex-direction:column; justify-content:flex-end;
+  }
+  #racebox .rb-ph img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:saturate(1.02) contrast(1.02);
+  }
+  #racebox .rb-ph figcaption{
+    position:relative; z-index:1; padding:10px 14px; font:400 10px/1.45 var(--sans);
+    color:rgba(255,255,255,.72);
+    background:linear-gradient(to top, rgba(6,7,10,.86), rgba(6,7,10,0));
+  }
+  #racebox .rb-ph figcaption a{ color:rgba(255,255,255,.86); text-decoration:underline; text-underline-offset:2px; }
+  #racebox .rb-body{ padding:30px 30px 26px; overflow:auto; }
+  #racebox .rb-k{
+    font:600 9px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--accent);
+  }
+  #racebox .rb-h, #racebox h3{
+    margin:12px 0 0; font:700 clamp(20px,2.2vw,27px)/1.16 var(--display);
+    letter-spacing:-.02em; color:#f5f3ef;
+  }
+  #racebox .rb-sub{
+    margin-top:9px; font:400 11.5px/1.5 var(--mono); letter-spacing:.02em; color:rgba(255,255,255,.52);
+  }
+  #racebox .rb-stats{
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px;
+    margin-top:20px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.10);
+  }
+  #racebox .rb-stats div{ background:#15161a; padding:11px 10px 12px; }
+  #racebox .rb-stats u{
+    display:block; font:600 8.5px/1 var(--mono); letter-spacing:.12em;
+    text-transform:uppercase; color:rgba(255,255,255,.42); text-decoration:none;
+  }
+  #racebox .rb-stats b{
+    display:block; margin-top:7px; font:700 17px/1 var(--display); color:#f5f3ef; letter-spacing:-.01em;
+  }
+  #racebox .rb-stats b small{ font:600 9px/1 var(--mono); color:rgba(255,255,255,.44); margin-left:3px; }
+  #racebox .rb-txt{
+    margin:18px 0 0; font:400 12.5px/1.75 var(--sans); color:rgba(255,255,255,.74);
+  }
+  #racebox .rb-x{
+    position:absolute; right:12px; top:12px; z-index:3; width:32px; height:32px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(10,11,14,.55); border:1px solid rgba(255,255,255,.14); border-radius:999px;
+    color:#f5f3ef; font-size:15px; line-height:1; cursor:pointer;
+  }
+  #racebox .rb-x:hover{ background:rgba(225,6,0,.85); border-color:transparent; }
+  @media (max-width:900px){
+    #racebox .rb-card{ grid-template-columns:1fr; max-height:88vh; }
+    #racebox .rb-ph{ min-height:180px; }
+    #ch-season .wins{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+  }﻿
+  #racebox .rb-card.noimg{ grid-template-columns:1fr; }
+  #racebox .rb-card.noimg .rb-ph{ display:none; }
+  #racebox .rb-ph.noimg{ background:radial-gradient(120% 90% at 30% 10%, #23262d 0%, #14161a 60%, #0e0f12 100%); }
+  #racebox .rb-ph.noimg::before{
+    content:""; position:absolute; inset:0; opacity:.5;
+    background:repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 1px, transparent 1px 9px);
+  }
+
 </style>
 </head>
 <body>
@@ -1161,13 +1266,7 @@ body.ui-hidden::after{ opacity:0; }
         <div class="eyebrow" data-t="sea-k">2025 Season</div>
         <h2 data-t="sea-h">七次登台，398 分</h2>
         <p data-t="sea-p">车队年终第四，落后迈凯伦 435 分。全年没有胜利，7 次登台全部来自 Leclerc——沙特、摩纳哥、西班牙、奥地利、比利时、美国、墨西哥城。398 分里，Hamilton 在 44 号车上贡献 156 分。</p>
-        <div class="wins">
-          <div class="win"><em>R05 · SAU</em><b data-t="w1">沙特</b><span data-t="w1d">Leclerc · 吉达 P3</span></div>
-          <div class="win hot"><em>R08 · MON</em><b data-t="w2">摩纳哥</b><span data-t="w2d">Leclerc · 主场 P2</span></div>
-          <div class="win hot"><em>R09 · ESP</em><b data-t="w3">西班牙</b><span data-t="w3d">Leclerc · 巴塞罗那 P3</span></div>
-          <div class="win"><em>R19 · USA</em><b data-t="w4">美国</b><span data-t="w4d">Leclerc · 奥斯汀 P3</span></div>
-          <div class="win"><em>R20 · MEX</em><b data-t="w5">墨西哥城</b><span data-t="w5d">Leclerc · 罗德里格斯兄弟 P2</span></div>
-        </div>
+        <div class="wins" id="wins"></div>
         <div class="pwrow">
           <figure class="pw"><img src="img/s1.jpg" alt="2025 新加坡大奖赛 Leclerc" loading="lazy"><figcaption>新加坡 · Leclerc · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_Ferrari_-_Charles_Leclerc_-_FP2.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
           <figure class="pw"><img src="img/s2.jpg" alt="2025 新加坡大奖赛 Hamilton" loading="lazy"><figcaption>新加坡 · Hamilton · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_Ferrari_-_Lewis_Hamilton_-_FP2.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
@@ -1175,6 +1274,22 @@ body.ui-hidden::after{ opacity:0; }
         <p style="margin-top:16px;font-size:11.5px;opacity:.72" data-t="sea-src">数据来源：Formula 1 官方年终报告、Scuderia Ferrari 2025 赛季页。</p>
       </div>
     </section>
+
+    <!-- 分站战报弹层：点赛季卡打开 -->
+    <div id="racebox" aria-hidden="true">
+      <div class="rb-back" id="rb-back"></div>
+      <div class="rb-card" role="dialog" aria-modal="true" aria-labelledby="rb-h">
+        <button class="rb-x" id="rb-close" aria-label="关闭">×</button>
+        <figure class="rb-ph"><img id="rb-img" alt="" loading="lazy"><figcaption id="rb-cap"></figcaption></figure>
+        <div class="rb-body">
+          <div class="rb-k" id="rb-k"></div>
+          <h3 id="rb-h"></h3>
+          <div class="rb-sub" id="rb-sub"></div>
+          <div class="rb-stats" id="rb-stats"></div>
+          <p class="rb-txt" id="rb-txt"></p>
+        </div>
+      </div>
+    </div>
 
     <section class="ch" id="ch-drivers">
       <div class="ch-in" style="max-width:880px">
@@ -8465,6 +8580,137 @@ function siteReady(){
   }, 260);
 }
 
+/* ── 2025 赛季 7 次登台：卡片 + 战报弹层 ─────────────────────────
+   数据来源：Jolpica/Ergast（F1 官方数据镜像）2025 逐站结果。
+   每站只写能核到的字段：发车位、完赛位、积分；叙事句由字段拼出，不额外编细节。 */
+const RACES = [
+  { r:5,  code:'SAU', zh:'沙特',     en:'Saudi Arabia', gp:'沙特阿拉伯大奖赛', gpE:'Saudi Arabian Grand Prix',
+    date:'2025-04-20', circ:'吉达滨海赛道', circE:'Jeddah Corniche Circuit',
+    grid:4, pos:3, pts:15, hg:7, hp:7, hpts:6, nth:1,
+    ph:'', by:'', lic:'', page:'',
+    note:'赛季第一次登台，也是全年唯一一次在吉达上台', noteE:'First podium of the season, and his only one in Jeddah' },
+  { r:8,  code:'MON', zh:'摩纳哥',   en:'Monaco',       gp:'摩纳哥大奖赛',     gpE:'Monaco Grand Prix',
+    date:'2025-05-25', circ:'摩纳哥赛道', circE:'Circuit de Monaco',
+    grid:2, pos:2, pts:18, hg:7, hp:5, hpts:10, nth:2,
+    ph:'img/r08.jpg', by:'Riottoso', lic:'CC BY 4.0', page:'https://commons.wikimedia.org/wiki/File:Hamilton_FP2_Monaco_GP.jpg',
+    note:'主场头排起跑，带回 P2——全年最好完赛名次', noteE:'Front-row start at home, P2 at the flag — his best finish of the year' },
+  { r:9,  code:'ESP', zh:'西班牙',   en:'Spain',        gp:'西班牙大奖赛',     gpE:'Spanish Grand Prix',
+    date:'2025-06-01', circ:'巴塞罗那-加泰罗尼亚赛道', circE:'Circuit de Barcelona-Catalunya',
+    grid:7, pos:3, pts:15, hg:5, hp:6, hpts:8, nth:3,
+    ph:'', by:'', lic:'', page:'',
+    note:'第 7 位发车，一路追到 P3', noteE:'Started seventh, came through to P3' },
+  { r:11, code:'AUT', zh:'奥地利',   en:'Austria',      gp:'奥地利大奖赛',     gpE:'Austrian Grand Prix',
+    date:'2025-06-29', circ:'红牛环', circE:'Red Bull Ring',
+    grid:2, pos:3, pts:15, hg:4, hp:4, hpts:12, nth:4,
+    ph:'img/p16.jpg', by:'Lukas Raich', lic:'CC BY-SA 4.0', page:'https://commons.wikimedia.org/wiki/File:FIA_F1_Austria_2025_Nr._16_Leclerc.jpg',
+    note:'头排起跑，两台法拉利都进前四', noteE:'Front row, both Ferraris inside the top four' },
+  { r:13, code:'BEL', zh:'比利时',   en:'Belgium',      gp:'比利时大奖赛',     gpE:'Belgian Grand Prix',
+    date:'2025-07-27', circ:'斯帕-弗朗科尔尚', circE:'Spa-Francorchamps',
+    grid:3, pos:3, pts:15, hg:18, hp:7, hpts:6, nth:5,
+    ph:'img/r13.jpg', by:'Skyebble', lic:'CC BY 4.0', page:'https://commons.wikimedia.org/wiki/File:Lewis_Hamilton_during_the_2025_Belgian_Grand_Prix_weekend.jpg',
+    note:'Hamilton 从第 18 位一路追到第 7', noteE:'Hamilton climbed from P18 to P7' },
+  { r:19, code:'USA', zh:'美国',     en:'United States',gp:'美国大奖赛',       gpE:'United States Grand Prix',
+    date:'2025-10-19', circ:'美洲赛道', circE:'Circuit of the Americas',
+    grid:3, pos:3, pts:15, hg:5, hp:4, hpts:12, nth:6,
+    ph:'', by:'', lic:'', page:'',
+    note:'奥斯汀，发车位与完赛位都是 P3', noteE:'Austin: started and finished P3' },
+  { r:20, code:'MEX', zh:'墨西哥城', en:'Mexico City',  gp:'墨西哥城大奖赛',   gpE:'Mexico City Grand Prix',
+    date:'2025-10-26', circ:'罗德里格斯兄弟赛道', circE:'Autódromo Hermanos Rodríguez',
+    grid:2, pos:2, pts:18, hg:3, hp:8, hpts:4, nth:7,
+    ph:'', by:'', lic:'', page:'',
+    note:'赛季最后一次登台，也是第 7 次', noteE:'Seventh and final podium of the season' },
+];
+
+const RB = { idx: -1 };
+function rbT(o, k){ return SITE.lang === 'en' ? o[k + 'E'] : o[k]; }
+
+function renderWins(){
+  const box = document.getElementById('wins');
+  if (!box) return;
+  box.innerHTML = RACES.map((o, i) => {
+    const nm = SITE.lang === 'en' ? o.en : o.zh;
+    return '<div class="win" data-i="' + i + '" role="button" tabindex="0" aria-label="' +
+      (SITE.lang === 'en' ? 'Race report: ' : '战报：') + nm + '">' +
+      '<em>R' + String(o.r).padStart(2, '0') + ' · ' + o.code + '</em>' +
+      '<b>' + nm + '</b>' +
+      '<i>P' + o.pos + '</i></div>';
+  }).join('');
+  if (RB.idx >= 0) openRace(RB.idx, true);
+}
+
+function openRace(i, quiet){
+  const o = RACES[i]; if (!o) return;
+  RB.idx = i;
+  document.querySelectorAll('#wins .win').forEach(el => el.classList.toggle('on', +el.dataset.i === i));
+  const en = SITE.lang === 'en';
+  const fig = document.querySelector('#racebox .rb-ph');
+  const img = document.getElementById('rb-img');
+  const cap = document.getElementById('rb-cap');
+  const cardEl = fig.closest('.rb-card');
+  const noPhoto = () => {
+    fig.classList.add('noimg'); cardEl.classList.add('noimg');
+    img.removeAttribute('src'); img.style.display = 'none';
+    cap.innerHTML = (en ? 'No photo for this round yet · ' : '该站暂无实拍图 · ') + 'Ferrari SF-25';
+  };
+  img.onerror = noPhoto;
+  img.onload = () => { fig.classList.remove('noimg'); cardEl.classList.remove('noimg'); img.style.display = ''; };
+  fig.classList.remove('noimg'); cardEl.classList.remove('noimg');
+  if (!o.ph){
+    img.alt = (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp');
+    noPhoto();
+  } else {
+  img.src = o.ph; img.alt = (en ? 'Ferrari at the ' : '法拉利在') + rbT(o, 'gp');
+  }
+  if (o.by){
+    cap.innerHTML = (en ? 'Photo: ' : '摄影：') + o.by + ' / <a href="' + o.page +
+      '" target="_blank" rel="noopener">' + o.lic + '</a>';
+  } else {
+    cap.innerHTML = (en ? 'Photo © ' : '摄影：') + (o.by||'—') + ' / ' + (o.lic||'') + (o.page ? ' · <a href="'+o.page+'" target="_blank" rel="noopener noreferrer">Commons</a>' : '');
+  }
+  document.getElementById('rb-k').textContent =
+    'R' + String(o.r).padStart(2, '0') + ' · ' + o.code + ' · ' + o.date;
+  document.getElementById('rb-h').textContent = rbT(o, 'gp');
+  document.getElementById('rb-sub').textContent = rbT(o, 'circ') + ' · ' +
+    (en ? 'Podium #' + o.nth + ' of 7' : '赛季第 ' + o.nth + ' 次登台');
+  const S = document.getElementById('rb-stats');
+  S.innerHTML =
+    '<div><u>' + (en ? 'Grid' : '发车') + '</u><b>P' + o.grid + '</b></div>' +
+    '<div><u>' + (en ? 'Finish' : '完赛') + '</u><b>P' + o.pos + '</b></div>' +
+    '<div><u>' + (en ? 'Points' : '积分') + '</u><b>+' + o.pts + '</b></div>' +
+    '<div><u>' + (en ? 'Teammate' : '队友') + '</u><b>P' + o.hp + '<small>+' + o.hpts + '</small></b></div>';
+  document.getElementById('rb-txt').innerHTML = en
+    ? 'Leclerc started P' + o.grid + ' in ' + rbT(o, 'circ') + ' and finished P' + o.pos +
+      ', scoring ' + o.pts + ' points. Hamilton lined up P' + o.hg + ' and came home P' + o.hp +
+      ' for ' + o.hpts + '. ' + o.noteE + '.'
+    : 'Leclerc 在' + rbT(o, 'circ') + '从第 ' + o.grid + ' 位发车，第 ' + o.pos + ' 完赛，进账 ' +
+      o.pts + ' 分；Hamilton 第 ' + o.hg + ' 位发车、第 ' + o.hp + ' 完赛，拿 ' + o.hpts +
+      ' 分。' + o.note + '。';
+  const box = document.getElementById('racebox');
+  box.classList.add('on'); box.setAttribute('aria-hidden', 'false');
+  if (!quiet) document.getElementById('rb-close').focus({ preventScroll: true });
+}
+
+function closeRace(){
+  const box = document.getElementById('racebox');
+  if (!box || !box.classList.contains('on')) return;
+  box.classList.remove('on'); box.setAttribute('aria-hidden', 'true');
+  RB.idx = -1;
+  document.querySelectorAll('#wins .win').forEach(el => el.classList.remove('on'));
+}
+
+document.addEventListener('click', (e) => {
+  const w = e.target.closest('#wins .win');
+  if (w){ openRace(+w.dataset.i); return; }
+  if (e.target.id === 'rb-back' || e.target.id === 'rb-close') closeRace();
+});
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' '){
+    const w = document.activeElement && document.activeElement.closest && document.activeElement.closest('#wins .win');
+    if (w){ e.preventDefault(); openRace(+w.dataset.i); }
+  }
+  if (e.key === 'Escape' && RB.idx >= 0){ e.stopPropagation(); closeRace(); }
+}, true);
+
 function setLang(lang){
   SITE.lang = lang;
   document.querySelectorAll('[data-t]').forEach(el => {
@@ -8480,6 +8726,7 @@ function setLang(lang){
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
   document.body.classList.toggle('lang-en', lang === 'en');
+  renderWins();
 }
 
 
@@ -8810,6 +9057,7 @@ function initSite(){
 
 main();
 initSite();
+renderWins();
 
 </script>
 </body>
