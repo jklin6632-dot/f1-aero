@@ -44,10 +44,11 @@
 | `h2008.jpg` | Ferrari F2008 | Calreyn88 | CC BY-SA 4.0 |
 | `h2023.jpg` | Carlos Sainz，2023 意大利站 | Eustace Bagge | CC BY-SA 4.0 |
 | `h2024.jpg` | SF-24，2024 日本站 | Cineyas | CC BY-SA 4.0 |
-| `p16.jpg` | Leclerc，2024 奥地利站 | Lukas Raich | CC BY-SA 4.0 |
-| `p55.jpg` | Sainz，2024 奥地利站 | Lukas Raich | CC BY-SA 4.0 |
-| `s1.jpg` | 2024 中国站发车格 | Liauzh | CC BY-SA 4.0 |
-| `s2.jpg` | 2024 西班牙站 | emperornie | CC BY-SA 2.0 |
+| `h2025.jpg` | Charles Leclerc，SF-25，2025 日本站 | Liauzh | CC BY-SA 4.0 |
+| `p16.jpg` | Charles Leclerc，2025 奥地利站 | Lukas Raich | CC BY-SA 4.0 |
+| `p44.jpg` | Lewis Hamilton，2025 日本站 | Liauzh | CC BY-SA 4.0 |
+| `s1.jpg` | Charles Leclerc，2025 新加坡站 | Liauzh | CC BY-SA 4.0 |
+| `s2.jpg` | Lewis Hamilton，2025 新加坡站 | Liauzh | CC BY-SA 4.0 |
 
 CC BY-SA 的要求是 **署名 + 许可证 + 标明是否修改**：
 本项目只做了等比缩放与 JPEG 重压缩（≤1400 px、q84），没有裁剪内容、没有加滤镜、没有加水印。
