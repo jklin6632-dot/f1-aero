@@ -895,8 +895,12 @@ body.ui-hidden::after{ opacity:0; }
   }
   .hp-frame img{ width:100%; height:100%; object-fit:cover; display:block; transition:opacity .28s ease; }
   .hp-frame img.fade{ opacity:0; }
+  .hp-prog{ margin-top:10px; height:2px; border-radius:2px; background:rgba(255,255,255,.10); overflow:hidden; }
+  .hp-prog i{ display:block; height:100%; width:0; border-radius:2px; background:linear-gradient(90deg, rgba(225,6,0,.55), rgba(225,6,0,.92)); }
+  .hp-prog.run i{ animation:hpbar 2s linear forwards; }
+  @keyframes hpbar{ from{ width:0 } to{ width:100% } }
   .hp-cap{
-    margin-top:10px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+    margin-top:12px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
     font-size:10.5px; letter-spacing:.04em; color:rgba(255,255,255,.52);
   }
   .hp-cap b{ font-size:12px; color:rgba(255,255,255,.9); letter-spacing:.02em; }
@@ -1513,6 +1517,7 @@ body.ui-hidden::after{ opacity:0; }
       <!-- 年份照片：小窗 + 图注（署名在图外，不压在画面上） -->
       <figure id="hphoto" aria-live="polite">
         <div class="hp-frame"><img id="hp-img" alt=""></div>
+        <div class="hp-prog" id="hp-prog" aria-hidden="true"><i></i></div>
         <figcaption class="hp-cap">
           <b id="hp-year">1950</b>
           <span id="hp-text"></span>
@@ -9259,7 +9264,21 @@ function histShow(i, fromClick){
   if (t) t.textContent = d.cap + ' · © ' + d.by + ' / ' + d.lic;
   if (a) a.href = d.page;
   document.querySelectorAll('#tl-hist .row').forEach((r) => r.classList.toggle('on', r.dataset.hy === d.k));
+  hpBarStart();
   if (fromClick) histRestart();
+}
+
+/* 照片自动播放的进度：换一张就从头走一遍，停播时收回 */
+function hpBarStart(){
+  const b = document.getElementById('hp-prog');
+  if (!b) return;
+  b.classList.remove('run');
+  void b.offsetWidth;               /* 强制重排，否则同一帧内重启动画无效 */
+  if (HP.on) b.classList.add('run');
+}
+function hpBarStop(){
+  const b = document.getElementById('hp-prog');
+  if (b) b.classList.remove('run');
 }
 
 function histRestart(){
@@ -9278,6 +9297,7 @@ function histStart(){
 function histStop(){
   HP.on = false;
   clearInterval(HP.timer); HP.timer = 0;
+  hpBarStop();
 }
 
 function initHistoryPhotos(){
