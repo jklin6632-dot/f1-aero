@@ -8785,7 +8785,7 @@ window.__T = {
    work 模式才是原来的仪表盘（驾驶 / 拆解 / 气动解）。两者共用同一台车、
    同一个解算器，切模式只切 DOM 与相机控制权。 */
 const SITE = {
-  on: true, lang: 'zh', ch: -1, ready: false, spin: 0, cam: null,
+  on: true, lang: 'zh', ch: -1, ready: false, odomGo: false, spin: 0, cam: null,
   cams: [
     { pos:[ 4.10, 1.78, -5.55], tgt:[0, 0.46, -0.06], sh:-0.10, tone:1 },  // 0 hero（文字左）
     { pos: [-4.60, 1.85, -5.20], tgt:[0, 0.50,  0.00], sh: 0.13, tone:1 },  // 1 技术（文字右）
@@ -8883,13 +8883,16 @@ function siteReady(){
   const fill = document.getElementById('gfill');
   if (fill) fill.style.width = '100%';
   const el = document.getElementById('gpct'); if (el) el.textContent = '100%';
+  /* 数字先归零压在 0，等闸门散开后再滚上去——避免先看到终值、再跳回 0 的"蹦两次" */
+  document.querySelectorAll('#site .odom').forEach(e => { e.textContent = '0'; });
   setTimeout(() => {
     const gate = document.getElementById('gate');
     if (gate) gate.classList.add('done');
     barShow(2000);                    /* 首屏先把导航亮 2 秒，再收 */
     applyChapter(0, true);
     buildHotspots();
-    setTimeout(() => {                 /* 等闸门淡出完，再让首屏数字滚一遍 */
+    setTimeout(() => {                 /* 等闸门淡出完，再让首屏数字滚一遍（只此一次） */
+      SITE.odomGo = true;
       const cur = document.querySelectorAll('#site .ch')[SITE.ch < 0 ? 0 : SITE.ch];
       if (cur) odomIn(cur);
     }, 640);
@@ -9518,7 +9521,7 @@ function odomIn(root){
     const t0 = performance.now(), dur = 760;
     el.textContent = '0';
     const step = (t) => {
-      const p = Math.min(1, (t - t0) / dur);
+      const p = Math.max(0, Math.min(1, (t - t0) / dur));   /* rAF 首帧可能早于 t0，夹住免得出负数 */
       const e = 1 - Math.pow(1 - p, 3);
       el.textContent = String(Math.round(target * e));
       if (p < 1) el._raf = requestAnimationFrame(step);
@@ -9552,7 +9555,7 @@ function applyChapter(i, force){
   if (i !== 5) hideHotTip();
   if (i === 6) histStart(); else histStop();
   const cur = document.querySelectorAll('#site .ch')[i];
-  if (cur) odomIn(cur);
+  if (cur && SITE.odomGo) odomIn(cur);              /* 首屏要等闸门消失后再滚，否则会滚两遍 */
 }
 
 function buildHotspots(){
