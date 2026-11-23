@@ -1248,6 +1248,24 @@ body.ui-hidden::after{ opacity:0; }
   }
   .ch-hint b{ color:rgba(255,255,255,.95); font-weight:600; }
 
+  /* 可点卡片：顶边一条缓慢闪烁的红线（不压字、不挡内容） */
+  @keyframes edgelive{ 0%,100%{ opacity:.18 } 50%{ opacity:.92 } }
+  #wins .win, #ch-drivers .drv article, #ch-spec .ch-in{ position:relative; }
+  #wins .win::before, #ch-drivers .drv article::before{
+    content:""; position:absolute; left:0; right:0; top:0; height:1px;
+    background:#e10600; opacity:.18; pointer-events:none;
+    animation:edgelive 2.6s ease-in-out infinite;
+  }
+  /* 技术卡是整张圆角卡片，顶边只画中间一段，避开圆角 */
+  #ch-spec .ch-in::after{
+    content:""; position:absolute; left:26px; right:26px; top:0; height:1px;
+    background:#e10600; opacity:.18; pointer-events:none;
+    animation:edgelive 2.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #wins .win::before, #ch-drivers .drv article::before, #ch-spec .ch-in::after{ animation:none; opacity:.6; }
+  }
+
   /* 可点卡片的角标：鼠标移上去才出现，触摸屏常显但更淡（赛季卡太窄，靠悬停底色即可） */
   #ch-drivers .drv article{ position:relative; }
   #ch-drivers .drv article::after{
