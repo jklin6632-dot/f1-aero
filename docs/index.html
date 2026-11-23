@@ -675,7 +675,16 @@ body.ui-hidden::after{ opacity:0; }
     border:0; background:transparent; cursor:pointer; padding:6px 9px;
     font:600 10.5px/1 var(--mono); letter-spacing:.08em; color:var(--faint);
   }
-  #sbar .lang button.on{ background:var(--ink); color:#fff; }
+  #sbar .lang{ position:relative; }
+  #sbar .lang .lang-pill{
+    position:absolute; top:0; bottom:0; left:0; width:0; border-radius:5px;
+    background:var(--ink); pointer-events:none;
+    transition:transform .30s cubic-bezier(.22,.86,.24,1), width .30s cubic-bezier(.22,.86,.24,1);
+  }
+  #sbar .lang button{ position:relative; z-index:1; transition:color .22s ease; }
+  #sbar .lang button.on{ background:transparent; color:#fff; }
+  body.mode-site.tone-dark #sbar .lang .lang-pill{ background:#F5F3EF; }
+  body.mode-site.tone-dark #sbar .lang button.on{ background:transparent; color:#0D0D10; }
   #sbar #to-work{
     border:1px solid var(--ink); background:var(--ink); color:#fff; cursor:pointer;
     padding:9px 15px; border-radius:6px; font:600 12px/1 var(--sans); transition:.15s;
@@ -714,7 +723,8 @@ body.ui-hidden::after{ opacity:0; }
   #ch-hero .kpis{ display:flex; gap:34px; margin-top:40px; }
   #ch-hero .kpi b{ display:block; font:700 34px/1 var(--display); letter-spacing:-.03em; color:var(--ink); }
   #ch-hero .kpi b i{ font:500 10px/1 var(--mono); font-style:normal; letter-spacing:.1em; color:var(--faint); margin-left:5px; }
-  #ch-hero .kpi span{ display:block; margin-top:7px; font:500 9.5px/1 var(--mono); letter-spacing:.14em; color:var(--faint); text-transform:uppercase; }
+  #ch-hero .kpi > span{ display:block; margin-top:7px; font:500 9.5px/1 var(--mono); letter-spacing:.14em; color:var(--faint); text-transform:uppercase; }
+  #ch-hero .kpi b .odom{ display:inline; margin:0; font:inherit; letter-spacing:inherit; color:inherit; text-transform:none; }
 
   /* 规格网格 */
   .specs2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:26px; }
@@ -1304,6 +1314,40 @@ body.ui-hidden::after{ opacity:0; }
   body.mode-site:not(.tone-dark) .cta-btn:hover{ background:rgba(15,23,42,.08); border-color:rgba(15,23,42,.3); }
 
   /* 可点卡片：顶边一条缓慢闪烁的红线（不压字、不挡内容） */
+  /* ── 入场：卡片按顺序浮起（参考 UI Moments 的 Domino Row） ── */
+  @keyframes domIn{ from{ opacity:0; transform:translateY(12px) } to{ opacity:1; transform:none } }
+  #site .ch.on .win,
+  #site .ch.on .drv article,
+  #site .ch.on .specs2 > div,
+  #site .ch.on #tl-hist .row{
+    animation:domIn .48s cubic-bezier(.22,.72,.24,1) backwards;
+  }
+  #site .ch.on .win:nth-child(1), #site .ch.on #tl-hist .row:nth-child(1){ animation-delay:.03s }
+  #site .ch.on .win:nth-child(2), #site .ch.on #tl-hist .row:nth-child(2){ animation-delay:.08s }
+  #site .ch.on .win:nth-child(3), #site .ch.on #tl-hist .row:nth-child(3){ animation-delay:.13s }
+  #site .ch.on .win:nth-child(4), #site .ch.on #tl-hist .row:nth-child(4){ animation-delay:.18s }
+  #site .ch.on .win:nth-child(5), #site .ch.on #tl-hist .row:nth-child(5){ animation-delay:.23s }
+  #site .ch.on .win:nth-child(6), #site .ch.on #tl-hist .row:nth-child(6){ animation-delay:.28s }
+  #site .ch.on .win:nth-child(7), #site .ch.on #tl-hist .row:nth-child(7){ animation-delay:.33s }
+  #site .ch.on .win:nth-child(8), #site .ch.on #tl-hist .row:nth-child(8){ animation-delay:.38s }
+  #site .ch.on .perf:nth-child(1){ animation-delay:.03s }
+  #site .ch.on .drv article:nth-child(2){ animation-delay:.12s }
+  #site .ch.on .specs2 > div:nth-child(2){ animation-delay:.06s }
+  #site .ch.on .specs2 > div:nth-child(3){ animation-delay:.11s }
+  #site .ch.on .specs2 > div:nth-child(4){ animation-delay:.16s }
+  #site .ch.on .specs2 > div:nth-child(5){ animation-delay:.21s }
+  #site .ch.on .specs2 > div:nth-child(6){ animation-delay:.26s }
+
+  /* 按压：轻微下压，松开带一点回弹（Squash Play 的手感） */
+  .cta-btn{ transition:background .2s ease, border-color .2s ease, transform .34s cubic-bezier(.2,1.5,.35,1); }
+  .cta-btn:active{ transform:scale(.972); transition-duration:.08s; }
+  #wins .win{ transition:background .18s ease, border-color .18s ease, transform .3s cubic-bezier(.2,1.5,.35,1); }
+  #wins .win:active{ transform:translateY(0) scale(.982); transition-duration:.08s; }
+
+  @media (prefers-reduced-motion: reduce){
+    #site .ch.on .win, #site .ch.on .drv article, #site .ch.on .specs2 > div, #site .ch.on #tl-hist .row{ animation:none; }
+  }
+
   /* 顶边强调线：不闪，鼠标移上去才淡入 */
   #wins .win, #ch-drivers .drv article{ position:relative; }
   #wins .win::before, #ch-drivers .drv article::before{
@@ -1429,6 +1473,7 @@ body.ui-hidden::after{ opacity:0; }
       </nav>
       <div class="sb-right">
         <div class="lang">
+          <span class="lang-pill" aria-hidden="true"></span>
           <button data-lang="zh" class="on">中文</button>
           <button data-lang="en">EN</button>
         </div>
@@ -1442,9 +1487,9 @@ body.ui-hidden::after{ opacity:0; }
         <h1>SF-25<span data-t="hero-sub">2025 season car</span></h1>
         <p data-t="hero-p">2025 赛季的 SF-25，16 号的 Leclerc 与 44 号的 Hamilton。下面按顺序看它的结构、气动、赛季成绩和队史。</p>
         <div class="kpis">
-          <div class="kpi"><b>398<i>PTS</i></b><span data-t="k1">车队积分</span></div>
+          <div class="kpi"><b><span class="odom" data-n="398">398</span><i>PTS</i></b><span data-t="k1">车队积分</span></div>
           <div class="kpi"><b>0<i>WINS</i></b><span data-t="k2">分站冠军</span></div>
-          <div class="kpi"><b>7<i>PODIUMS</i></b><span data-t="k3">登上领奖台</span></div>
+          <div class="kpi"><b><span class="odom" data-n="7">7</span><i>PODIUMS</i></b><span data-t="k3">登上领奖台</span></div>
         </div>
         <div class="hint" data-t="scroll">点击任意处继续 →</div>
       </div>
@@ -1552,7 +1597,7 @@ body.ui-hidden::after{ opacity:0; }
             <div class="tag" data-t="d1t">摩纳哥 · 1997</div>
             <figure class="pw"><img src="img/pod_c.jpg" alt="Charles Leclerc 在 2024 荷兰站领奖台" loading="lazy"><figcaption>2024 荷兰站领奖台 · Steffen Prößdorf / <a href="https://commons.wikimedia.org/wiki/File:2024-08-25_Motorsport,_Formel_1,_Großer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_(cropped2).jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
             <p data-t="d1p">242 分，年度第五。全年 7 次登台、1 个杆位，是队内唯一上过领奖台的人；赛季中段连续四站进前三。</p>
-            <div class="st"><div><i>PTS</i><b>242</b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P5</b></div></div>
+            <div class="st"><div><i>PTS</i><b><span class="odom" data-n="242">242</span></b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P5</b></div></div>
             <button class="cta-btn" type="button"><span data-t="drv-open">打开生涯时间轴</span><i>→</i></button>
           </article>
           <article class="drv-card" data-drv="1">
@@ -1561,7 +1606,7 @@ body.ui-hidden::after{ opacity:0; }
             <div class="tag" data-t="d2t">斯蒂夫尼奇 · 1985</div>
             <figure class="pw"><img src="img/ham25.jpg" alt="Lewis Hamilton 在 2025 铃鹿站车迷区" loading="lazy"><figcaption>铃鹿 2025 车迷区 · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_Fanzone_Stage_(cropped).jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
             <p data-t="d2p">156 分，年度第六。转会法拉利的第一年：中国站冲刺赛拿下全场最快单圈，全年最接近领奖台的一次是迈阿密第四。</p>
-            <div class="st"><div><i>PTS</i><b>156</b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P6</b></div></div>
+            <div class="st"><div><i>PTS</i><b><span class="odom" data-n="156">156</span></b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P6</b></div></div>
             <button class="cta-btn" type="button"><span data-t="drv-open">打开生涯时间轴</span><i>→</i></button>
           </article>
         </div>
@@ -8844,6 +8889,10 @@ function siteReady(){
     barShow(2000);                    /* 首屏先把导航亮 2 秒，再收 */
     applyChapter(0, true);
     buildHotspots();
+    setTimeout(() => {                 /* 等闸门淡出完，再让首屏数字滚一遍 */
+      const cur = document.querySelectorAll('#site .ch')[SITE.ch < 0 ? 0 : SITE.ch];
+      if (cur) odomIn(cur);
+    }, 640);
   }, 260);
 }
 
@@ -9300,6 +9349,19 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && TB.on){ e.stopPropagation(); closeTech(); }
 }, true);
 
+/* 语言切换的墨丸：跟着选中的那个按钮滑过去 */
+function langInk(){
+  const box = document.querySelector('#sbar .lang');
+  if (!box) return;
+  const pill = box.querySelector('.lang-pill');
+  const on = box.querySelector('button.on');
+  if (!pill || !on) return;
+  pill.style.width = on.offsetWidth + 'px';
+  pill.style.transform = 'translateX(' + on.offsetLeft + 'px)';
+}
+addEventListener('load', langInk);
+addEventListener('resize', langInk);
+
 function setLang(lang){
   SITE.lang = lang;
   document.querySelectorAll('[data-t]').forEach(el => {
@@ -9313,6 +9375,7 @@ function setLang(lang){
     }
   });
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  langInk();
   document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
   document.body.classList.toggle('lang-en', lang === 'en');
   renderWins();
@@ -9444,6 +9507,27 @@ function initHistoryPhotos(){
   histShow(0);
 }
 
+/* 数字滚动：章节进入时，把 .odom 从 0 滚到目标值 */
+function odomIn(root){
+  if (!root) return;
+  const slow = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  root.querySelectorAll('.odom').forEach(el => {
+    const target = +el.dataset.n || 0;
+    if (el._raf) cancelAnimationFrame(el._raf);
+    if (slow || !target){ el.textContent = String(target); return; }
+    const t0 = performance.now(), dur = 760;
+    el.textContent = '0';
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = String(Math.round(target * e));
+      if (p < 1) el._raf = requestAnimationFrame(step);
+      else { el.textContent = String(target); el._raf = 0; }
+    };
+    el._raf = requestAnimationFrame(step);
+  });
+}
+
 function applyChapter(i, force){
   if (i === SITE.ch && !force) return;
   SITE.ch = i;
@@ -9467,6 +9551,8 @@ function applyChapter(i, force){
   document.body.classList.toggle('hot-on', i === 5);
   if (i !== 5) hideHotTip();
   if (i === 6) histStart(); else histStop();
+  const cur = document.querySelectorAll('#site .ch')[i];
+  if (cur) odomIn(cur);
 }
 
 function buildHotspots(){
