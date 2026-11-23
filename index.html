@@ -2702,7 +2702,7 @@ function twinTick(now){
   APP.controls.target.lerpVectors(TWIN.fromTgt, TWIN.toTgt, e);
   if (k >= 1){
     TWIN.on = false;
-    APP.controls.enabled = true;
+    APP.controls.enabled = !SITE.on;   /* 官网里不交还控制权，否则一拖就把机位带偏 */
     if (TWIN.onComplete){ const f = TWIN.onComplete; TWIN.onComplete = null; f(); }
     else if (S.isolate) framePart(S.isolate);
   }
@@ -9514,8 +9514,63 @@ function toWork(){
   }
 }
 
+/* 从工作台回官网：把工作台里打开的视图、驾驶状态、相机限制全收干净。
+   相机不在这里归位——交给随后的 applyChapter 做一次 900 ms 的平滑补间，
+   所以从座舱 / 爆炸视图 / 底板视图切回来是「飞回去」而不是「跳回去」。 */
+function resetWorkState(){
+  /* 1) 工作台的各种视图：关掉时一律不让它们自己补间机位（keepCam=true / 静默退出），
+        统一由 applyChapter 收尾，避免两次补间打架 */
+  try {
+    if (typeof CPIT !== 'undefined' && CPIT.on){
+      const cam = APP.camera, sv = CPIT.saved || {};
+      cam.fov = sv.fov != null ? sv.fov : 35;
+      cam.near = sv.near == null ? 0.1 : sv.near;
+      cam.updateProjectionMatrix();
+      if (sv.tgt) APP.controls.target.copy(sv.tgt);
+      if (FLOW.mesh) FLOW.mesh.visible = false;
+      document.body.classList.remove('cockpit');
+      CPIT.on = false; CPIT.saved = null; CPIT.drag = null;
+    }
+    if (typeof DEMO !== 'undefined' && DEMO.on){
+      /* 静默停掉演示：不动相机，只把演示改过的视图/DRS/画质档位还原 */
+      DEMO.on = false;
+      const sv = DEMO.saved || {};
+      if (!!sv.drs !== DRS.on) setDrs(!!sv.drs);
+      if (sv.view && sv.view !== S.view) dispatch({ type:'VIEW', v:sv.view });
+      if (sv.tier != null && typeof applyTier === 'function') applyTier(sv.tier);
+      document.body.classList.remove('demo');
+      if (DEMO.cap) DEMO.cap.classList.remove('on');
+      const bar = document.getElementById('demoBar');
+      if (bar) bar.classList.remove('on');
+      if (DEMO.fill) DEMO.fill.style.width = '0%';
+      DEMO.saved = null;
+    }
+    if (typeof FLOORV !== 'undefined' && FLOORV.on) floorGhost(false);
+    if (typeof SWV !== 'undefined' && SWV.on) setSteerView(false, true);
+    if (typeof DECALV !== 'undefined' && DECALV.on) setDecalFrag(false, true);
+    if (S.isolate) dispatch({ type:'CLEAR' });
+    if (S.view !== 'exterior') setView('exterior');
+    if (document.body.classList.contains('guiding')) setGuide(false);
+  } catch (e){ console.warn('[resetWorkState]', e); }
+
+  /* 2) 驾驶状态归零：车停住、车轮与方向盘回正、DRS 合上（尾翼自己缓动闭回去） */
+  DRIVE.v = 0; DRIVE.spin = 0; DRIVE.steer = 0; DRIVE.steerLock = undefined;
+  DRIVE.keys.w = DRIVE.keys.s = DRIVE.keys.a = DRIVE.keys.d = false;
+  for (const w of DRIVE.wheels){ w.roll.rotation.x = 0; w.yaw.rotation.y = 0; }
+  if (SWLINK.enabled && !SWLINK.hold){ try { steerLinkApply(0); } catch (_){} }
+  if (DRS.on) setDrs(false);
+  try { updateWheelGamma(); } catch (_){}
+  if (FLOW.mesh) FLOW.mesh.visible = false;
+
+  /* 3) 相机限制回出厂值（framePart / 底板视图会把 min / max / 极角改成单件的量级） */
+  APP.controls.minDistance = 0.35;
+  APP.controls.maxDistance = 26;
+  APP.controls.maxPolarAngle = Math.PI * 0.495;
+}
+
 function toSite(){
   SITE.on = true;
+  resetWorkState();                 /* 先把工作台的状态收干净，再切回官网 */
   document.body.classList.add('mode-site');
   document.body.classList.remove('mode-work');
   APP.controls.enabled = false;
