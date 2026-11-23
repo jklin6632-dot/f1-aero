@@ -767,6 +767,18 @@ body.ui-hidden::after{ opacity:0; }
   .hs::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--accent); }
   .hs:hover{ transform:translate(-50%,-50%) scale(1.18); background:var(--accent); }
   .hs:hover::before{ background:#fff; }
+  #hot-legend{ display:flex; flex-wrap:wrap; gap:7px; margin-top:16px; }
+  #hot-legend button{
+    display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+    border:1px solid rgba(255,255,255,.20); background:rgba(255,255,255,.05); border-radius:999px;
+    padding:7px 12px 7px 10px; font:600 11px/1 var(--sans); color:var(--ink);
+    transition:background .18s ease, border-color .18s ease;
+  }
+  #hot-legend button::before{
+    content:""; width:5px; height:5px; border-radius:999px; background:rgba(225,6,0,.9);
+  }
+  #hot-legend button:hover{ background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.42); }
+  .hs.lit{ transform:scale(1.45); box-shadow:0 0 0 4px rgba(225,6,0,.28); }
   .hs-lbl{
     position:absolute; left:34px; top:50%; transform:translateY(-50%);
     white-space:nowrap; font:600 11px/1 var(--sans); color:var(--ink);
@@ -875,6 +887,11 @@ body.ui-hidden::after{ opacity:0; }
 
   /* §SITE-7 队史章：俯视全车 + 窄卡，避免卡片吃掉整车 */
   #ch-history .ch-in{ width:min(470px,40vw); padding:32px 34px 28px; }
+  /* 上面几条按 vw 限宽的规则排在 857 行那条移动端 100% 规则之后，窄屏会被它们压回半屏；
+     这里补一条放最后，手机上一律整宽 */
+  @media (max-width:900px){
+    #ch-season .ch-in, #ch-drivers .ch-in, #ch-history .ch-in, #ch-cta .ch-in{ width:100%; }
+  }
 
   body.lang-en #ch-season .win b{ font-size:14px; letter-spacing:-.02em; }
   body.lang-en #ch-season .win span{ font-size:9.8px; }
@@ -906,7 +923,13 @@ body.ui-hidden::after{ opacity:0; }
   .hp-cap b{ font-size:12px; color:rgba(255,255,255,.9); letter-spacing:.02em; }
   .hp-cap a{ color:inherit; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.22); }
   .hp-cap a:hover{ color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.5); }
-  #ch-history .tl .row{ cursor:pointer; transition:background .2s ease; }
+  #ch-history .tl .row{ cursor:pointer; position:relative; padding-right:30px; transition:background .2s ease; }
+  #ch-history .tl .row::after{
+    content:"›"; position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    font:400 16px/1 var(--sans); color:rgba(255,255,255,.28); transition:color .2s ease, transform .2s ease;
+  }
+  #ch-history .tl .row:hover::after{ color:rgba(255,255,255,.85); transform:translateY(-50%) translateX(2px); }
+  #ch-history .tl .row.on::after{ color:var(--accent); }
   #ch-history .tl .row:hover{ background:rgba(255,255,255,.04); }
   #ch-history .tl .row.on{ background:rgba(255,255,255,.05); box-shadow:inset 2px 0 0 rgba(255,255,255,.72); }
 
@@ -1109,13 +1132,23 @@ body.ui-hidden::after{ opacity:0; }
   }
   /* ── 赛季：7 张领奖台卡（可点开战报）+ 战报弹层 ───────────────── */
   #ch-season .wins{
-    display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:1px;
-    background:var(--line); border:1px solid var(--line); margin-top:24px;
+    display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px;
+    background:transparent; border:0; margin-top:24px;
   }
   #ch-season .wins .win{
-    cursor:pointer; text-align:center; padding:13px 4px 14px; position:relative;
-    transition:background .18s ease;
+    cursor:pointer; text-align:center; padding:14px 5px 11px; position:relative;
+    border:1px solid rgba(255,255,255,.16); border-radius:10px; background:rgba(255,255,255,.045);
+    transition:background .18s ease, border-color .18s ease, transform .18s ease;
   }
+  #ch-season .wins .win .go{
+    display:inline-flex; align-items:center; gap:3px; margin-top:9px;
+    padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.22);
+    font:600 9px/1 var(--sans); letter-spacing:.02em; color:rgba(255,255,255,.80);
+    transition:background .18s ease, border-color .18s ease;
+  }
+  #ch-season .wins .win .go i{ font-style:normal; opacity:.7; transition:transform .18s ease; }
+  #ch-season .wins .win:hover .go{ background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.45); }
+  #ch-season .wins .win:hover .go i{ transform:translateX(2px); opacity:1; }
   #ch-season .wins .win em{
     display:block; font:600 8px/1 var(--mono); letter-spacing:.1em;
     color:var(--faint); font-style:normal;
@@ -1128,10 +1161,10 @@ body.ui-hidden::after{ opacity:0; }
     display:block; margin-top:7px; font:700 10px/1 var(--mono);
     letter-spacing:.06em; color:#ff3a24; font-style:normal;
   }
-  #ch-season .wins .win:hover{ background:rgba(255,255,255,.055); }
+  #ch-season .wins .win:hover{ background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.34); transform:translateY(-2px); }
   #ch-season .wins .win.on{ background:rgba(255,255,255,.085); box-shadow:inset 0 0 0 1px rgba(255,255,255,.24); }
   #ch-season .wins .win.on::after{
-    content:""; position:absolute; left:0; right:0; top:0; height:2px; background:var(--accent);
+    content:""; position:absolute; left:10px; right:10px; top:-1px; height:2px; border-radius:2px; background:var(--accent);
   }
   body.mode-site:not(.tone-dark) #ch-season .wins .win:hover{ background:rgba(15,23,42,.05); }
 
@@ -1265,6 +1298,22 @@ body.ui-hidden::after{ opacity:0; }
   }
   .ch-hint b{ color:rgba(255,255,255,.95); font-weight:600; }
 
+  /* ── 可点区域的「按钮」外观：边框 + 底色 + 右侧箭头，悬停时整体亮一档 ── */
+  .cta-btn{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%;
+    margin-top:16px; padding:11px 13px; border-radius:8px; cursor:pointer;
+    border:1px solid rgba(255,255,255,.22); background:rgba(255,255,255,.055);
+    font:600 12px/1 var(--sans); color:#f4f4f5; text-align:left;
+    transition:background .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  #ch-spec .cta-btn, #ch-spec .cta-btn span, .cta-btn, .cta-btn span{ color:#f4f4f5; }
+  .cta-btn i{ font-style:normal; font-size:13px; opacity:.75; color:#f4f4f5; transition:transform .2s ease; }
+  .cta-btn:hover{ background:rgba(255,255,255,.11); border-color:rgba(255,255,255,.42); }
+  .cta-btn:hover i{ transform:translateX(3px); opacity:1; }
+  .cta-btn:focus-visible{ outline:2px solid rgba(225,6,0,.75); outline-offset:3px; }
+  body.mode-site:not(.tone-dark) .cta-btn{ border-color:rgba(15,23,42,.16); background:rgba(15,23,42,.04); }
+  body.mode-site:not(.tone-dark) .cta-btn:hover{ background:rgba(15,23,42,.08); border-color:rgba(15,23,42,.3); }
+
   /* 可点卡片：顶边一条缓慢闪烁的红线（不压字、不挡内容） */
   @keyframes edgelive{ 0%,100%{ opacity:.18 } 50%{ opacity:.92 } }
   #wins .win, #ch-drivers .drv article, #ch-spec .ch-in{ position:relative; }
@@ -1274,6 +1323,8 @@ body.ui-hidden::after{ opacity:0; }
     animation:edgelive 2.6s ease-in-out infinite;
   }
   #ch-drivers .drv article::before{ top:-1px; left:-1px; right:-1px; height:1px; z-index:2; }
+  /* 赛季卡变成圆角卡片之后，顶上那条闪光线要内缩，否则会顶出圆角 */
+  #wins .win::before{ left:10px; right:10px; top:-1px; height:2px; border-radius:2px; }
   /* 技术卡是整张圆角卡片，顶边只画中间一段，避开圆角 */
   #ch-spec .ch-in::after{
     content:""; position:absolute; left:26px; right:26px; top:0; height:1px;
@@ -1358,8 +1409,9 @@ body.ui-hidden::after{ opacity:0; }
   @media (max-width:900px){
     #racebox .rb-card{ grid-template-columns:1fr; max-height:88vh; }
     #racebox .rb-ph{ min-height:180px; }
-    #ch-season .wins{ grid-template-columns:repeat(4,minmax(0,1fr)); }
-  }﻿
+    /* 窄屏把七张卡收成一条可横向滑动的卡带，别让卡片被撑到一屏之外 */
+    #ch-season .wins{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+  }
   #racebox .rb-card.noimg{ grid-template-columns:1fr; }
   #racebox .rb-card.noimg .rb-ph{ display:none; }
   #racebox .ph-empty{
@@ -1431,7 +1483,7 @@ body.ui-hidden::after{ opacity:0; }
       <div class="ch-in" id="tspec" role="button" tabindex="0" aria-label="打开 2025 规则与 SF-25 设计理念">
         <div class="eyebrow" data-t="spec-k">Technical</div>
         <h2 data-t="spec-h">SF-25 的技术单</h2>
-        <p class="ch-hint" id="hint-spec"><span data-t="spec-hint"><b>点这块</b>，看 2025 规则与 SF-25 的设计理念</span></p>
+        <button class="cta-btn" id="tech-open" type="button"><span data-t="spec-hint">查看 2025 规则与 SF-25 设计理念</span><i>→</i></button>
         <p data-t="spec-p">2022 年地面效应新规之后的第四代车。碳纤维蜂巢单体壳加 Halo，8 速纵置变速箱；这一年前悬从推杆改成拉杆、后悬仍是拉杆。下面几项是官方口径的硬指标。</p>
         <div class="specs2">
           <div><u data-t="sp1">动力单元</u><b>066/12 · 1600 cc V6 Turbo</b></div>
@@ -1459,7 +1511,6 @@ body.ui-hidden::after{ opacity:0; }
         <div class="eyebrow" data-t="sea-k">2025 Season</div>
         <h2 data-t="sea-h">七次登台，398 分</h2>
         <p data-t="sea-p">车队年终第四，落后迈凯伦 435 分。全年没有胜利，7 次登台全部来自 Leclerc——沙特、摩纳哥、西班牙、奥地利、比利时、美国、墨西哥城。398 分里，Hamilton 在 44 号车上贡献 156 分。</p>
-        <p class="ch-hint" id="hint-season"><span data-t="sea-hint"><b>点赛道卡</b>，看那站的战报</span></p>
         <div class="wins" id="wins"></div>
         <div class="pwrow">
           <figure class="pw"><img src="img/s1.jpg" alt="2025 新加坡大奖赛 Leclerc" loading="lazy"><figcaption>新加坡 · Leclerc · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_Ferrari_-_Charles_Leclerc_-_FP2.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
@@ -1523,7 +1574,6 @@ body.ui-hidden::after{ opacity:0; }
       <div class="ch-in" style="max-width:880px">
         <div class="eyebrow" data-t="drv-k">Drivers</div>
         <h2 data-t="drv-h">16 号和 44 号</h2>
-        <p class="ch-hint" id="hint-drv"><span data-t="drv-hint"><b>点车手卡</b>，看生涯时间轴</span></p>
         <div class="drv">
           <article class="drv-card" data-drv="0" role="button" tabindex="0" aria-label="Charles Leclerc 生涯时间轴">
             <div class="num">16</div>
@@ -1532,6 +1582,7 @@ body.ui-hidden::after{ opacity:0; }
             <figure class="pw"><img src="img/pod_c.jpg" alt="Charles Leclerc 在 2024 荷兰站领奖台" loading="lazy"><figcaption>2024 荷兰站领奖台 · Steffen Prößdorf / <a href="https://commons.wikimedia.org/wiki/File:2024-08-25_Motorsport,_Formel_1,_Großer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_(cropped2).jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
             <p data-t="d1p">242 分，年度第五。全年 7 次登台、1 个杆位，是队内唯一上过领奖台的人；赛季中段连续四站进前三。</p>
             <div class="st"><div><i>PTS</i><b>242</b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P5</b></div></div>
+            <button class="cta-btn" type="button"><span data-t="drv-open">打开生涯时间轴</span><i>→</i></button>
           </article>
           <article class="drv-card" data-drv="1" role="button" tabindex="0" aria-label="Lewis Hamilton 生涯时间轴">
             <div class="num">44</div>
@@ -1540,6 +1591,7 @@ body.ui-hidden::after{ opacity:0; }
             <figure class="pw"><img src="img/ham25.jpg" alt="Lewis Hamilton 在 2025 铃鹿站车迷区" loading="lazy"><figcaption>铃鹿 2025 车迷区 · Liauzh / <a href="https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_Fanzone_Stage_(cropped).jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></figcaption></figure>
             <p data-t="d2p">156 分，年度第六。转会法拉利的第一年：中国站冲刺赛拿下全场最快单圈，全年最接近领奖台的一次是迈阿密第四。</p>
             <div class="st"><div><i>PTS</i><b>156</b></div><div><i>WINS</i><b>0</b></div><div><i>RANK</i><b>P6</b></div></div>
+            <button class="cta-btn" type="button"><span data-t="drv-open">打开生涯时间轴</span><i>→</i></button>
           </article>
         </div>
       </div>
@@ -1550,7 +1602,8 @@ body.ui-hidden::after{ opacity:0; }
         <div class="eyebrow" data-t="hot-k">Anatomy</div>
         <h2 data-t="hot-h">六处关键结构</h2>
         <p data-t="hot-p">车身上六个红点：前翼、侧箱进气口、底板、扩散器、尾翼、Halo。鼠标移到点上就出这块部件的名称、尺寸和气动作用。</p>
-        <p class="ch-hint"><span data-t="hot-hint"><b>鼠标移到红点</b>上，看这块部件的名称、尺寸和气动作用</span></p>
+        <p class="ch-hint"><span data-t="hot-hint">把鼠标移到车身上的红点，或点下面的部件名</span></p>
+        <div id="hot-legend"></div>
       </div>
     </section>
 
@@ -8762,7 +8815,8 @@ const EN = {
   'drv-k':'Drivers', 'drv-h':'Cars 16 and 44',
   'drv-hint':'Tap a driver card for the career timeline',
   'db-k':'Career timeline',
-  'spec-hint':'<b>Tap this card</b> for the 2025 rules and the SF-25 design story',
+  'spec-hint':'Open the 2025 rules and the SF-25 design story',
+  'drv-open':'Open career timeline',
   'sea-hint':'<b>Tap a race card</b> to open that round report',
   'his-hint':'<b>Tap a year</b> for its photo — auto-advances every 2 s',
   'tb-k':'Regulations · Design',
@@ -8918,7 +8972,8 @@ function renderWins(){
       (SITE.lang === 'en' ? 'Race report: ' : '战报：') + nm + '">' +
       '<em>R' + String(o.r).padStart(2, '0') + ' · ' + o.code + '</em>' +
       '<b>' + nm + '</b>' +
-      '<i>P' + o.pos + '</i></div>';
+      '<i>P' + o.pos + '</i>' +
+      '<span class="go">' + (SITE.lang === 'en' ? 'Report' : '查看') + '<i>›</i></span></div>';
   }).join('');
   if (RB.idx >= 0) openRace(RB.idx, true);
 }
@@ -9466,6 +9521,24 @@ function buildHotspots(){
     box.appendChild(b);
     SITE.hot.push({ id, el: b, node: p });
   });
+  /* 底部一排部件名：点/移到哪个就点亮车身上那个点 */
+  const legend = document.getElementById('hot-legend');
+  if (legend && !legend.children.length){
+    SITE.hot.forEach(function(it){
+      const meta = PART_META[it.id];
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = (meta && meta.cn || it.id).split(' / ')[0];
+      const on = function(){ it.el.classList.add('lit'); showHotTip(it.id, it.el); };
+      const off = function(){ it.el.classList.remove('lit'); hideHotTip(); };
+      b.addEventListener('mouseenter', on);
+      b.addEventListener('mouseleave', off);
+      b.addEventListener('focus', on);
+      b.addEventListener('blur', off);
+      b.addEventListener('click', function(ev){ ev.stopPropagation(); on(); });
+      legend.appendChild(b);
+    });
+  }
   document.addEventListener('click', () => hideHotTip());
 }
 
