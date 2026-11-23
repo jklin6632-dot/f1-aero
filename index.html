@@ -653,6 +653,11 @@ body.ui-hidden::after{ opacity:0; }
     background:rgba(255,255,255,.92); backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
+  /* 顶栏会自己躲起来：首屏停一会儿就缩上去，鼠标贴到屏幕上沿再滑出来 */
+  @media (hover:hover) and (min-width:901px){
+    #sbar{ transition:transform .46s cubic-bezier(.32,.72,.24,1); will-change:transform; }
+    body.mode-site #sbar.tuck{ transform:translateY(-100%); }
+  }
   #sbar .sb-brand{ display:flex; align-items:baseline; gap:9px; }
   #sbar .sb-brand b{ font:700 15px/1 var(--display); letter-spacing:-.02em; color:var(--ink); }
   #sbar .sb-brand span{ font:500 9.5px/1 var(--mono); letter-spacing:.14em; color:var(--faint); text-transform:uppercase; }
@@ -8797,10 +8802,49 @@ function siteReady(){
   setTimeout(() => {
     const gate = document.getElementById('gate');
     if (gate) gate.classList.add('done');
+    barShow(2000);                    /* 首屏先把导航亮 2 秒，再收 */
     applyChapter(0, true);
     buildHotspots();
   }, 260);
 }
+
+/* ── 顶栏自动收起 ────────────────────────────────────────────────
+   首屏先亮 2 秒把导航亮给用户看，然后缩上去；鼠标贴到屏幕上沿（26px 内）
+   再滑出来，离开栏面 0.7 秒后收回去。工作台不动它，触屏设备也不缩。 */
+const BAR = { el: null, t: 0 };
+function barEl(){ return BAR.el || (BAR.el = document.getElementById('sbar')); }
+function barShow(ms){
+  const b = barEl();
+  if (!b) return;
+  clearTimeout(BAR.t);
+  b.classList.remove('tuck');
+  if (ms) BAR.t = setTimeout(barHide, ms);
+}
+function barHide(delay){
+  const b = barEl();
+  if (!b) return;
+  clearTimeout(BAR.t);
+  BAR.t = setTimeout(function(){
+    if (!document.body.classList.contains('mode-site')) return;   /* 工作台里不收 */
+    if (!matchMedia('(hover:hover) and (min-width:901px)').matches) return;   /* 触屏 / 窄屏不缩 */
+    if (b.matches(':hover')) return;                             /* 鼠标还停在栏上 */
+    b.classList.add('tuck');
+  }, delay == null ? 800 : delay);
+}
+(function(){
+  const b = barEl();
+  if (!b) return;
+  addEventListener('pointermove', function(e){
+    if (!SITE.on) return;                    /* 工作台自己管顶条 */
+    if (e.clientY <= 26 && b.classList.contains('tuck')) barShow();
+  }, { passive: true });
+  b.addEventListener('pointerenter', function(){ barShow(); });
+  b.addEventListener('pointerleave', function(){ barHide(700); });
+  b.addEventListener('focusin', function(){ barShow(); });
+  b.querySelectorAll('#snav button').forEach(function(btn){
+    btn.addEventListener('click', function(){ barHide(1200); });
+  });
+})();
 
 /* ── 2025 赛季 7 次登台：卡片 + 战报弹层 ─────────────────────────
    数据来源：Jolpica/Ergast（F1 官方数据镜像）2025 逐站结果。
@@ -9500,6 +9544,7 @@ function toWork(){
   if (APP.tone) APP.tone.target = 0;      /* 工作台永远是白棚 */
   hideHotTip();
   APP.controls.enabled = true;
+  barShow();                          /* 工作台常亮，不自动收 */
   goHome();
   setView('exterior');
   /* 只有第一次进工作台时自动弹操作指南，之后靠侧栏按钮或 ? */
@@ -9574,6 +9619,7 @@ function toSite(){
   document.body.classList.add('mode-site');
   document.body.classList.remove('mode-work');
   APP.controls.enabled = false;
+  barShow(1800);                      /* 回来先亮一会儿，让人看清导航 */
   applyChapter(SITE.ch < 0 ? 0 : SITE.ch, true);
 }
 
