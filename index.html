@@ -4263,7 +4263,6 @@ function initFlow(scene){
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
   const mat = new THREE.LineBasicMaterial({ vertexColors:true, transparent:true, opacity:0.38, depthWrite:false });
-  APP.flowMat = mat;
   /* I.1 深度淡出：远处的流线渐隐，避免尾流在画面上糊成一片。
      用相机空间深度（-mvPosition.z）做 smoothstep；near/far 取 16/30 m，
      比尾流可见范围（maxDistance 26）更宽松，只在很远的地方淡掉。 */
@@ -5861,7 +5860,6 @@ function initScene(){
       if (R){ R.toneMapping = THREE.ACESFilmicToneMapping; R.toneMappingExposure = 1.2; }
       if (APP.keyLight) APP.keyLight.intensity = 3.0;
       if (APP.poolPlane) APP.poolPlane.visible = true;
-      if (APP.flowMat) APP.flowMat.opacity = 0.62;   /* 暗场里流线提亮一档 */
       if (APP.hemi) APP.hemi.intensity = 1.55;
       if (APP.fill) APP.fill.intensity = 0.6;
       if (APP.rim)  APP.rim.intensity  = 0.5;
@@ -5873,7 +5871,6 @@ function initScene(){
       if (R){ R.toneMapping = THREE.NoToneMapping; R.toneMappingExposure = 1; }
       if (APP.keyLight) APP.keyLight.intensity = 2.1;
       if (APP.poolPlane) APP.poolPlane.visible = false;
-      if (APP.flowMat) APP.flowMat.opacity = 0.38;
       if (APP.hemi) APP.hemi.intensity = 1.15;
       if (APP.fill) APP.fill.intensity = 0.45;
       if (APP.rim)  APP.rim.intensity  = 0.35;
