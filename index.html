@@ -655,8 +655,7 @@ body.ui-hidden::after{ opacity:0; }
   }
   /* 顶栏会自己躲起来：首屏停一会儿就缩上去，鼠标贴到屏幕上沿再滑出来 */
   @media (hover:hover) and (min-width:901px){
-    #sbar{ transition:transform .46s cubic-bezier(.32,.72,.24,1); will-change:transform; }
-    body.mode-site #sbar.tuck{ transform:translateY(-100%); }
+    #sbar{ will-change:transform; }
   }
   #sbar .sb-brand{ display:flex; align-items:baseline; gap:9px; }
   #sbar .sb-brand b{ font:700 15px/1 var(--display); letter-spacing:-.02em; color:var(--ink); }
@@ -1094,6 +1093,19 @@ body.ui-hidden::after{ opacity:0; }
   /* 过渡：切章时不要硬跳 */
   body.mode-site #sbar, body.mode-site .ch-in, body.mode-site #pager{
     transition:background .55s ease, border-color .55s ease, box-shadow .55s ease, color .4s ease;
+  }
+
+  /* 顶栏收起 / 滑出：收的时候加速离场，出来的时候减速落定，各带一点淡入淡出 */
+  @media (hover:hover) and (min-width:901px){
+    body.mode-site #sbar{
+      transition:background .55s ease, border-color .55s ease, box-shadow .55s ease, color .4s ease,
+                 transform .72s cubic-bezier(.16,.84,.30,1), opacity .40s ease .12s;
+    }
+    body.mode-site #sbar.tuck{
+      transform:translateY(-100%); opacity:0;
+      transition:background .55s ease, border-color .55s ease, box-shadow .55s ease, color .4s ease,
+                 transform .60s cubic-bezier(.42,0,.72,.08), opacity .34s ease;
+    }
   }
   /* ── 赛季：7 张领奖台卡（可点开战报）+ 战报弹层 ───────────────── */
   #ch-season .wins{
