@@ -1602,6 +1602,39 @@ body.ui-hidden::after{ opacity:0; }
     #views #guide-btn{ margin-top:6px; padding:7px 10px; }
     body.mode-work #solve, body.mode-work #solve.open{ top:386px; }
     body.mode-work #specs{ top:434px; max-height:calc(100vh - 448px); }
+  }
+  /* ==========================================================================
+     §V10 隧道暗场：场景转近黑，面板抬高一档，界面整体从"浅色后台"变成控制室
+     ========================================================================== */
+  html.wb-dark, html.wb-dark body{ background:#0a0d12; }
+  html.wb-dark #c{ background:#0a0d12; }
+  :root{ --wb-bg:#12161e; --wb-bg-2:#171c26; --wb-line:rgba(255,255,255,.11); --wb-line-2:rgba(255,255,255,.06); }
+  body.mode-work #views{ background:#101419; }
+  /* 标题区在暗底上要反过来 */
+  html.wb-dark #hud .brand b{ color:#f2f4f8; }
+  html.wb-dark #hud .brand span{ color:#7d8695; }
+  html.wb-dark #hud .spark svg path{ stroke:#7f8ea3; }
+  html.wb-dark #hud .spark span{ color:#5f6875; }
+  html.wb-dark #badge{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14); color:#aeb6c2; }
+  html.wb-dark #srcnote{ color:#5f6875; }
+  html.wb-dark #srcnote b{ color:#8d95a3; }
+  /* 暗场里图例/遥测/读数都再压一档，靠 1px 亮边分层 */
+  html.wb-dark #legend, html.wb-dark #perf{ background:#12161e; border-color:rgba(255,255,255,.12); }
+  html.wb-dark #specs{ border-top-color:rgba(255,255,255,.10); }
+  /* 场景氛围：中心微亮、四角压暗，模拟试验段灯光 */
+  html.wb-dark #tunnel{
+    background:
+      radial-gradient(70% 52% at 56% 40%, rgba(120,150,190,.07), transparent 70%),
+      radial-gradient(120% 95% at 54% 46%, rgba(255,255,255,0) 46%, rgba(0,0,0,.42) 100%);
+  }
+  /* V10 修版：暗场里给车一点环境补光，雾稍近一点把远处吃掉 */
+  html.wb-dark #specs .spec b{ color:#f4f6fa; }
+  html.wb-dark #specs .spec u{ color:#6b7484; }
+  /* V10 修版 2：暗角收一点，别在天花板位置切出硬边 */
+  html.wb-dark #tunnel{
+    background:
+      radial-gradient(60% 46% at 55% 44%, rgba(120,150,190,.05), transparent 72%),
+      radial-gradient(135% 110% at 54% 62%, rgba(255,255,255,0) 52%, rgba(0,0,0,.30) 100%);
   }</style>
 </head>
 <body>
@@ -5713,7 +5746,9 @@ function initScene(){
   pmrem.dispose();
 
   /* 光照：半球底光 + 主光投影 + 补光 + 轮廓光 */
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe6ee, 1.15));
+  const hemi = new THREE.HemisphereLight(0xffffff, 0xdfe6ee, 1.15);
+  scene.add(hemi);
+  APP.hemi = hemi;
 
   const key = new THREE.DirectionalLight(0xffffff, 2.1);
   key.position.set(4, 7, 6);
@@ -5728,6 +5763,7 @@ function initScene(){
 
   const fill = new THREE.DirectionalLight(0xffffff, 0.45); fill.position.set(-5, 3, -4); scene.add(fill);
   const rim  = new THREE.DirectionalLight(0xffffff, 0.35); rim.position.set(0, 4, -7);  scene.add(rim);
+  APP.fill = fill; APP.rim = rim;
 
   /* 暗章专用：背后的红色轮廓光，让车身边缘泛一点 Rosso Corsa */
   const kick = new THREE.DirectionalLight(0xff3a24, 0);
@@ -5744,6 +5780,35 @@ function initScene(){
   ground.receiveShadow = true;
   scene.add(ground);
   APP.ground = ground;
+
+  /* 试验段光池：一张径向渐变当 map，只在工作台（暗场）挂上去，
+     中心的亮斑由材质色 × 光决定，边缘收到全黑，读起来像头顶那排灯打下来的光 */
+  APP.poolPlane = (function(){
+    const geo = new THREE.CircleGeometry(6.6, 64);
+    const mat = new THREE.MeshBasicMaterial({ transparent:true, opacity:.22, depthWrite:false, blending:THREE.AdditiveBlending });
+    const m = new THREE.Mesh(geo, mat);
+    m.rotation.x = -Math.PI/2;
+    m.position.set(0, 0.004, 0.2);
+    m.visible = false;
+    scene.add(m);
+    return m;
+  })();
+  APP.poolTex = (function(){
+    const S = 512, cv = document.createElement('canvas');
+    cv.width = cv.height = S;
+    const g2 = cv.getContext('2d');
+    g2.fillStyle = '#000'; g2.fillRect(0, 0, S, S);              /* 底色先铺黑：光池之外就是黑 */
+    const rg = g2.createRadialGradient(S/2, S/2, S*0.015, S/2, S/2, S*0.30);
+    rg.addColorStop(0.00, '#ffffff');
+    rg.addColorStop(0.38, '#c8c8c8');
+    rg.addColorStop(0.70, '#4e4e4e');
+    rg.addColorStop(1.00, '#000000');
+    g2.fillStyle = rg; g2.fillRect(0, 0, S, S);
+    const t = new THREE.CanvasTexture(cv);
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  })();
+  if (APP.poolPlane) APP.poolPlane.material.map = APP.poolTex;
 
   /* 车底补光：只在底板视图打开，让地板/扩散器在背光面也看得清 */
   const underLight = new THREE.DirectionalLight(0xffffff, 2.4);
@@ -5763,9 +5828,56 @@ function initScene(){
   APP.grid = grid;
 
   /* 章节色调：亮 / 暗两套，跟章节一起过渡 */
-  APP.tone = { t: 0, target: 0,
-    light: { bg: new THREE.Color(0xfbfaf7), ground: new THREE.Color(0xfbfaf7), grid: new THREE.Color(0x0b1b2b), gridOp: 0.06, fogN: 30, fogF: 64 },
-    dark:  { bg: new THREE.Color(0x0a0a0c), ground: new THREE.Color(0x0a0a0c), grid: new THREE.Color(0x9aa0a8), gridOp: 0.09, fogN: 13, fogF: 44 }
+  const SITE_LIGHT = { bg: new THREE.Color(0xfbfaf7), ground: new THREE.Color(0xfbfaf7), grid: new THREE.Color(0x0b1b2b), gridOp: 0.06, fogN: 30, fogF: 64 };
+  /* 隧道配方：近黑石墨底 + 浅色标定网线 + 更短的雾，车下方留一片被主光照亮的地面 */
+  const TUNNEL = { bg: new THREE.Color(0x0a0d12), ground: new THREE.Color(0x0a0e14), grid: new THREE.Color(0x9db0c4), gridOp: 0.20, fogN: 12, fogF: 40 };
+  APP.tone = { t: 0, target: 0, light: SITE_LIGHT, dark: { bg: new THREE.Color(0x0a0a0c), ground: new THREE.Color(0x0a0a0c), grid: new THREE.Color(0x9aa0a8), gridOp: 0.09, fogN: 13, fogF: 44 } };
+  APP.tonePalette = { siteLight: SITE_LIGHT, tunnel: TUNNEL };
+  /* 把当前混合系数 k 真正写进场景（帧循环与模式切换共用） */
+  APP.applyTone = function applyTone(k){
+    const T = APP.tone, sc = APP.scene;
+    if (sc && sc.background && sc.background.isColor) sc.background.lerpColors(T.light.bg, T.dark.bg, k);
+    if (APP.ground) APP.ground.material.color.lerpColors(T.light.ground, T.dark.ground, k);
+    if (APP.grid){
+      APP.grid.material.color.lerpColors(T.light.grid, T.dark.grid, k);
+      APP.grid.material.opacity = T.light.gridOp + (T.dark.gridOp - T.light.gridOp) * k;
+    }
+    if (APP.kick) APP.kick.intensity = APP.kickBase * k;
+    if (sc && sc.fog){
+      sc.fog.color.lerpColors(T.light.bg, T.dark.bg, k);
+      sc.fog.near = T.light.fogN + (T.dark.fogN - T.light.fogN) * k;
+      sc.fog.far  = T.light.fogF + (T.dark.fogF - T.light.fogF) * k;
+    }
+  };
+  APP.kickBase = 1.25;
+  /* 工作台 / 官网两套调色，切换时立即落到场景上 */
+  APP.setToneMode = function setToneMode(mode){
+    const T = APP.tone, R = APP.renderer;
+    if (mode === 'tunnel'){
+      T.light = APP.tonePalette.tunnel;
+      T.dark  = APP.tonePalette.tunnel;
+      T.t = 0; T.target = 0;
+      if (R){ R.toneMapping = THREE.ACESFilmicToneMapping; R.toneMappingExposure = 1.2; }
+      if (APP.keyLight) APP.keyLight.intensity = 3.0;
+      if (APP.poolPlane) APP.poolPlane.visible = true;
+      if (APP.hemi) APP.hemi.intensity = 1.55;
+      if (APP.fill) APP.fill.intensity = 0.6;
+      if (APP.rim)  APP.rim.intensity  = 0.5;
+      APP.kickBase = 0.95;
+      document.documentElement.classList.add('wb-dark');
+    } else {
+      T.light = APP.tonePalette.siteLight;
+      T.dark  = { bg: new THREE.Color(0x0a0a0c), ground: new THREE.Color(0x0a0a0c), grid: new THREE.Color(0x9aa0a8), gridOp: 0.09, fogN: 13, fogF: 44 };
+      if (R){ R.toneMapping = THREE.NoToneMapping; R.toneMappingExposure = 1; }
+      if (APP.keyLight) APP.keyLight.intensity = 2.1;
+      if (APP.poolPlane) APP.poolPlane.visible = false;
+      if (APP.hemi) APP.hemi.intensity = 1.15;
+      if (APP.fill) APP.fill.intensity = 0.45;
+      if (APP.rim)  APP.rim.intensity  = 0.35;
+      APP.kickBase = 1.25;
+      document.documentElement.classList.remove('wb-dark');
+    }
+    APP.applyTone(T.t);
   };
 
   /* 控制器 */
@@ -6149,20 +6261,7 @@ function frame(){
     const T = APP.tone;
     if (Math.abs(T.t - T.target) > 0.002){
       T.t += (T.target - T.t) * Math.min(1, dtMs / 260);
-      const k = T.t;
-      const sc = APP.scene;
-      if (sc && sc.background && sc.background.isColor) sc.background.lerpColors(T.light.bg, T.dark.bg, k);
-      if (APP.ground) APP.ground.material.color.lerpColors(T.light.ground, T.dark.ground, k);
-      if (APP.grid){
-        APP.grid.material.color.lerpColors(T.light.grid, T.dark.grid, k);
-        APP.grid.material.opacity = T.light.gridOp + (T.dark.gridOp - T.light.gridOp) * k;
-      }
-      if (APP.kick) APP.kick.intensity = 1.25 * k;
-      if (sc && sc.fog){
-        sc.fog.color.lerpColors(T.light.bg, T.dark.bg, k);
-        sc.fog.near = T.light.fogN + (T.dark.fogN - T.light.fogN) * k;
-        sc.fog.far  = T.light.fogF + (T.dark.fogF - T.light.fogF) * k;
-      }
+      APP.applyTone(T.t);
     }
   }
 
@@ -9831,7 +9930,7 @@ function toWork(){
   SITE.on = false;
   document.body.classList.remove('mode-site', 'hot-on', 'tone-dark');
   document.body.classList.add('mode-work');
-  if (APP.tone) APP.tone.target = 0;      /* 工作台永远是白棚 */
+  if (APP.setToneMode) APP.setToneMode('tunnel');   /* 工作台：近黑隧道 */
   hideHotTip();
   APP.controls.enabled = true;
   barShow();                          /* 工作台常亮，不自动收 */
@@ -9905,6 +10004,7 @@ function resetWorkState(){
 
 function toSite(){
   SITE.on = true;
+  if (APP.setToneMode) APP.setToneMode('site');     /* 官网：恢复白棚/暗章两套 */
   resetWorkState();                 /* 先把工作台的状态收干净，再切回官网 */
   document.body.classList.add('mode-site');
   document.body.classList.remove('mode-work');
