@@ -1443,10 +1443,170 @@ body.ui-hidden::after{ opacity:0; }
     background:repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 1px, transparent 1px 9px);
   }
 
-</style>
+  /* ==========================================================================
+     §V9 风洞控制台：深色仪表盘 + 亮色试验段
+     ========================================================================== */
+  :root{
+    --wb-bg:#0b0e13; --wb-bg-2:#11151c; --wb-ink:#e8eaef; --wb-dim:#8d95a3;
+    --wb-faint:#5d6472; --wb-line:rgba(255,255,255,.085); --wb-line-2:rgba(255,255,255,.05);
+  }
+  #tunnel{ display:none; }
+  body.mode-work #tunnel{
+    display:block; position:fixed; inset:0; z-index:6; pointer-events:none;
+    background:
+      radial-gradient(120% 92% at 54% 44%, rgba(255,255,255,0) 52%, rgba(12,16,22,.16) 100%),
+      linear-gradient(180deg, rgba(12,16,22,.05) 0%, rgba(255,255,255,0) 18%);
+  }
+  #views{ width:212px; background:var(--wb-bg); border-right:1px solid var(--wb-line); padding:16px 12px 18px; }
+  #views::-webkit-scrollbar{ width:6px; }
+  #views::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.14); border-radius:3px; }
+  #views .wb-head{ padding:2px 4px 14px; margin-bottom:6px; border-bottom:1px solid var(--wb-line); }
+  #views .wb-head b{ display:flex; align-items:baseline; gap:6px;
+    font:700 15px/1 var(--display); letter-spacing:.14em; color:var(--wb-ink); }
+  #views .wb-head b span{ font:600 8.5px/1 var(--mono); letter-spacing:.22em; color:var(--wb-faint); }
+  #views .wb-head em{ display:flex; align-items:center; gap:6px; margin-top:8px;
+    font:500 8.5px/1 var(--mono); letter-spacing:.16em; color:var(--wb-dim); font-style:normal; }
+  #views .wb-head em i{ width:5px; height:5px; border-radius:50%; background:#37d07a; box-shadow:0 0 0 3px rgba(55,208,122,.16); }
+  #views .wb-sec{ display:flex; align-items:baseline; justify-content:space-between;
+    margin:14px 4px 7px; font:600 8.5px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--wb-faint); }
+  #views .wb-sec em{ font-style:normal; color:rgba(255,255,255,.22); }
+  #views #to-site{ border-color:var(--wb-line); color:var(--wb-dim); background:transparent; border-radius:7px; }
+  #views #to-site:hover{ color:var(--wb-ink); border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.04); }
+  #views button{ color:var(--wb-dim); border-radius:7px; padding:8px 11px 8px 13px; position:relative; }
+  #views button:hover:not(:disabled){ background:rgba(255,255,255,.05); color:var(--wb-ink); }
+  #views button.on{ background:rgba(255,255,255,.07); color:#fff; font-weight:600; box-shadow:inset 0 0 0 1px rgba(255,255,255,.09); }
+  #views button.on::before{ content:''; position:absolute; left:0; top:7px; bottom:7px; width:2px; border-radius:2px; background:var(--accent); }
+  #views .dhud{ border-color:var(--wb-line); background:var(--wb-bg-2); color:var(--wb-ink); border-radius:7px; font-family:var(--display); }
+  #views .dhud b{ color:var(--wb-ink); }
+  #views .dhud i{ color:var(--wb-faint); }
+  #views .dhud.rev{ background:#1b0f10; border-color:rgba(225,6,0,.5); color:#fff; }
+  #views .dhud.rev b,#views .dhud.rev i{ color:#fff; opacity:.75; }
+  #views .dhud.fast{ box-shadow:inset 0 0 0 1px rgba(225,6,0,.42); }
+  #views button.drs{ border-color:var(--wb-line); background:rgba(255,255,255,.03); color:var(--wb-dim); border-radius:7px; font-size:10.5px; letter-spacing:.14em; }
+  #views button.drs:hover{ border-color:rgba(225,6,0,.5); color:#ff5a52; background:rgba(225,6,0,.08); }
+  #views button.drs.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  #views #guide-btn{ border-color:var(--wb-line); background:transparent; color:var(--wb-dim); border-radius:7px; }
+  #views #guide-btn:hover{ color:var(--wb-ink); border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.04); }
+  #views #guide-btn::after{ color:var(--wb-faint); }
+  #solve{ background:var(--wb-bg-2); border:1px solid var(--wb-line); border-radius:7px; box-shadow:none; }
+  #solve #solve-t{ color:var(--wb-dim); letter-spacing:.16em; }
+  #solve #solve-t::after{ color:var(--wb-faint); }
+  #solve #solve-body{ color:#b9c0cc; }
+  #solve.open{ background:var(--wb-bg); border-color:var(--wb-line); box-shadow:0 20px 60px rgba(0,0,0,.5); }
+  #solve.open::after{ background:var(--accent); }
+  #specs{ background:transparent; border-top:1px solid var(--wb-line); }
+  #specs .spec{ border-top:1px solid var(--wb-line-2); }
+  #specs .spec u{ color:var(--wb-faint); letter-spacing:.14em; }
+  #specs .spec b{ color:var(--wb-ink); }
+  #specs .spec b i{ color:var(--wb-faint); }
+  #specs .spec.slv{ position:relative; padding-left:9px; }
+  #specs .spec.slv::before{ content:''; position:absolute; left:0; top:8px; bottom:7px; width:1px; background:rgba(225,6,0,.55); }
+  #specs .spec.est b{ color:#ffb020; }
+  #perf{ background:var(--wb-bg); border:1px solid var(--wb-line); color:var(--wb-dim); border-radius:6px; letter-spacing:.1em; font-family:var(--mono); font-size:9.5px; }
+  #perf b{ color:var(--wb-ink); font-weight:600; }
+  #perf .dot{ background:#37d07a; box-shadow:0 0 0 3px rgba(55,208,122,.14); }
+  #legend{ background:var(--wb-bg); border:1px solid var(--wb-line); border-radius:7px; }
+  #legend .lg-t{ color:var(--wb-dim); }
+  #legend .lg-r span{ color:var(--wb-ink); }
+  #legend .lg-n{ color:var(--wb-faint); }
+  #legend .lg-bar{ border-color:var(--wb-line); }
+  #card, #sw, #decal{ background:var(--wb-bg); border:1px solid var(--wb-line); border-radius:8px; box-shadow:0 20px 60px rgba(0,0,0,.45); }
+  #card h3, #sw .dhd b, #decal .dhd b{ color:var(--wb-ink); }
+  #card .en, #sw .dhd b em, #decal .dhd b em, #sw .dhd i, #decal .dhd i{ color:var(--wb-faint); }
+  #card .row{ border-top-color:var(--wb-line-2); }
+  #card .row u{ color:var(--wb-faint); }
+  #card .row div{ color:#c2c8d2; }
+  #card .close, #sw .x, #decal .x{ color:var(--wb-faint); }
+  #sw #sw-sum, #decal #decal-sum{ color:#c2c8d2; border-color:var(--wb-line-2); }
+  #sw .dck, #decal .dck{ color:var(--wb-dim); }
+  #sw .swburn span, #sw .swburn b{ color:var(--wb-dim); }
+  #sw #sw-list .dcard, #decal #decal-list .dcard{ background:rgba(255,255,255,.028); border:1px solid var(--wb-line); border-radius:6px; }
+  #sw #sw-list .dcard:hover, #decal #decal-list .dcard:hover{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.2); }
+  #sw #sw-list .dcard.on, #decal #decal-list .dcard.on{ border-color:var(--accent); background:rgba(225,6,0,.1); }
+  #sw .dft, #decal .dft{ color:var(--wb-faint); border-top-color:var(--wb-line-2); }
+  #hover, #probe, #sw-tip, #decal-tip, #cpit{ background:var(--wb-bg); border:1px solid var(--wb-line); border-radius:6px; }
+  #cpit span{ color:#c2c8d2; }
+  #cpit #cpit-speed{ color:#fff; }
+  @media (max-width:1400px){
+    #views{ width:196px; }
+    #hud,#srcnote,#solve{ left:208px; }
+    #solve{ left:10px; }
+    #specs{ left:10px; width:172px; }
+  }
+  /* V9 修版：左栏多了标题与分组，把求解/读数往下推，别压住 DRS 与指南 */
+  #solve{ top:440px; }
+  #solve.open{ top:440px; }
+  #specs{ top:488px; max-height:calc(100vh - 502px); }
+  #specs .spec{ padding:5px 2px 4px; }
+  #specs .spec b{ font-size:16px; }
+  @media (max-height:880px){
+    #solve, #solve.open{ top:412px; }
+    #specs{ top:460px; max-height:calc(100vh - 474px); }
+  }
+  /* V9 修版 2：`body.mode-work #solve` 的层级更高，必须用同样的前缀覆盖 */
+  body.mode-work #solve{ top:442px; }
+  body.mode-work #solve.open{ top:442px; }
+  body.mode-work #specs{ top:490px; max-height:calc(100vh - 504px); }
+  @media (max-height:880px){
+    body.mode-work #solve, body.mode-work #solve.open{ top:414px; }
+    body.mode-work #specs{ top:462px; max-height:calc(100vh - 476px); }
+  }
+  /* V9 润色：标题区做成隧道铭牌，操作指南改成同一套暗色 */
+  #hud .brand{ position:relative; padding-left:14px; }
+  #hud .brand::before{
+    content:''; position:absolute; left:0; top:2px; bottom:6px; width:2px;
+    border-radius:2px; background:var(--accent);
+  }
+  #hud .brand b{ letter-spacing:-.01em; }
+  #hud .brand span{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--faint);
+  }
+  #badge{
+    border:1px solid var(--wb-line); background:var(--wb-bg); color:var(--wb-dim);
+    font-family:var(--mono); letter-spacing:.16em;
+  }
+  #badge::before{
+    content:''; display:inline-block; width:5px; height:5px; border-radius:50%;
+    background:#37d07a; margin-right:7px; vertical-align:1px;
+    box-shadow:0 0 0 3px rgba(55,208,122,.14);
+  }
+
+  #guide{ background:rgba(6,9,13,.72); }
+  #guide .gbox{
+    background:var(--wb-bg); border:1px solid var(--wb-line); border-radius:12px;
+    box-shadow:0 30px 80px rgba(0,0,0,.6);
+  }
+  #guide .gh{ border-bottom-color:var(--wb-line); }
+  #guide .gh b{ color:var(--wb-ink); }
+  #guide .gh em{ color:var(--wb-faint); }
+  #guide .gh span{ color:var(--wb-dim); }
+  #guide .gh span:hover{ color:#fff; background:rgba(255,255,255,.06); }
+  #guide section h4{ color:var(--wb-faint); }
+  #guide .gr{ color:var(--wb-ink); }
+  #guide .gr span{ color:var(--wb-dim); }
+  #guide kbd{
+    background:rgba(255,255,255,.06); border:1px solid var(--wb-line); border-bottom-width:2px;
+    color:var(--wb-ink);
+  }
+  #guide .gf{ border-top-color:var(--wb-line); color:var(--wb-faint); }
+  /* V9 修版 3：矮屏把左栏压紧，避免求解/读数与"操作指南"打架 */
+  @media (max-height:900px){
+    #views{ padding-top:12px; }
+    #views .wb-head{ padding-bottom:10px; }
+    #views .wb-head b{ font-size:13.5px; }
+    #views .wb-sec{ margin:9px 4px 5px; }
+    #views button{ padding:6px 11px 6px 13px; margin-bottom:2px; }
+    #views .dhud{ padding:8px 11px; font-size:10.5px; }
+    #views button.drs{ padding:7px 10px; margin-top:5px; }
+    #views #guide-btn{ margin-top:6px; padding:7px 10px; }
+    body.mode-work #solve, body.mode-work #solve.open{ top:386px; }
+    body.mode-work #specs{ top:434px; max-height:calc(100vh - 448px); }
+  }</style>
 </head>
 <body>
   <canvas id="c"></canvas>
+  <div id="tunnel" aria-hidden="true"></div>
 
   <!-- 加载闸门：进度条满即淡出，直接进开场 -->
   <div id="gate">
@@ -1694,11 +1854,17 @@ body.ui-hidden::after{ opacity:0; }
   <div id="cap"></div>
 <div id="demoBar"><i id="demoFill"></i></div>
 <nav id="views" class="panel">
+    <div class="wb-head">
+      <b>TUNNEL<span>CONSOLE</span></b>
+      <em><i></i>RUN 07 · SF-25</em>
+    </div>
     <button id="to-site" class="back" data-t="wbb">返回官网</button>
+    <div class="wb-sec"><span>视图</span><em>VIEWS</em></div>
     <button class="on" data-view="exterior">外观</button>
     <button data-view="speed">速度场</button>
     <button data-view="cp">表面压力</button>
     <button data-view="floor">底板气流</button>
+    <div class="wb-sec"><span>工况</span><em>RUN</em></div>
     <span id="drive-hud" class="dhud">0<i>km/h</i></span><button id="drs-btn" class="drs" title="开启/关闭 DRS（减阻尾翼）">DRS</button><button id="demo-btn" class="drs" title="播放 32 秒演示动画（V）">演示</button>
     <button id="guide-btn" class="gnav" title="操作指南（按 ? 也能打开）">操作指南</button>
   </nav>
