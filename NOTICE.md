@@ -110,3 +110,14 @@ CC BY-SA 的要求是 **署名 + 许可证 + 标明是否修改**：
 | `img/gal/hamilton-imola-paddock.jpg` | 伊莫拉，汉密尔顿 SF-25 的前 3/4 视角，前翼与鼻锥细节清楚。 | Buczkowiak94 | CC BY 4.0 |
 | `img/gal/mercedes-roadshow-singapore.jpg` | 新加坡大奖赛周，商场中庭展示的梅赛德斯 F1 赛车与围观人群（他队）。 | Walk around the RED DOT from Singapore | CC0 |
 | `img/gal/hamilton-imola-2025.jpg` | 伊莫拉 2025，汉密尔顿的 SF-25 贴地过弯，背景大片 TAG Heuer 广告。 | Jen_ross83 | CC BY 4.0 |
+
+补充（13 张照片 + 3 段视频）：
+
+| 文件 | 内容 | 作者 | 许可证 |
+|---|---|---|---|
+| `img/gal/singapore-night-mclaren.jpg` | 新加坡夜间 FP2（当地 21:53），诺里斯的迈凯伦 MCL39 贴地驶过，背景是 AMEX 广告墙（他队，非法拉利） | Liauzh | CC BY-SA 4.0 |
+| `img/gal/russian-gp-warmup-2021.webm` | 2021 俄罗斯大奖赛，暖胎圈出发。 | rubin16 | CC BY-SA 4.0 |
+| `img/gal/turkish-gp-2021.webm` | 2021 土耳其大奖赛，赛车从四号弯转入五号弯。 | SAİT71 | CC BY-SA 4.0 |
+| `img/gal/charouz-f1-2010.webm` | 2010 布尔诺雷诺世界系列赛，Jan Charouz 驾驶 F1 赛车原地打转。 | Sevela.p (uploader; Commons Artist field is a reuse notice, not a name) | CC BY-SA 3.0 |
+
+视频由浏览器端截取首帧作为封面，视频文件本身未做转码，直接取自 Commons（VP9 webm）。
