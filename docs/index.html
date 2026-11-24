@@ -1687,7 +1687,7 @@ body.ui-hidden::after{ opacity:0; }
   #ch-gallery::before{ content:''; position:absolute; inset:0; pointer-events:none;
     background:radial-gradient(120% 90% at 50% 42%, rgba(8,8,10,.55) 0%, rgba(8,8,10,.80) 62%, rgba(8,8,10,.92) 100%); }
   #ch-gallery .ch-in{ position:relative; z-index:2; }
-  #ch-gallery .gal-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:18px; }
+  #ch-gallery .gal-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:12px; }
   #ch-gallery h2{ margin:0; }
   #ch-gallery .gal-meta{
     font-family:var(--mono); font-size:10.5px; letter-spacing:.2em; text-transform:uppercase;
@@ -1759,6 +1759,73 @@ body.ui-hidden::after{ opacity:0; }
   @media (hover:none){
     #ch-gallery .gal figcaption{ opacity:1; transform:none; }
   }
+
+  /* §V14 画廊：错落网格 / 入场 / 灯箱 */
+  #ch-gallery .gal{
+    grid-template-columns:repeat(4, minmax(0,1fr));
+    grid-auto-rows:100px;
+    grid-auto-flow:dense;
+    gap:8px;
+  }
+  #ch-gallery .gal figure.gw{ grid-column:span 2; }
+  #ch-gallery .gal figure.gh{ grid-row:span 2; }
+  #ch-gallery .gal figure{
+    margin:0; position:relative; border-radius:12px; overflow:hidden;
+    background:rgba(255,255,255,.04);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+    cursor:zoom-in;
+  }
+  #ch-gallery.on .gal figure{
+    animation:galIn .58s cubic-bezier(.22,.72,.24,1) both;
+    animation-delay:calc(var(--i, 0) * 34ms + 40ms);
+  }
+  @media (prefers-reduced-motion: reduce){
+    #ch-gallery.on .gal figure{ animation:none; }
+  }
+  @keyframes galIn{
+    from{ opacity:0; transform:translateY(16px) scale(.985); clip-path:inset(0 0 100% 0 round 12px); }
+    to  { opacity:1; transform:none; clip-path:inset(0 0 0 0 round 12px); }
+  }
+  #ch-gallery .gal figure:hover{ box-shadow:inset 0 0 0 1px rgba(255,255,255,.22), 0 18px 40px -22px rgba(0,0,0,.9); }
+
+  /* 灯箱 */
+  #lbox{ position:fixed; inset:0; z-index:120; display:none; }
+  #lbox.on{ display:block; }
+  #lbox .lb-bg{ position:absolute; inset:0; background:rgba(6,6,8,.92); backdrop-filter:blur(8px); animation:lbFade .28s ease both; }
+  @keyframes lbFade{ from{opacity:0} to{opacity:1} }
+  #lbox .lb-stage{
+    position:absolute; inset:56px 76px 84px; display:flex; align-items:center; justify-content:center;
+  }
+  #lbox .lb-stage img, #lbox .lb-stage video{
+    max-width:100%; max-height:100%; border-radius:10px;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,.9);
+    animation:lbPop .34s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes lbPop{ from{ opacity:0; transform:scale(.965) } to{ opacity:1; transform:none } }
+  #lbox .lb-cap{
+    position:absolute; left:76px; right:76px; bottom:30px;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:20px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:rgba(255,255,255,.62);
+  }
+  #lbox .lb-cap b{ display:block; font-family:var(--sans); font-weight:600; font-size:13px; letter-spacing:.01em; color:#eaeaef; margin-bottom:6px; }
+  #lbox .lb-cap a{ color:inherit; text-decoration:underline; text-underline-offset:2px; }
+  #lbox .lb-idx{ font-variant-numeric:tabular-nums; color:rgba(255,255,255,.42); }
+  #lbox button.lb-nav{
+    position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:999px;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); color:#fff; font-size:16px;
+    cursor:pointer; transition:background .18s ease, border-color .18s ease;
+  }
+  #lbox button.lb-nav:hover{ background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.3); }
+  #lbox #lb-prev{ left:18px; } #lbox #lb-next{ right:18px; }
+  #lbox #lb-close{ position:absolute; top:16px; right:18px; width:34px; height:34px; }
+  @media (max-width:760px){
+    #ch-gallery .gal{ grid-template-columns:repeat(2, minmax(0,1fr)); grid-auto-rows:80px; gap:7px; }
+    #ch-gallery .gal figure.gw{ grid-column:span 1; }
+    #ch-gallery .gal figure.gh{ grid-row:span 1; }
+    #lbox .lb-stage{ inset:52px 12px 96px; }
+    #lbox .lb-cap{ left:14px; right:14px; flex-direction:column; align-items:flex-start; gap:6px; }
+  }
+
 </style>
 </head>
 <body>
@@ -1869,7 +1936,8 @@ body.ui-hidden::after{ opacity:0; }
     </section>
 
     <!-- 分站战报弹层：点赛季卡打开 -->
-    <div id="racebox" aria-hidden="true">
+  
+  <div id="racebox" aria-hidden="true">
       <div class="rb-back" id="rb-back"></div>
       <div class="rb-card" role="dialog" aria-modal="true" aria-labelledby="rb-h">
         <button class="rb-x" id="rb-close" aria-label="关闭">×</button>
@@ -9498,19 +9566,62 @@ function rbT(o, k){ return SITE.lang === 'en' ? o[k + 'E'] : o[k]; }
 /* ============ 影像画廊 ============ */
 const GAL = [{"f":"canada-start.jpg","w":1920,"h":2560,"zh":"2025 加拿大站首圈，从看台俯拍车流穿过一号弯。","en":"Opening lap of the 2025 Canadian GP from the stands, cars streaming through the first corners.","a":"Bassfish22","l":"CC BY-SA 4.0","p":"https://commons.wikimedia.org/wiki/File:Opening_lap_of_the_2025_Canadian_Grand_Prix.jpg","v":false},{"f":"miami-grid.jpg","w":1920,"h":1440,"zh":"迈阿密发车前，看台与围栏边挤满观众，前景是发车格前三排。","en":"Miami grid before the start: packed grandstands and fans shooting the top rows of the grid.","a":"Bassfish22","l":"CC BY-SA 4.0","p":"https://commons.wikimedia.org/wiki/File:The_first_three_rows_of_the_grid_ahead_of_the_race_start_miami_gp_2025.jpg","v":false},{"f":"zandvoort-aerial.jpg","w":1920,"h":1279,"zh":"赞德沃特赛道航拍，倾斜弯与沙丘地形一览无余。","en":"Aerial view of Circuit Zandvoort with its banked bends and dunes.","a":"dronepicr","l":"CC BY 2.0","p":"https://commons.wikimedia.org/wiki/File:Aerial_view_of_Motorsport_race_track_Circuit_Zandvoort_Formula_one_(40889997713).jpg","v":false},{"f":"pirelli-tyres.jpg","w":1920,"h":1280,"zh":"伦敦 F1 展览上的倍耐力半雨胎与全雨胎，荧光绿与蓝色色圈。","en":"Pirelli intermediate and full-wet tyre sets on show at the Formula 1 Exhibition, London.","a":"Hullian111","l":"CC BY-SA 4.0","p":"https://commons.wikimedia.org/wiki/File:Pirelli_Tyre_Sets_at_Formula_1_Exhibition,_London_03.jpg","v":false},{"f":"singapore-night-mclaren.jpg","w":1920,"h":1080,"zh":"新加坡夜间 FP2（当地 21:53），诺里斯的迈凯伦 MCL39 贴地驶过，背景是 AMEX 广告墙（他队，非法拉利）。","en":"Lando Norris's McLaren MCL39 under the Singapore floodlights, 2025 Singapore GP FP2 (21:53 local). Other team, not Ferrari.","a":"Liauzh","l":"CC BY-SA 4.0","p":"https://commons.wikimedia.org/wiki/File:2025_Singapore_GP_-_McLaren_-_Lando_Norris_-_FP2.jpg","v":false},{"f":"sf25-garage-assembly.jpg","w":1920,"h":1080,"zh":"铃鹿周四，法拉利技师在车库里组装汉密尔顿的 SF-25，一排红衣技师围在车尾。","en":"Ferrari SF-25 of Lewis Hamilton being assembled in the garage on Thursday, Suzuka; mechanics in red at work.","a":"Liauzh","l":"CC BY-SA 4.0","p":"https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_SF-25_-_Thursday.jpg","v":false},{"f":"hamilton-sf25-suzuka.jpg","w":1920,"h":1080,"zh":"铃鹿 FP1，汉密尔顿的 SF-25 侧面飞驰，赞助标贴清晰。","en":"Lewis Hamilton's Ferrari SF-25 in side profile at speed, Suzuka FP1.","a":"Liauzh","l":"CC BY-SA 4.0","p":"https://commons.wikimedia.org/wiki/File:2025_Japan_GP_-_Ferrari_-_Lewis_Hamilton_-_FP1.jpg","v":false},{"f":"leclerc-imola-2025.jpg","w":1920,"h":1207,"zh":"伊莫拉 2025，勒克莱尔的 SF-25 侧影，背景是 TAG Heuer 广告墙。","en":"Charles Leclerc's SF-25 in profile in front of the TAG Heuer hoarding, Imola 2025.","a":"Jen_ross83","l":"CC BY 4.0","p":"https://commons.wikimedia.org/wiki/File:FIA_F1_Imola_2025_No._16_Leclerc_(2).jpg","v":false},{"f":"hamilton-imola-2025.jpg","w":1920,"h":1121,"zh":"伊莫拉 2025，汉密尔顿的 SF-25 贴地过弯，背景大片 TAG Heuer 广告。","en":"Lewis Hamilton's SF-25 cornering under the TAG Heuer hoarding, Imola 2025.","a":"Jen_ross83","l":"CC BY 4.0","p":"https://commons.wikimedia.org/wiki/File:FIA_F1_Imola_2025_No._44_Hamilton_(5).jpg","v":false},{"f":"hamilton-imola-paddock.jpg","w":1920,"h":1285,"zh":"伊莫拉，汉密尔顿 SF-25 的前 3/4 视角，前翼与鼻锥细节清楚。","en":"Three-quarter front view of Hamilton's SF-25 at Imola, front wing and nose in clear view.","a":"Buczkowiak94","l":"CC BY 4.0","p":"https://commons.wikimedia.org/wiki/File:2025_ImolaGP_Lewis_Hamilton.jpg","v":false},{"f":"leclerc-monza-qualifying.jpg","w":1920,"h":1280,"zh":"2025 蒙扎排位赛，勒克莱尔压过蒙扎红白路肩。","en":"Leclerc's SF-25 through the Monza kerbs during 2025 qualifying.","a":"Eustace Bagge","l":"CC BY 4.0","p":"https://commons.wikimedia.org/wiki/File:Charles_Leclerc_2025_Italian_Grand_Prix_qualifying.jpg","v":false},{"f":"hamilton-monza-qualifying.jpg","w":1920,"h":1280,"zh":"2025 蒙扎排位赛，汉密尔顿的 SF-25 贴地驶过路肩。","en":"Hamilton's SF-25 through the Monza kerbs during 2025 qualifying.","a":"Eustace Bagge","l":"CC BY 4.0","p":"https://commons.wikimedia.org/wiki/File:Lewis_Hamilton_2025_Italian_Grand_Prix_qualifying.jpg","v":false},{"f":"russian-gp-warmup-2021.webm","w":854,"h":480,"zh":"2021 俄罗斯大奖赛，暖胎圈出发。","en":"Start of the warm-up lap, 2021 Russian Grand Prix.","a":"rubin16","l":"CC BY-SA 4.0","p":"https://commons.wikimedia.org/wiki/File:2021_Russian_Grand_Prix_-_start_for_warm-up.webm","v":true},{"f":"turkish-gp-2021.webm","w":854,"h":480,"zh":"2021 土耳其大奖赛，赛车从四号弯转入五号弯。","en":"Formula 1 cars turning from Turn Four to Turn Five, Turkish GP 2021.","a":"SAİT71","l":"CC BY-SA 4.0","p":"https://commons.wikimedia.org/wiki/File:Formula_1_Turkish_GP_2021_-_2.ogg","v":true},{"f":"charouz-f1-2010.webm","w":640,"h":480,"zh":"2010 布尔诺雷诺世界系列赛，Jan Charouz 驾驶 F1 赛车原地打转。","en":"Jan Charouz doing a doughnut in an F1 car, 2010 Brno World Series by Renault.","a":"Sevela.p (uploader; Commons Artist field is a reuse notice, not a name)","l":"CC BY-SA 3.0","p":"https://commons.wikimedia.org/wiki/File:Jan_Charouz,_F1,_2010_Brno_WSR.ogv","v":true},{"f":"mercedes-roadshow-singapore.jpg","w":1920,"h":1440,"zh":"新加坡大奖赛周，商场中庭展示的梅赛德斯 F1 赛车与围观人群（他队）。","en":"Mercedes F1 car on public display in a Singapore mall during the 2025 Singapore GP week, spectators around it.","a":"Walk around the RED DOT from Singapore","l":"CC0","p":"https://commons.wikimedia.org/wiki/File:Extreme_sports_-_F1_night_racing_now_in_Singapore_(54833150001).jpg","v":false}];
 
+
+/* 画廊：错落尺寸 + 灯箱 */
+const GALSIZE = { 'canada-start.jpg':'gh', 'miami-grid.jpg':'gw', 'zandvoort-aerial.jpg':'gw',
+  'sf25-garage-assembly.jpg':'gw', 'hamilton-imola-paddock.jpg':'gw', 'leclerc-monza-qualifying.jpg':'gw',
+  'russian-gp-warmup-2021.webm':'gw' };
+const LB = { i: -1, list: [] };
+
+function lbRender(){
+  const g = GAL[LB.i]; if (!g) return;
+  const st = document.getElementById('lb-stage');
+  const zh = () => SITE.lang !== 'en';
+  st.innerHTML = g.f.endsWith('.webm')
+    ? '<video src="img/gal/' + g.f + '" controls autoplay loop playsinline></video>'
+    : '<img src="img/gal/' + g.f + '" alt="">';
+  document.getElementById('lb-title').textContent = zh() ? g.zh : g.en;
+  document.getElementById('lb-credit').innerHTML = (g.a ? '© ' + g.a : '') + (g.l ? (g.a ? ' · ' : '') +
+    '<a href="' + (g.p || '#') + '" target="_blank" rel="noopener">' + g.l + '</a>' : '');
+  document.getElementById('lb-idx').textContent = (LB.i + 1) + ' / ' + GAL.length;
+  const pv = document.getElementById('lb-prev'), nx = document.getElementById('lb-next');
+  if (pv) pv.style.visibility = LB.i > 0 ? 'visible' : 'hidden';
+  if (nx) nx.style.visibility = LB.i < GAL.length - 1 ? 'visible' : 'hidden';
+}
+function openLbox(i){
+  LB.i = i;
+  const box = document.getElementById('lbox');
+  if (!box) return;
+  box.classList.add('on'); box.setAttribute('aria-hidden','false');
+  lbRender();
+}
+function closeLbox(){
+  const box = document.getElementById('lbox');
+  if (!box) return;
+  box.classList.remove('on'); box.setAttribute('aria-hidden','true');
+  const st = document.getElementById('lb-stage'); if (st) st.innerHTML = '';
+  LB.i = -1;
+}
+function lbStep(d){
+  if (LB.i < 0) return;
+  const n = LB.i + d;
+  if (n < 0 || n >= GAL.length) return;
+  LB.i = n; lbRender();
+}
+
 function renderGallery(){
   const box = document.getElementById('gal');
   if (!box || box.dataset.done) return;
   const zh = () => SITE.lang !== 'en';
-  box.innerHTML = GAL.map((g) => {
-    const cls = (g.wd ? ' wide' : '') + (g.tl ? ' tall' : '');
+  box.innerHTML = GAL.map((g, i) => {
+    const cls = ' ' + (GALSIZE[g.f] || '');
     const cap = '<figcaption><b>' + (zh() ? g.zh : g.en) + '</b>' +
       (g.a ? '© ' + g.a : '') + (g.l ? (g.a ? ' · ' : '') + '<a href="' + (g.p || '#') + '" target="_blank" rel="noopener">' + g.l + '</a>' : '') +
       '</figcaption>';
     const media = g.f.endsWith('.webm')
       ? '<video muted loop playsinline preload="none" data-src="img/gal/' + g.f + '" poster="img/gal/' + g.f.replace(/\.webm$/, '.jpg') + '"></video><span class="vid-badge"></span>'
       : '<img src="img/gal/' + g.f + '" alt="' + (zh() ? g.zh : g.en) + '" loading="lazy" decoding="async">';
-    return '<figure class="' + cls.trim() + '"><div class="ph">' + media + '</div>' + cap + '</figure>';
+    return '<figure class="' + cls.trim() + '" data-i="' + i + '" style="--i:' + i + '"><div class="ph">' + media + '</div>' + cap + '</figure>';
   }).join('');
   box.querySelectorAll('video').forEach(v => {
     const fig = v.closest('figure');
@@ -9518,6 +9629,10 @@ function renderGallery(){
     fig.addEventListener('pointerleave', () => { v.pause(); });
   });
   box.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => e.stopPropagation()));
+  box.querySelectorAll('figure').forEach(f => f.addEventListener('click', (e) => {
+    if (e.target.closest('a')) return;
+    openLbox(+f.dataset.i);
+  }));
   box.dataset.done = '1';
 }
 
@@ -10092,6 +10207,9 @@ function applyChapter(i, force){
   document.body.classList.toggle('hot-on', i === 6);
   if (i !== 6) hideHotTip();
   if (i === 7) histStart(); else histStop();
+  if (i !== 1) closeLbox();
+  const gal = document.getElementById('ch-gallery');
+  if (gal && i === 1){ gal.classList.remove('on'); void gal.offsetWidth; gal.classList.add('on'); }
   const cur = document.querySelectorAll('#site .ch')[i];
   if (cur && SITE.odomGo) odomIn(cur);              /* 首屏要等闸门消失后再滚，否则会滚两遍 */
 }
@@ -10349,7 +10467,7 @@ function initSite(){
 
   /* 点空白处直接翻到下一页 —— 但按钮/圆点/热区/信息卡这些交互元素要放过 */
   let lastNav = 0;
-  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide,#wins,#racebox,#drvbox,#techbox,#ch-gallery .gal';
+  const INTERACTIVE = 'button,a,input,label,select,textarea,#pager,#snav,.lang,#hot,#hot-tip,#to-work,#cta-work,#to-site,#gate,#card,#sw,#decal,#solve,.gbox,#guide,#wins,#racebox,#drvbox,#techbox,#ch-gallery .gal,#lbox';
   document.addEventListener('click', (e) => {
     if (!SITE.on) return;
     if (!document.body.classList.contains('mode-site')) return;
@@ -10366,12 +10484,39 @@ function initSite(){
   siteTick();
 }
 
+/* 灯箱交互 */
+(function(){
+  const bg = document.getElementById('lb-bg'), cl = document.getElementById('lb-close');
+  const pv = document.getElementById('lb-prev'), nx = document.getElementById('lb-next');
+  if (bg) bg.addEventListener('click', closeLbox);
+  if (cl) cl.addEventListener('click', closeLbox);
+  if (pv) pv.addEventListener('click', () => lbStep(-1));
+  if (nx) nx.addEventListener('click', () => lbStep(1));
+  document.addEventListener('keydown', (e) => {
+    if (LB.i < 0) return;
+    if (e.key === 'Escape'){ e.stopPropagation(); e.preventDefault(); closeLbox(); }
+    else if (e.key === 'ArrowLeft'){ e.stopPropagation(); e.preventDefault(); lbStep(-1); }
+    else if (e.key === 'ArrowRight'){ e.stopPropagation(); e.preventDefault(); lbStep(1); }
+  }, true);
+})();
+
 main();
 initSite();
 renderWins();
 renderGallery();
 
 </script>
+  <div id="lbox" aria-hidden="true">
+    <div class="lb-bg" id="lb-bg"></div>
+    <button class="lb-nav" id="lb-prev" aria-label="上一张">‹</button>
+    <button class="lb-nav" id="lb-next" aria-label="下一张">›</button>
+    <button class="lb-nav" id="lb-close" aria-label="关闭">✕</button>
+    <div class="lb-stage" id="lb-stage"></div>
+    <div class="lb-cap">
+      <div><b id="lb-title"></b><span id="lb-credit"></span></div>
+      <div class="lb-idx" id="lb-idx"></div>
+    </div>
+  </div>
 </body>
 </html>
 
