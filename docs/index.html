@@ -9824,7 +9824,7 @@ function renderGallery(){
   });
   /* 平衡：先试两列交换，再试整块搬运，直到高度差收敛 */
   const spread = () => Math.max(...heights) - Math.min(...heights);
-  for (let pass = 0; pass < 40 && spread() > 50; pass++) {
+  for (let pass = 0; pass < 80 && spread() > 6; pass++) {
     let hi = 0, lo = 0;
     for (let k = 1; k < cols; k++) { if (heights[k] > heights[hi]) hi = k; if (heights[k] < heights[lo]) lo = k; }
     if (hi === lo) break;
@@ -9852,8 +9852,11 @@ function renderGallery(){
     buckets[lo].push(moved);
     heights[hi] -= moved.h; heights[lo] += moved.h;
   }
+  /* 残差：让各列宽度按 1/高度 微调（±2%），把最后几十像素也抹平 */
+  const meanH = heights.reduce((s, v) => s + v, 0) / cols;
+  const grows = heights.map(v => Math.max(0.9, Math.min(1.1, meanH / Math.max(1, v))));
   const colHTML = buckets.map(list => list.map(it => itemHTML(GAL[it.i], it.i)).join(''));
-  box.innerHTML = colHTML.map(list => '<div class="gal-col">' + list + '</div>').join('');
+  box.innerHTML = colHTML.map((list, k) => '<div class="gal-col" style="flex:' + grows[k].toFixed(4) + ' 1 0">' + list + '</div>').join('');
   box.querySelectorAll('video').forEach(v => {
     const fig = v.closest('figure');
     fig.addEventListener('pointerenter', () => { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); });
