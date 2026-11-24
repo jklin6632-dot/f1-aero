@@ -1640,31 +1640,41 @@ body.ui-hidden::after{ opacity:0; }
       radial-gradient(60% 46% at 55% 44%, rgba(120,150,190,.05), transparent 72%),
       radial-gradient(135% 110% at 54% 62%, rgba(255,255,255,0) 52%, rgba(0,0,0,.30) 100%);
   }
-  /* §V11 卡片里的流动：两层柔光在卡面里对着慢慢漂（白 + 法拉利红），像玻璃后面有液体在动 */
+  /* §V11 卡片：玻璃质感 + 内部流动。冷白光斑慢慢漂，另加一道斜向反光扫过卡面 */
   @keyframes cardDrift{
-    0%   { background-position: 12% 16%, 86% 84%, 0 0; }
-    50%  { background-position: 82% 62%, 18% 26%, 0 0; }
-    100% { background-position: 12% 16%, 86% 84%, 0 0; }
+    0%   { background-position: 6% 8%, 14% 20%, -140% 0, 0 0, 0 0; }
+    50%  { background-position: 86% 66%, 80% 74%, 150% 0, 0 0, 0 0; }
+    100% { background-position: 6% 8%, 14% 20%, -140% 0, 0 0, 0 0; }
   }
   body.mode-site.tone-dark .ch-in,
   body.mode-site.tone-dark #ch-hero .ch-in,
   body.mode-site.tone-dark #ch-cta .ch-in{
     background-image:
-      radial-gradient(64% 78% at 50% 50%, rgba(255,255,255,.10), rgba(255,255,255,0) 66%),
-      radial-gradient(58% 72% at 50% 50%, rgba(225,6,0,.13), rgba(225,6,0,0) 68%),
-      linear-gradient(180deg, rgba(24,24,27,.92) 0%, rgba(13,13,15,.86) 100%);
-    background-size: 165% 165%, 190% 190%, 100% 100%;
+      radial-gradient(46% 58% at 50% 50%, rgba(178,204,238,.12), rgba(178,204,238,0) 68%),
+      radial-gradient(52% 64% at 50% 50%, rgba(255,255,255,.075), rgba(255,255,255,0) 70%),
+      linear-gradient(104deg, rgba(255,255,255,0) 38%, rgba(255,255,255,.085) 50%, rgba(255,255,255,0) 62%),
+      linear-gradient(180deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 18%),
+      linear-gradient(180deg, rgba(26,27,31,.94) 0%, rgba(12,12,14,.90) 100%);
+    background-size: 118% 118%, 205% 205%, 230% 100%, 100% 100%, 100% 100%;
     background-repeat: no-repeat;
-    animation: cardDrift 22s ease-in-out infinite;
+    animation: cardDrift 8s ease-in-out infinite;
+    border-color: rgba(255,255,255,.16);
+    box-shadow:
+      0 44px 96px -34px rgba(0,0,0,.85),
+      inset 0 1px 0 rgba(255,255,255,.14),
+      inset 0 -1px 0 rgba(255,255,255,.04),
+      inset 0 0 70px rgba(170,195,230,.05);
   }
   body.mode-site:not(.tone-dark) .ch-in{
     background-image:
-      radial-gradient(64% 78% at 50% 50%, rgba(15,23,42,.05), rgba(15,23,42,0) 66%),
-      radial-gradient(58% 72% at 50% 50%, rgba(225,6,0,.05), rgba(225,6,0,0) 68%),
-      linear-gradient(180deg, rgba(255,255,255,.94) 0%, rgba(255,255,255,.88) 100%);
-    background-size: 165% 165%, 190% 190%, 100% 100%;
+      radial-gradient(46% 58% at 50% 50%, rgba(120,145,180,.09), rgba(120,145,180,0) 68%),
+      radial-gradient(52% 64% at 50% 50%, rgba(15,23,42,.04), rgba(15,23,42,0) 70%),
+      linear-gradient(104deg, rgba(15,23,42,0) 38%, rgba(15,23,42,.05) 50%, rgba(15,23,42,0) 62%),
+      linear-gradient(180deg, rgba(255,255,255,.9) 0%, rgba(255,255,255,.94) 100%);
+    background-size: 118% 118%, 205% 205%, 230% 100%, 100% 100%;
     background-repeat: no-repeat;
-    animation: cardDrift 26s ease-in-out infinite;
+    animation: cardDrift 10s ease-in-out infinite;
+    border-color: rgba(15,23,42,.10);
   }
   @media (prefers-reduced-motion: reduce){
     body.mode-site .ch-in{ animation: none; }
