@@ -1864,21 +1864,18 @@ body.ui-hidden::after{ opacity:0; }
     max-width:52ch; font-size:14.5px; line-height:1.7; color:var(--dim,#8b8b93); margin:0 0 26px;
   }
   #ch-gallery .gal{
-    display:grid; gap:10px;
-    grid-template-columns:repeat(4, minmax(0,1fr));
-    grid-auto-rows:150px;
+    columns:3; column-gap:10px;
   }
   #ch-gallery .gal figure{
-    margin:0; position:relative; overflow:hidden;
+    display:block; break-inside:avoid; -webkit-column-break-inside:avoid;
+    margin:0 0 10px; position:relative; overflow:hidden;
     border-radius:12px; background:rgba(255,255,255,.03);
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
     outline:none;
   }
-  #ch-gallery .gal figure.wide{ grid-column:span 2; }
-  #ch-gallery .gal figure.tall{ grid-row:span 2; }
-  #ch-gallery .gal .ph{ position:relative; width:100%; height:100%; min-height:0; overflow:hidden; }
+  #ch-gallery .gal .ph{ position:relative; width:100%; height:auto; min-height:0; overflow:hidden; }
   #ch-gallery .gal img,#ch-gallery .gal video{
-    display:block; width:100%; height:100%; object-fit:cover;
+    display:block; width:100%; height:auto;
     transition:transform .6s cubic-bezier(.22,.72,.24,1), filter .4s ease;
     filter:saturate(.92) contrast(1.02);
   }
@@ -1909,14 +1906,12 @@ body.ui-hidden::after{ opacity:0; }
     #ch-gallery .ch-in{ width:min(960px, 94vw); }
   }
   @media (max-width:760px){
-    #ch-gallery .gal{ grid-template-columns:repeat(2, minmax(0,1fr)); grid-auto-rows:104px; gap:8px; }
+    #ch-gallery .gal{ columns:2; column-gap:8px; }
     #ch-gallery h2{ font-size:30px; }
     #ch-gallery .gal-intro{ display:none; }
     #ch-gallery .gal-note{ display:none; }
     #ch-gallery .gal-head{ margin-bottom:14px; flex-direction:column; align-items:flex-start; gap:6px; }
     #ch-gallery .gal-meta{ font-size:9.5px; padding-bottom:0; }
-    #ch-gallery .gal figure.wide{ grid-column:span 2; }
-    #ch-gallery .gal figure.tall{ grid-row:span 1; }
     #ch-gallery .ch-in{ width:calc(100vw - 32px); }
   }
   @media (prefers-reduced-motion: reduce){
@@ -1927,22 +1922,19 @@ body.ui-hidden::after{ opacity:0; }
     #ch-gallery .gal figcaption{ opacity:1; transform:none; }
   }
 
-  /* §V14 画廊：错落网格 / 卡内纵向滚动 / 入场 / 灯箱 */
-  #ch-gallery .gal{
-    grid-template-columns:repeat(3, minmax(0,1fr));
-    grid-auto-rows:172px;
-    grid-auto-flow:dense;
-    gap:10px;
+  /* §V14 画廊：卡内纵向滚动 / 入场 / 灯箱 */
+  #ch-gallery .gal-wrap::-webkit-scrollbar{ width:8px; }
+  #ch-gallery .gal-wrap::-webkit-scrollbar-track{ background:transparent; }
+  #ch-gallery .gal-wrap::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.18); border-radius:4px; }
+  #ch-gallery .gal-wrap::-webkit-scrollbar-thumb:hover{ background:rgba(255,255,255,.30); }
+  #ch-gallery .gal-wrap{
+    position:relative;
     max-height:calc(100vh - 292px);
     overflow-y:auto;
+    overflow-x:hidden;
     overscroll-behavior:contain;
     padding-right:8px;
   }
-  #ch-gallery .gal::-webkit-scrollbar{ width:8px; }
-  #ch-gallery .gal::-webkit-scrollbar-track{ background:transparent; }
-  #ch-gallery .gal::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.18); border-radius:4px; }
-  #ch-gallery .gal::-webkit-scrollbar-thumb:hover{ background:rgba(255,255,255,.30); }
-  #ch-gallery .gal-wrap{ position:relative; }
   #ch-gallery .gal-wrap::after{
     content:""; position:absolute; left:0; right:8px; bottom:0; height:64px; pointer-events:none;
     background:linear-gradient(180deg, rgba(16,17,21,0) 0%, rgba(16,17,21,.88) 78%, rgba(16,17,21,.96) 100%);
@@ -1955,8 +1947,6 @@ body.ui-hidden::after{ opacity:0; }
   #ch-gallery .gal-scrollhint::after{
     content:""; flex:1; height:1px; background:linear-gradient(90deg, rgba(255,255,255,.14), transparent);
   }
-  #ch-gallery .gal figure.gw{ grid-column:span 2; }
-  #ch-gallery .gal figure.gh{ grid-row:span 2; }
   #ch-gallery .gal figure{
     margin:0; position:relative; border-radius:12px; overflow:hidden;
     background:rgba(255,255,255,.04);
@@ -2007,9 +1997,8 @@ body.ui-hidden::after{ opacity:0; }
   #lbox #lb-prev{ left:18px; } #lbox #lb-next{ right:18px; }
   #lbox #lb-close{ position:absolute; top:16px; right:18px; width:34px; height:34px; }
   @media (max-width:760px){
-    #ch-gallery .gal{ grid-template-columns:repeat(2, minmax(0,1fr)); grid-auto-rows:120px; gap:8px; max-height:calc(100vh - 180px); }
-    #ch-gallery .gal figure.gw{ grid-column:span 2; }
-    #ch-gallery .gal figure.gh{ grid-row:span 1; }
+    #ch-gallery .gal{ columns:2; column-gap:8px; }
+    #ch-gallery .gal-wrap{ max-height:calc(100vh - 180px); }
     #ch-gallery .gal-scrollhint{ display:none; }
     #lbox .lb-stage{ inset:52px 12px 96px; }
     #lbox .lb-cap{ left:14px; right:14px; flex-direction:column; align-items:flex-start; gap:6px; }
@@ -9762,7 +9751,7 @@ const GAL = [{"f":"canada-start.jpg","w":1920,"h":2560,"zh":"2025 加拿大站�
 
 
 /* 画廊：错落尺寸 + 灯箱 */
-const GALSIZE = { 'canada-start.jpg':'gh', 'miami-grid.jpg':'gw', 'zandvoort-aerial.jpg':'gw',
+const GALSIZE = {}; const GALSIZE_OLD = { 'canada-start.jpg':'gh', 'miami-grid.jpg':'gw', 'zandvoort-aerial.jpg':'gw',
   'sf25-garage-assembly.jpg':'gw', 'hamilton-imola-paddock.jpg':'gw', 'leclerc-monza-qualifying.jpg':'gw',
   'russian-gp-warmup-2021.webm':'gw' };
 const LB = { i: -1, list: [] };
@@ -9808,7 +9797,7 @@ function renderGallery(){
   if (!box || box.dataset.done) return;
   const zh = () => SITE.lang !== 'en';
   box.innerHTML = GAL.map((g, i) => {
-    const cls = ' ' + (GALSIZE[g.f] || '');
+    const cls = '';
     const cap = '<figcaption><b>' + (zh() ? g.zh : g.en) + '</b>' +
       (g.a ? '© ' + g.a : '') + (g.l ? (g.a ? ' · ' : '') + '<a href="' + (g.p || '#') + '" target="_blank" rel="noopener">' + g.l + '</a>' : '') +
       '</figcaption>';
