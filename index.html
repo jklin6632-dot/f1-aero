@@ -1864,7 +1864,10 @@ body.ui-hidden::after{ opacity:0; }
     max-width:52ch; font-size:14.5px; line-height:1.7; color:var(--dim,#8b8b93); margin:0 0 26px;
   }
   #ch-gallery .gal{
-    columns:3; column-gap:10px;
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  #ch-gallery .gal-col{
+    flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:10px;
   }
   #ch-gallery .gal figure{
     display:block; break-inside:avoid; -webkit-column-break-inside:avoid;
@@ -9793,7 +9796,10 @@ function renderGallery(){
   const box = document.getElementById('gal');
   if (!box || box.dataset.done) return;
   const zh = () => SITE.lang !== 'en';
-  box.innerHTML = GAL.map((g, i) => {
+  const cols = window.matchMedia('(max-width:1100px)').matches ? 2 : 3;
+  const heights = new Array(cols).fill(0);
+  const buckets = Array.from({ length: cols }, () => []);
+  const itemHTML = (g, i) => {
     const cls = '';
     const cap = '<figcaption><b>' + (zh() ? g.zh : g.en) + '</b>' +
       (g.a ? '© ' + g.a : '') + (g.l ? (g.a ? ' · ' : '') + '<a href="' + (g.p || '#') + '" target="_blank" rel="noopener">' + g.l + '</a>' : '') +
@@ -9802,7 +9808,49 @@ function renderGallery(){
       ? '<video muted loop playsinline preload="none" data-src="img/gal/' + g.f + '" poster="img/gal/' + g.f.replace(/\.webm$/, '.jpg') + '"></video><span class="vid-badge"></span>'
       : '<img src="img/gal/' + g.f + '" alt="' + (zh() ? g.zh : g.en) + '" loading="lazy" decoding="async">';
     return '<figure class="' + cls.trim() + '" data-i="' + i + '" style="--i:' + i + '"><div class="ph">' + media + '</div>' + cap + '</figure>';
-  }).join('');
+  };
+  /* 贪心装箱：每次放进当前最矮的一列 */
+  const COLPX = 353;
+  const ar = GAL.map(g => ((g.w && g.h) ? (g.h / g.w) : 0.62) * COLPX);
+  const items = GAL.map((g, i) => ({ i, h: ar[i] }));
+  GAL.forEach((g, i) => {
+    let t = 0;
+    for (let k = 1; k < cols; k++) if (heights[k] < heights[t]) t = k;
+    buckets[t].push({ i, h: ar[i] });
+    heights[t] += ar[i];
+  });
+  /* 平衡：先试两列交换，再试整块搬运，直到高度差收敛 */
+  const spread = () => Math.max(...heights) - Math.min(...heights);
+  for (let pass = 0; pass < 40 && spread() > 50; pass++) {
+    let hi = 0, lo = 0;
+    for (let k = 1; k < cols; k++) { if (heights[k] > heights[hi]) hi = k; if (heights[k] < heights[lo]) lo = k; }
+    if (hi === lo) break;
+    let bestSwap = null, bestSwapSpread = spread();
+    for (let a = 0; a < buckets[hi].length; a++) {
+      for (let b = 0; b < buckets[lo].length; b++) {
+        const na = heights[hi] - buckets[hi][a].h + buckets[lo][b].h;
+        const nb = heights[lo] - buckets[lo][b].h + buckets[hi][a].h;
+        const s = Math.max(na, nb, ...heights.filter((_, k) => k !== hi && k !== lo)) - Math.min(na, nb, ...heights.filter((_, k) => k !== hi && k !== lo));
+        if (s < bestSwapSpread - 1) { bestSwapSpread = s; bestSwap = [a, b]; }
+      }
+    }
+    if (bestSwap) {
+      const [a, b] = bestSwap;
+      const tmp = buckets[hi][a]; buckets[hi][a] = buckets[lo][b]; buckets[lo][b] = tmp;
+      heights[hi] += buckets[hi][a].h - buckets[lo][b].h;
+      heights[lo] += buckets[lo][b].h - buckets[hi][a].h;
+      continue;
+    }
+    const target = (heights[hi] - heights[lo]) / 2;
+    let best = -1, bestD = 1e9;
+    buckets[hi].forEach((it, idx) => { const d = Math.abs(it.h - target); if (d < bestD) { bestD = d; best = idx; } });
+    if (best < 0) break;
+    const moved = buckets[hi].splice(best, 1)[0];
+    buckets[lo].push(moved);
+    heights[hi] -= moved.h; heights[lo] += moved.h;
+  }
+  const colHTML = buckets.map(list => list.map(it => itemHTML(GAL[it.i], it.i)).join(''));
+  box.innerHTML = colHTML.map(list => '<div class="gal-col">' + list + '</div>').join('');
   box.querySelectorAll('video').forEach(v => {
     const fig = v.closest('figure');
     fig.addEventListener('pointerenter', () => { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); });
@@ -9815,6 +9863,16 @@ function renderGallery(){
   }));
   box.dataset.done = '1';
 }
+let galResizeT = 0;
+window.addEventListener('resize', () => {
+  clearTimeout(galResizeT);
+  galResizeT = setTimeout(() => {
+    const box = document.getElementById('gal');
+    if (!box) return;
+    delete box.dataset.done;
+    renderGallery();
+  }, 160);
+});
 
 function renderWins(){
   const box = document.getElementById('wins');
