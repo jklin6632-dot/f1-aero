@@ -91,3 +91,22 @@ CC BY-SA 的要求是 **署名 + 许可证 + 标明是否修改**：
 
 开源不等于放弃署名：别人用你的代码时，MIT 要求保留你的版权声明；
 用这个模型时，CC BY 要求署名 Abu Saif。两边都请照做。
+
+## 5. 影像画廊（`img/gal/`，共 12 张）
+
+新增的「画廊」章节用图，同样全部取自 **Wikimedia Commons**，署名在图注里，点许可证可回到原始文件页。
+
+| 文件 | 内容 | 作者 | 许可证 |
+|---|---|---|---|
+| `img/gal/canada-start.jpg` | 2025 加拿大站首圈，从看台俯拍车流穿过一号弯。 | Bassfish22 | CC BY-SA 4.0 |
+| `img/gal/sf25-garage-assembly.jpg` | 铃鹿周四，法拉利技师在车库里组装汉密尔顿的 SF-25，一排红衣技师围在车尾。 | Liauzh | CC BY-SA 4.0 |
+| `img/gal/pirelli-tyres.jpg` | 伦敦 F1 展览上的倍耐力半雨胎与全雨胎，荧光绿与蓝色色圈。 | Hullian111 | CC BY-SA 4.0 |
+| `img/gal/zandvoort-aerial.jpg` | 赞德沃特赛道航拍，倾斜弯与沙丘地形一览无余。 | dronepicr | CC BY 2.0 |
+| `img/gal/miami-grid.jpg` | 迈阿密发车前，看台与围栏边挤满观众，前景是发车格前三排。 | Bassfish22 | CC BY-SA 4.0 |
+| `img/gal/hamilton-sf25-suzuka.jpg` | 铃鹿 FP1，汉密尔顿的 SF-25 侧面飞驰，赞助标贴清晰。 | Liauzh | CC BY-SA 4.0 |
+| `img/gal/leclerc-imola-2025.jpg` | 伊莫拉 2025，勒克莱尔的 SF-25 侧影，背景是 TAG Heuer 广告墙。 | Jen_ross83 | CC BY 4.0 |
+| `img/gal/leclerc-monza-qualifying.jpg` | 2025 蒙扎排位赛，勒克莱尔压过蒙扎红白路肩。 | Eustace Bagge | CC BY 4.0 |
+| `img/gal/hamilton-monza-qualifying.jpg` | 2025 蒙扎排位赛，汉密尔顿的 SF-25 贴地驶过路肩。 | Eustace Bagge | CC BY 4.0 |
+| `img/gal/hamilton-imola-paddock.jpg` | 伊莫拉，汉密尔顿 SF-25 的前 3/4 视角，前翼与鼻锥细节清楚。 | Buczkowiak94 | CC BY 4.0 |
+| `img/gal/mercedes-roadshow-singapore.jpg` | 新加坡大奖赛周，商场中庭展示的梅赛德斯 F1 赛车与围观人群（他队）。 | Walk around the RED DOT from Singapore | CC0 |
+| `img/gal/hamilton-imola-2025.jpg` | 伊莫拉 2025，汉密尔顿的 SF-25 贴地过弯，背景大片 TAG Heuer 广告。 | Jen_ross83 | CC BY 4.0 |
