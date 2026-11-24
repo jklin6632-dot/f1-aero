@@ -109,7 +109,31 @@
 #views .dhud i{ font-style:normal; font-family:var(--sans); font-size:9px; opacity:.55; margin-left:2px; }
 #views .dhud .sep{ opacity:.28; margin:0 6px; font-size:10px; }
 #views .dhud b{ font-weight:700; color:var(--amber); }
-#cpit{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:12; display:none;
+#views .tel{ position:relative; margin:6px 0 2px; padding:10px 11px 9px;
+    border:1px solid rgba(255,255,255,.10); border-radius:5px;
+    background:linear-gradient(180deg, rgba(11,12,15,.92), rgba(6,7,9,.94)); overflow:hidden; }
+  #views .tel::before{ content:''; position:absolute; left:0; top:0; width:38px; height:2px; background:var(--accent); }
+  #views .tel-k{ display:block; font:700 8.5px/1 var(--mono); letter-spacing:.22em; color:rgba(255,255,255,.38); }
+  #views .tel .dhud{ display:block; margin:6px 0 0; padding:0; height:auto; background:none;
+    font:700 22px/1 var(--display); letter-spacing:-.02em; color:#F3F4F6; }
+  #views .tel .dhud i{ font:500 9px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; opacity:.45; margin-left:3px; }
+  #views .tel .dhud .sep{ opacity:.22; margin:0 5px; font-size:11px; font-weight:400; }
+  #views .tel .dhud b{ color:var(--accent); font-weight:700; }
+  #views .tel-bar{ position:relative; height:5px; margin:9px 0 10px; background:rgba(255,255,255,.07); border-radius:2px; overflow:hidden; }
+  #views .tel-bar i{ position:absolute; left:0; top:0; bottom:0; width:calc(var(--v,0) * 100%);
+    background:linear-gradient(90deg, #e10600, #ff7a45); transition:width .1s linear; }
+  #views .tel-bar .tick{ position:absolute; inset:0;
+    background:repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), rgba(0,0,0,.6) calc(10% - 1px) 10%); }
+  #views .tel-btns{ display:flex; gap:6px; }
+  #views .drs{ flex:1; border:1px solid rgba(255,255,255,.13); border-radius:3px; padding:7px 6px;
+    background:linear-gradient(180deg,#232428,#191a1d); color:#c9ccd1;
+    font:700 9px/1 var(--mono); letter-spacing:.16em; cursor:pointer;
+    transition:color .15s, border-color .15s, background .15s; }
+  #views .drs:hover{ color:#F2F3F4; border-color:rgba(255,255,255,.26); }
+  #views .drs.on{ color:#6dffab; border-color:rgba(60,255,140,.45);
+    background:linear-gradient(180deg, rgba(20,60,38,.95), rgba(10,32,22,.95));
+    box-shadow:inset 0 0 12px rgba(40,255,130,.18); }
+  #cpit{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:12; display:none;
   align-items:center; gap:14px; padding:10px 18px; border-radius:11px;
   background:var(--dark); color:#e8edf5; font-family:var(--display); font-size:14px; font-weight:500;
   font-variant-numeric:tabular-nums; box-shadow:0 10px 30px rgba(8,20,32,.30); }
@@ -629,8 +653,18 @@ body.ui-hidden::after{ opacity:0; }
     color:var(--faint); font-style:normal;
   }
   .gw .gsub{ margin:10px 0 34px; font:400 13px/1.6 var(--sans); color:var(--dim); }
-  .gbar{ height:2px; background:var(--line); overflow:hidden; }
-  .gbar i{ display:block; height:100%; width:0%; background:var(--accent); transition:width .25s ease; }
+  .gbar{ position:relative; height:8px; border-radius:1px; overflow:hidden;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.13) 0 14px, rgba(255,255,255,.05) 14px 16px),
+      rgba(255,255,255,.04); }
+  .gbar::after{ content:''; position:absolute; right:0; top:0; bottom:0; width:18px; opacity:.45;
+    background:repeating-conic-gradient(#fff 0% 25%, #000 0% 50%) 0 0/8px 8px; }
+  .gbar i{ display:block; height:100%; width:0%; position:relative; z-index:1;
+    background:linear-gradient(90deg, #6d0500 0%, #e10600 62%, #ff4a3d 100%);
+    box-shadow:0 0 14px rgba(225,6,0,.55), inset 0 1px 0 rgba(255,255,255,.35);
+    transition:width .25s cubic-bezier(.4,0,.2,1); }
+  .gbar i::after{ content:''; position:absolute; right:0; top:0; bottom:0; width:2px; background:#fff;
+    opacity:.9; box-shadow:0 0 8px rgba(255,120,110,.9); }
   .grow{
     margin-top:12px; display:flex; justify-content:space-between;
     font:500 10px/1 var(--mono); letter-spacing:.1em; color:var(--faint); text-transform:uppercase;
@@ -1052,17 +1086,25 @@ body.ui-hidden::after{ opacity:0; }
   #dots i.on{ background:var(--accent); transform:scale(1.28); }
 
   .cbtn{
-    border:1px solid var(--ink); background:var(--ink); color:#fff; cursor:pointer;
-    padding:15px 30px; border-radius:0;            /* Ferrari 网站：CTA 一律直角 */
+    border:1px solid #8e9198; cursor:pointer;
+    padding:15px 30px; border-radius:2px;          /* Ferrari 网站：CTA 一律直角 */
     font:600 11.5px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase;
-    transition:transform .18s ease, background .4s ease, border-color .4s ease, box-shadow .4s ease;
+    background-color:#f2f3f5; color:#121316;
+    background-image:linear-gradient(180deg,#ffffff 0%,#eff0f2 46%,#dfe1e5 100%);
+    box-shadow: inset 0 1px 0 #ffffff, 0 2px 0 0 #8e9198, 0 3px 2px rgba(0,0,0,.4), 0 14px 26px -12px rgba(0,0,0,.55);
+    transition:transform .14s ease, box-shadow .14s ease;
   }
+  .cbtn:active{ transform:translateY(2px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.65), inset 0 2px 4px rgba(0,0,0,.22), 0 1px 1px rgba(0,0,0,.4); }
   .cbtn:hover{ transform:translateY(-1px); }
   body.mode-site.tone-dark .cbtn{
-    background:#DA291C; border-color:#DA291C; color:#fff;
-    box-shadow:0 18px 40px -18px rgba(218,41,28,.75);
+    background-color:#f2f3f5; color:#121316; border-color:#8e9198;
+    background-image:linear-gradient(180deg,#ffffff 0%,#eff0f2 46%,#dfe1e5 100%);
+    box-shadow: inset 0 1px 0 #ffffff, 0 2px 0 0 #8e9198, 0 3px 2px rgba(0,0,0,.4), 0 14px 26px -12px rgba(0,0,0,.55);
   }
-  body.mode-site.tone-dark .cbtn:hover{ background:#B01E0A; border-color:#B01E0A; }
+  body.mode-site.tone-dark .cbtn:hover{
+    background-color:#ffffff; border-color:#a3a7ae; transform:translateY(-1px);
+  }
 
   body.mode-site.tone-dark .ch-in::before{
     content:""; position:absolute; left:24px; right:24px; top:0; height:1px;
@@ -2008,6 +2050,38 @@ body.ui-hidden::after{ opacity:0; }
     #lbox .lb-cap{ left:14px; right:14px; flex-direction:column; align-items:flex-start; gap:6px; }
   }
 
+  /* ---------- §V17 工作台遥测条（转播风格）：放在最后，覆盖前面几轮 .dhud/.drs 规则 ---------- */
+  #views .tel{ position:relative; margin:6px 0 2px; padding:10px 11px 9px;
+    border:1px solid rgba(255,255,255,.10); border-radius:5px;
+    background:linear-gradient(180deg, rgba(11,12,15,.92), rgba(6,7,9,.94)); overflow:hidden; }
+  #views .tel::before{ content:''; position:absolute; left:0; top:0; width:38px; height:2px; background:var(--accent); }
+  #views .tel-k{ display:block; font:700 8.5px/1 var(--mono); letter-spacing:.22em; color:rgba(255,255,255,.38); }
+  #views .tel .dhud{ display:block; margin:6px 0 0; padding:0; height:auto; width:auto; border:0;
+    background:none; box-shadow:none; border-radius:0;
+    font:600 12.5px/1.55 var(--mono); letter-spacing:-.01em; color:#F3F4F6;
+    white-space:normal; overflow:visible; text-overflow:clip; font-variant-numeric:tabular-nums; }
+  #views .tel .dhud i{ font:500 9px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
+    opacity:.45; margin-left:3px; color:inherit; }
+  #views .tel .dhud .sep{ opacity:.22; margin:0 5px; font-size:10px; }
+  #views .tel .dhud b{ color:var(--accent); font-weight:700; }
+  #views .tel .dhud.rev{ background:none; box-shadow:none; color:#ff9a90; }
+  #views .tel .dhud.fast{ box-shadow:none; }
+  #views .tel-bar{ position:relative; height:5px; margin:9px 0 10px; background:rgba(255,255,255,.07); border-radius:2px; overflow:hidden; }
+  #views .tel-bar i{ position:absolute; left:0; top:0; bottom:0; width:calc(var(--v,0) * 100%);
+    background:linear-gradient(90deg, #e10600, #ff7a45); transition:width .1s linear; }
+  #views .tel-bar .tick{ position:absolute; inset:0;
+    background:repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), rgba(0,0,0,.6) calc(10% - 1px) 10%); }
+  #views .tel-btns{ display:flex; gap:6px; }
+  #views .tel-btns button.drs{ flex:1; width:auto; margin:0; padding:7px 6px; display:block;
+    border:1px solid rgba(255,255,255,.14); border-radius:3px;
+    background:linear-gradient(180deg,#232428,#191a1d); color:#c9ccd1;
+    font:700 9px/1 var(--mono); letter-spacing:.16em; text-align:center; cursor:pointer;
+    transition:color .15s, border-color .15s, background .15s; }
+  #views .tel-btns button.drs:hover{ color:#F2F3F4; border-color:rgba(255,255,255,.28); }
+  #views .tel-btns button.drs.on{ color:#6dffab; border-color:rgba(60,255,140,.45);
+    background:linear-gradient(180deg, rgba(20,60,38,.95), rgba(10,32,22,.95));
+    box-shadow:inset 0 0 12px rgba(40,255,130,.18); }
+
 </style>
 </head>
 <body>
@@ -2290,7 +2364,15 @@ body.ui-hidden::after{ opacity:0; }
     <button data-view="cp">表面压力</button>
     <button data-view="floor">底板气流</button>
     <div class="wb-sec"><span>工况</span><em>RUN</em></div>
-    <span id="drive-hud" class="dhud">0<i>km/h</i></span><button id="drs-btn" class="drs" title="开启/关闭 DRS（减阻尾翼）">DRS</button><button id="demo-btn" class="drs" title="播放 32 秒演示动画（V）">演示</button>
+    <div class="tel">
+      <span class="tel-k">TELEMETRY</span>
+      <span id="drive-hud" class="dhud">0<i>km/h</i></span>
+      <div class="tel-bar" aria-hidden="true"><i></i><span class="tick"></span></div>
+      <div class="tel-btns">
+        <button id="drs-btn" class="drs" title="开启/关闭 DRS（减阻尾翼）">DRS</button>
+        <button id="demo-btn" class="drs" title="播放 32 秒演示动画（V）">演示</button>
+      </div>
+    </div>
     <button id="guide-btn" class="gnav" title="操作指南（按 ? 也能打开）">操作指南</button>
   </nav>
 
@@ -6040,6 +6122,8 @@ function driveTick(dt) {
 function driveHud() {
   const el = DOM.driveHud;
   if (!el) return;
+  const tw = el.closest('.tel');
+  if (tw) tw.style.setProperty('--v', Math.min(1, Math.abs(DRIVE.v) / DRIVE.maxV).toFixed(3));
   /* 图例上的来流数字跟着车速走：流场是按车速缩放的。
      元素由 setView() 在速度场里写入，这里只改文字（不重建，避免每帧重排）。 */
   const lgv = document.getElementById('lg-v');
