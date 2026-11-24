@@ -1607,6 +1607,10 @@ body.ui-hidden::after{ opacity:0; }
      §V10 隧道暗场：场景转近黑，面板抬高一档，界面整体从"浅色后台"变成控制室
      ========================================================================== */
   html.wb-dark, html.wb-dark body{ background:#0a0d12; }
+  /* 模式切换的遮黑过渡：CSS 过渡走合成层，主线程卡顿也不会闪 */
+  #fade{ position:fixed; inset:0; z-index:66; background:#080b10; opacity:0; pointer-events:none;
+         transition:opacity .26s ease; }
+  #fade.on{ opacity:1; transition-duration:.22s; }
   html.wb-dark #c{ background:#0a0d12; }
   :root{ --wb-bg:#12161e; --wb-bg-2:#171c26; --wb-line:rgba(255,255,255,.11); --wb-line-2:rgba(255,255,255,.06); }
   body.mode-work #views{ background:#101419; }
@@ -1639,6 +1643,7 @@ body.ui-hidden::after{ opacity:0; }
 </head>
 <body>
   <canvas id="c"></canvas>
+<div id="fade" aria-hidden="true"></div>
   <div id="tunnel" aria-hidden="true"></div>
 
   <!-- 加载闸门：进度条满即淡出，直接进开场 -->
@@ -5871,7 +5876,7 @@ function initScene(){
     }
   };
   APP.kickBase = 1.25;
-  /* 工作台 / 官网两套调色，切换时立即落到场景上 */
+  /* 工作台 / 官网两套调色：切换时落到场景上（可见的过渡由 #fade 遮罩负责，见 toWork/toSite） */
   APP.setToneMode = function setToneMode(mode){
     const T = APP.tone, R = APP.renderer;
     if (mode === 'tunnel'){
@@ -9947,7 +9952,22 @@ function siteTick(){
   });
 }
 
+/* 模式切换统一走这里：先压黑 220ms 盖住瞬间的换色，换完再淡出 420ms */
+function modeDip(then){
+  const f = document.getElementById('fade');
+  if (!f || document.body.classList.contains('hudhide')){ then(); return; }
+  f.classList.add('on');
+  setTimeout(() => {
+    then();
+    requestAnimationFrame(() => { f.classList.remove('on'); });
+  }, 220);
+}
+
 function toWork(){
+  modeDip(toWorkNow);
+}
+
+function toWorkNow(){
   SITE.on = false;
   document.body.classList.remove('mode-site', 'hot-on', 'tone-dark');
   document.body.classList.add('mode-work');
@@ -10024,6 +10044,10 @@ function resetWorkState(){
 }
 
 function toSite(){
+  modeDip(toSiteNow);
+}
+
+function toSiteNow(){
   SITE.on = true;
   if (APP.setToneMode) APP.setToneMode('site');     /* 官网：恢复白棚/暗章两套 */
   resetWorkState();                 /* 先把工作台的状态收干净，再切回官网 */
