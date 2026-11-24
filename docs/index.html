@@ -1628,6 +1628,9 @@ body.ui-hidden::after{ opacity:0; }
       radial-gradient(120% 95% at 54% 46%, rgba(255,255,255,0) 46%, rgba(0,0,0,.42) 100%);
   }
   /* V10 修版：暗场里给车一点环境补光，雾稍近一点把远处吃掉 */
+  #views button#sec-btn{ margin-left:6px; font-size:10px; letter-spacing:.08em; }
+  #views button#sec-btn.on{ color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); background:var(--accent-soft); }
+  html.wb-dark #views button#sec-btn.on{ color:#ff5a4d; box-shadow:inset 0 0 0 1px rgba(225,6,0,.85); background:rgba(225,6,0,.12); }
   html.wb-dark #specs .spec b{ color:#f4f6fa; }
   html.wb-dark #specs .spec u{ color:#6b7484; }
   /* V10 修版 2：暗角收一点，别在天花板位置切出硬边 */
@@ -1898,7 +1901,7 @@ body.ui-hidden::after{ opacity:0; }
     <button data-view="cp">表面压力</button>
     <button data-view="floor">底板气流</button>
     <div class="wb-sec"><span>工况</span><em>RUN</em></div>
-    <span id="drive-hud" class="dhud">0<i>km/h</i></span><button id="drs-btn" class="drs" title="开启/关闭 DRS（减阻尾翼）">DRS</button><button id="demo-btn" class="drs" title="播放 32 秒演示动画（V）">演示</button>
+    <span id="drive-hud" class="dhud">0<i>km/h</i></span><button id="drs-btn" class="drs" title="开启/关闭 DRS（减阻尾翼）">DRS</button><button id="demo-btn" class="drs" title="播放 32 秒演示动画（V）">演示</button><button id="sec-btn" class="drs sec" data-t="sec" title="只保留对称面附近的流线，看得更清">切面</button>
     <button id="guide-btn" class="gnav" title="操作指南（按 ? 也能打开）">操作指南</button>
   </nav>
 
@@ -3260,6 +3263,15 @@ function initInteraction(){
 
   const db = document.getElementById('drs-btn');
   if (db) db.addEventListener('click', () => setDrs(!DRS.on));
+  const sb = document.getElementById('sec-btn');
+  if (sb) sb.addEventListener('click', () => {
+    FLOW.slice.on = !FLOW.slice.on;
+    sb.classList.toggle('on', FLOW.slice.on);
+    /* 切换时重新撒点：开 → 粒子全部进入薄层；关 → 回到整个流场 */
+    if (FLOW.ready){ for (let i = 0; i < FLOW.N; i++) respawnParticle(i, true); }
+    /* 开截面时切到正侧机位：薄层在侧视下才像一张二维切片，3/4 视角会看成一条斜带 */
+    if (FLOW.slice.on && typeof goPreset === 'function') goPreset(2);
+  });
   const CAM_PRESETS = {
   1: { pos:[0.00, 0.95, -6.90], tgt:[0, 0.45, 0.00] },   // 正前
   2: { pos:[7.40, 1.05, 0.00], tgt:[0, 0.45, 0.00] },    // 正侧
@@ -4015,6 +4027,7 @@ function buildWake(){
    §G 气流可视化（S4b）：粗网格速度场（8 条翼面马蹄涡 + 地面镜像）→ 粒子平流
    ============================================================================ */
 const FLOW = {
+  slice: { on: false, half: 0.55 },   /* 截面：只画对称面附近 |x| < half 的粒子 */
   N: 8000, mesh:null, geo:null, pos:null, col:null, alive:null, src:null,
   grid:null, fine:null, nx:24, ny:16, nz:92,
   lo:[-1.75, 0.005, -3.20], hi:[1.90, 1.90, 12.00],
@@ -4265,7 +4278,11 @@ function initFlow(scene){
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  const mat = new THREE.LineBasicMaterial({ vertexColors:true, transparent:true, opacity:0.38, depthWrite:false });
+  /* 每段两个顶点：尾=0、头=1。着色器按它把尾巴压暗，线就有了方向（像长曝光）。 */
+  const head = new Float32Array(N * 2);
+  for (let i = 0; i < N; i++) head[i * 2 + 1] = 1;
+  geo.setAttribute('aHead', new THREE.BufferAttribute(head, 1));
+  const mat = new THREE.LineBasicMaterial({ vertexColors:true, transparent:true, opacity:0.46, depthWrite:false });
   /* I.1 深度淡出：远处的流线渐隐，避免尾流在画面上糊成一片。
      用相机空间深度（-mvPosition.z）做 smoothstep；near/far 取 16/30 m，
      比尾流可见范围（maxDistance 26）更宽松，只在很远的地方淡掉。 */
@@ -4274,14 +4291,14 @@ function initFlow(scene){
     sh.uniforms.uFadeNear = { value: FLOW.fade.near };
     sh.uniforms.uFadeFar  = { value: FLOW.fade.far };
     sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nvarying float vDepth;')
-      .replace('#include <project_vertex>', '#include <project_vertex>\n  vDepth = -mvPosition.z;');
+      .replace('#include <common>', '#include <common>\nvarying float vDepth;\nattribute float aHead;\nvarying float vHead;')
+      .replace('#include <project_vertex>', '#include <project_vertex>\n  vDepth = -mvPosition.z;\n  vHead = aHead;');
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying float vDepth;\nuniform float uFadeNear;\nuniform float uFadeFar;')
+      .replace('#include <common>', '#include <common>\nvarying float vDepth;\nvarying float vHead;\nuniform float uFadeNear;\nuniform float uFadeFar;')
       .replace('#include <dithering_fragment>',
-        '#include <dithering_fragment>\n  gl_FragColor.a *= 1.0 - smoothstep(uFadeNear, uFadeFar, vDepth);');
+        '#include <dithering_fragment>\n  gl_FragColor.a *= (1.0 - smoothstep(uFadeNear, uFadeFar, vDepth)) * mix(0.06, 1.0, vHead);');
   };
-  mat.customProgramCacheKey = () => 'flowFade1';
+  mat.customProgramCacheKey = () => 'flowFade2';
   const mesh = new THREE.LineSegments(geo, mat);
   mesh.frustumCulled = false;
   mesh.visible = false;
@@ -4292,6 +4309,7 @@ function initFlow(scene){
 
 function respawnParticle(i, scatter){
   const lo = FLOW.lo, hi = FLOW.hi;
+  const sliceOn = FLOW.slice && FLOW.slice.on, sliceHalf = FLOW.slice ? FLOW.slice.half : 0.3;
   const zIn = lo[2] + Math.random() * 0.15;
   const tier = i % 20;
   let x, y, z;
@@ -4347,6 +4365,7 @@ function respawnParticle(i, scatter){
     }
     if (!insideSolid(x, y, z)) break;
   }
+  if (sliceOn) x = (Math.random() * 2 - 1) * sliceHalf;
   FLOW.pos[i * 3] = x; FLOW.pos[i * 3 + 1] = y; FLOW.pos[i * 3 + 2] = z;
   FLOW.prev[i * 3] = x; FLOW.prev[i * 3 + 1] = y; FLOW.prev[i * 3 + 2] = z - 0.01;
 }
@@ -4422,8 +4441,8 @@ function stepFlow(dt){
      两个手段：① 抽稀（每 2 / 3 根才画一根）；② 给段长封顶，让它变成短划线而不是贯穿全场的长条。
      —— 低速不动，保持连贯流线的观感。 */
   const kmh = DRIVE.v * 3.6;
-  const keep = kmh < 140 ? 1 : (kmh < 210 ? 2 : 3);
   const SEG_MAX = kmh < 140 ? 0 : 0.85;
+  const sliceOn = FLOW.slice.on, sliceHalf = FLOW.slice.half;
   const c = new THREE.Color();
   for (let i = 0; i < FLOW.N; i++){
     const k = i * 3;
@@ -4452,8 +4471,8 @@ function stepFlow(dt){
     const sp = Math.hypot(_v[0], _v[1], _v[2]) / (AERO.V * 1.35);
     speedColor(sp, c);
     const j = i * 6;
-    if (keep > 1 && (i % keep) !== 0){
-      /* 这一根不画：两端点重合，长度为 0，等于隐形（不写颜色也无所谓） */
+    if (sliceOn && Math.abs(P[k]) > sliceHalf){
+      /* 截面模式：不在对称面附近的粒子不画（两端点重合即隐形），粒子本身照常推进 */
       posA[j] = P[k]; posA[j + 1] = P[k + 1]; posA[j + 2] = P[k + 2];
       posA[j + 3] = P[k]; posA[j + 4] = P[k + 1]; posA[j + 5] = P[k + 2];
       continue;
@@ -9118,6 +9137,7 @@ const EN = {
   'db-k':'Career timeline',
   'spec-hint':'Open the 2025 rules and the SF-25 design story',
   'drv-open':'Open career timeline',
+  'sec':'Section',
   'sea-hint':'<b>Tap a race card</b> to open that round report',
   'his-hint':'<b>Tap a year</b> for its photo — auto-advances every 2 s',
   'tb-k':'Regulations · Design',
