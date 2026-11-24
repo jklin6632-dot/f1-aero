@@ -1927,12 +1927,33 @@ body.ui-hidden::after{ opacity:0; }
     #ch-gallery .gal figcaption{ opacity:1; transform:none; }
   }
 
-  /* §V14 画廊：错落网格 / 入场 / 灯箱 */
+  /* §V14 画廊：错落网格 / 卡内纵向滚动 / 入场 / 灯箱 */
   #ch-gallery .gal{
-    grid-template-columns:repeat(4, minmax(0,1fr));
-    grid-auto-rows:100px;
+    grid-template-columns:repeat(3, minmax(0,1fr));
+    grid-auto-rows:172px;
     grid-auto-flow:dense;
-    gap:8px;
+    gap:10px;
+    max-height:calc(100vh - 292px);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    padding-right:8px;
+  }
+  #ch-gallery .gal::-webkit-scrollbar{ width:8px; }
+  #ch-gallery .gal::-webkit-scrollbar-track{ background:transparent; }
+  #ch-gallery .gal::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.18); border-radius:4px; }
+  #ch-gallery .gal::-webkit-scrollbar-thumb:hover{ background:rgba(255,255,255,.30); }
+  #ch-gallery .gal-wrap{ position:relative; }
+  #ch-gallery .gal-wrap::after{
+    content:""; position:absolute; left:0; right:8px; bottom:0; height:64px; pointer-events:none;
+    background:linear-gradient(180deg, rgba(16,17,21,0) 0%, rgba(16,17,21,.88) 78%, rgba(16,17,21,.96) 100%);
+  }
+  #ch-gallery .gal-scrollhint{
+    display:flex; align-items:center; gap:6px;
+    margin-top:8px; font-family:var(--mono); font-size:9.5px; letter-spacing:.18em;
+    color:rgba(255,255,255,.30); text-transform:uppercase;
+  }
+  #ch-gallery .gal-scrollhint::after{
+    content:""; flex:1; height:1px; background:linear-gradient(90deg, rgba(255,255,255,.14), transparent);
   }
   #ch-gallery .gal figure.gw{ grid-column:span 2; }
   #ch-gallery .gal figure.gh{ grid-row:span 2; }
@@ -1986,9 +2007,10 @@ body.ui-hidden::after{ opacity:0; }
   #lbox #lb-prev{ left:18px; } #lbox #lb-next{ right:18px; }
   #lbox #lb-close{ position:absolute; top:16px; right:18px; width:34px; height:34px; }
   @media (max-width:760px){
-    #ch-gallery .gal{ grid-template-columns:repeat(2, minmax(0,1fr)); grid-auto-rows:80px; gap:7px; }
-    #ch-gallery .gal figure.gw{ grid-column:span 1; }
+    #ch-gallery .gal{ grid-template-columns:repeat(2, minmax(0,1fr)); grid-auto-rows:120px; gap:8px; max-height:calc(100vh - 180px); }
+    #ch-gallery .gal figure.gw{ grid-column:span 2; }
     #ch-gallery .gal figure.gh{ grid-row:span 1; }
+    #ch-gallery .gal-scrollhint{ display:none; }
     #lbox .lb-stage{ inset:52px 12px 96px; }
     #lbox .lb-cap{ left:14px; right:14px; flex-direction:column; align-items:flex-start; gap:6px; }
   }
@@ -2056,7 +2078,10 @@ body.ui-hidden::after{ opacity:0; }
           <div class="gal-meta" data-t="gal-meta">16 帧 · Wikimedia Commons</div>
         </div>
         <p class="gal-intro" data-t="gal-p">从发车到车库，从旗下一个弯到整条赛道。所有照片来自公开授权（CC BY / CC BY-SA），署名在图注里，点许可证可回到原始文件页。</p>
-        <div class="gal" id="gal"></div>
+        <div class="gal-wrap">
+          <div class="gal" id="gal"></div>
+        </div>
+        <div class="gal-scrollhint" data-t="gal-scroll">滚动 · 共 16 帧</div>
         <p class="gal-note" data-t="gal-note">素材：Wikimedia Commons · 遵循 CC 授权，仅作展示</p>
       </div>
     </section>
@@ -9544,6 +9569,7 @@ const EN = {
   'gal-h':'Beyond the circuit',
   'gal-meta':'12 frames · Wikimedia Commons',
   'gal-p':'From the grid to the garage, from a single corner to the whole circuit. Every frame is openly licensed (CC BY / CC BY-SA); the credit is in the caption and the licence links back to the original file.',
+  'gal-scroll': 'Scroll · 16 frames',
   'gal-note':'Source: Wikimedia Commons · CC licensed · shown for reference',
   towork:'Open workspace',
   'scroll':'Click anywhere to continue →',
