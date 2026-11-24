@@ -8,6 +8,10 @@
 <style>
   /* ---------- 字体（本地自托管，离线可用；latin 子集） ---------- */
   /* 变量字体：Google 对这两个族返回的是同一份可变字重字体，五个文件其实只有两份，这里合成两条 @font-face */
+  @font-face{ font-family:'Archivo'; font-style:normal; font-weight:100 900; font-stretch:62% 125%; font-display:swap;
+    src:url(vendor/fonts/archivo-var.woff2) format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+
   @font-face{ font-family:'Inter'; font-style:normal; font-weight:100 900; font-display:swap;
     src:url(vendor/fonts/inter-var.woff2) format('woff2');
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
@@ -1677,6 +1681,7 @@ body.ui-hidden::after{ opacity:0; }
   @media (prefers-reduced-motion: reduce){
     body.mode-site .ch-in{ animation: none; }
   }
+
 </style>
 </head>
 <body>
@@ -5801,86 +5806,22 @@ function initScene(){
   camera.position.fromArray(HOME_CAM.pos);
   APP.camera = camera;
 
-  /* ---------- 官网背景：风洞烟线（全屏面片，挂在相机上，只在官网显示） ---------- */
-  const flowBg = (() => {
-    const mat = new THREE.ShaderMaterial({
-      depthWrite: false, depthTest: false, fog: false, transparent: false,
-      uniforms: {
-        uTime:  { value: 0 },
-        uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-        uBg:    { value: new THREE.Color(0xfbfaf7) },
-        uTone:  { value: 0 },
-        uInk:   { value: 0.16 }
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
-      `,
-      fragmentShader: `
-        precision highp float;
-        varying vec2 vUv;
-        uniform float uTime, uTone, uInk;
-        uniform vec2 uMouse;
-        uniform vec3 uBg;
-        float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-        float noise(vec2 p){
-          vec2 i = floor(p), f = fract(p);
-          vec2 u = f * f * (3.0 - 2.0 * f);
-          return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
-                     mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
-        }
-        float fbm(vec2 p){
-          float s = 0.0, a = 0.5;
-          for (int i = 0; i < 4; i++){ s += a * noise(p); p *= 2.02; a *= 0.5; }
-          return s;
-        }
-        void main(){
-          vec2 uv = vUv;
-          float t = uTime * 0.05;
-          /* 横向流动的噪声场：时间主要推 x，y 拉长成丝 */
-          float warp = fbm(vec2(uv.x * 2.6 - t * 1.4, uv.y * 4.0) + vec2(0.0, t * 0.7));
-          float n  = fbm(vec2(uv.x * 1.7 - t, uv.y * 3.2) + vec2(warp * 0.55, 0.0));
-          float n2 = fbm(vec2(uv.x * 3.4 - t * 2.1, uv.y * 7.5) + vec2(warp * 0.9, 1.7));
-          /* 两根不同粗细/速度的烟线层，叠出前后景 */
-          float b1 = abs(fract(uv.y * 26.0 + n * 3.0) - 0.5);
-          float l1 = 1.0 - smoothstep(0.02, 0.10, b1);
-          float b2 = abs(fract(uv.y * 58.0 + n2 * 5.0) - 0.5);
-          float l2 = 1.0 - smoothstep(0.02, 0.07, b2);
-          float line = clamp(l1 * 0.85 + l2 * 0.40, 0.0, 1.0);
-          /* 贴着地平线淡出，别切出一条硬边 */
-          float horiz = smoothstep(0.74, 0.90, uv.y);
-          line *= horiz;
-          /* 画面中央留给车：越靠边越明显 */
-          vec2 c = (uv - vec2(0.5, 0.46)) * vec2(1.15, 1.0);
-          float edge = smoothstep(0.16, 0.58, length(c));
-          /* 鼠标附近轻轻带起来一点（触屏没有，自然为 0） */
-          float dm = length((uv - uMouse) * vec2(1.5, 1.0));
-          float near = 0.45 * smoothstep(0.34, 0.0, dm);
-          float mask = clamp(edge + near, 0.0, 1.0);
-          float a = clamp(line * mask, 0.0, 1.0);
-          /* 亮章用深烟线，暗章用浅烟线；混一点法拉利红 */
-          vec3 inkL = mix(vec3(0.30, 0.36, 0.47), vec3(0.72, 0.16, 0.10), smoothstep(0.42, 0.92, n));
-          vec3 inkD = mix(vec3(0.52, 0.64, 0.82), vec3(0.95, 0.42, 0.32), smoothstep(0.42, 0.92, n));
-          vec3 ink = mix(inkL, inkD, uTone);
-          gl_FragColor = vec4(mix(uBg, ink, a * uInk), 1.0);
-        }
-      `
-    });
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
-    m.frustumCulled = false;
-    m.renderOrder = -1000;        /* 先画，随后地面/车/UI 全部盖在上面 */
-    camera.add(m);
-    scene.add(camera);            /* 相机要进场景，挂在它身上的东西才会被渲染 */
-    APP.flowBg = m;
+  APP.reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  APP.pointer = new THREE.Vector2(0.5, 0.5);
+  addEventListener('pointermove', (e) => {
+    APP.pointer.set(e.clientX / innerWidth, 1 - e.clientY / innerHeight);
+  }, { passive: true });
 
-    /* 地面薄雾：贴地的横向流线，加法混合只提亮，不遮阴影 */
-    const gmat = new THREE.ShaderMaterial({
+  /* ---------- 官网背景：地面潮汐（贴地的横向波带，只提亮不遮阴影） ---------- */
+  const tide = (() => {
+    const mat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, fog: false,
       blending: THREE.AdditiveBlending,
       uniforms: {
-        uTime: { value: 0 },
-        uTone: { value: 0 },
-        uInk:  { value: 0.05 }
+        uTime:  { value: 0 },
+        uMouse: { value: new THREE.Vector2(0.5, 0.5) },
+        uTone:  { value: 0 },
+        uInk:   { value: 0.46 }
       },
       vertexShader: `
         varying vec2 vUv;
@@ -5890,6 +5831,7 @@ function initScene(){
         precision highp float;
         varying vec2 vUv;
         uniform float uTime, uTone, uInk;
+        uniform vec2 uMouse;
         float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
         float noise(vec2 p){
           vec2 i = floor(p), f = fract(p);
@@ -5903,32 +5845,33 @@ function initScene(){
           return s;
         }
         void main(){
-          /* vUv.y 是"离相机远近"，让雾沿 z 慢慢往镜头方向跑 */
-          float t = uTime * 0.09;
-          vec2 p = vec2(vUv.x * 5.0, vUv.y * 3.0 - t);
-          float n = fbm(p + vec2(fbm(p * 1.7), 0.0) * 0.7);
-          float band = abs(fract(vUv.y * 9.0 - t * 0.35 + n * 1.2) - 0.5);
-          float line = 1.0 - smoothstep(0.02, 0.22, band);
-          /* 近处淡、远处更淡，中间最清楚 */
-          float near = smoothstep(0.0, 0.22, vUv.y) * (1.0 - smoothstep(0.62, 0.98, vUv.y));
-          float a = line * near * uInk;
-          vec3 ink = mix(vec3(0.45, 0.55, 0.70), vec3(0.85, 0.62, 0.58), uTone);
-          gl_FragColor = vec4(ink * a * 6.0, a * 0.9);
+          /* vUv.y = 离镜头的远近。波带整体朝镜头推，横方向再慢慢摆 */
+          float t = uTime * 0.11;
+          vec2 p = vec2(vUv.x * 4.4 + sin(t * 0.6) * 0.35, vUv.y * 2.6 - t);
+          float n = fbm(p + vec2(fbm(p * 1.6 + 3.1), 0.0) * 0.8);
+          /* 三层不同频率的波叠加，避免规则的斑马线 */
+          float b1 = abs(fract(vUv.y * 2.3 - t * 0.42 + n * 0.90) - 0.5);
+          float b2 = abs(fract(vUv.y * 4.6 - t * 0.62 + n * 1.25) - 0.5);
+          float l1 = 1.0 - smoothstep(0.03, 0.30, b1);
+          float l2 = 1.0 - smoothstep(0.05, 0.48, b2);
+          float line = l1 * 0.85 + l2 * 0.45;
+          /* 鼠标附近轻轻鼓起来一下 */
+          float dm = length((vUv - uMouse) * vec2(1.0, 0.7));
+          line *= 1.0 + 0.6 * smoothstep(0.30, 0.0, dm);
+          /* 近处淡、远处淡，中间最清楚 */
+          float near = smoothstep(0.0, 0.20, vUv.y) * (1.0 - smoothstep(0.58, 0.96, vUv.y));
+          float a = clamp(line, 0.0, 1.0) * near * uInk;
+          vec3 ink = mix(vec3(0.62, 0.71, 0.86), vec3(0.95, 0.72, 0.68), uTone);
+          gl_FragColor = vec4(ink * a, a);
         }
       `
     });
-    const gm = new THREE.Mesh(new THREE.PlaneGeometry(46, 46), gmat);
-    gm.rotation.x = -Math.PI / 2;
-    gm.position.set(0, 0.008, 0);
-    gm.renderOrder = 2;
-    scene.add(gm);
-    APP.flowFloor = gm;
-
-    APP.reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    APP.pointer = new THREE.Vector2(0.5, 0.5);
-    addEventListener('pointermove', (e) => {
-      APP.pointer.set(e.clientX / innerWidth, 1 - e.clientY / innerHeight);
-    }, { passive: true });
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(52, 52), mat);
+    m.rotation.x = -Math.PI / 2;
+    m.position.set(0, 0.010, 0);
+    m.renderOrder = 2;
+    scene.add(m);
+    APP.flowFloor = m;
     return m;
   })();
 
@@ -6452,24 +6395,14 @@ function frame(){
   const dtMs = lastFrameT ? Math.min(now - lastFrameT, 250) : 16.7;
   lastFrameT = now;
 
-  /* 官网背景：烟线推进（工作台里不可见） */
-  if (APP.flowBg){
-    const fb = APP.flowBg, u = fb.material.uniforms;
-    fb.visible = !!SITE.on;
+  /* 官网背景：地面潮汐推进（工作台里不可见） */
+  if (APP.flowFloor){
+    const fl = APP.flowFloor, u = fl.material.uniforms;
+    fl.visible = !!SITE.on;
     if (SITE.on && !APP.reduced){
       u.uTime.value = now * 0.001;
-      if (APP.scene.background && APP.scene.background.isColor) u.uBg.value.copy(APP.scene.background);
       u.uTone.value += ((APP.tone ? APP.tone.t : 0) - u.uTone.value) * Math.min(1, dtMs / 240);
-      const m = APP.pointer;
-      if (m) u.uMouse.value.lerp(m, Math.min(1, dtMs / 220));
-    }
-    if (APP.flowFloor){
-      APP.flowFloor.visible = !!SITE.on;
-      if (SITE.on && !APP.reduced){
-        const gu = APP.flowFloor.material.uniforms;
-        gu.uTime.value = now * 0.001;
-        gu.uTone.value = u.uTone.value;
-      }
+      if (APP.pointer) u.uMouse.value.lerp(APP.pointer, Math.min(1, dtMs / 260));
     }
   }
 
