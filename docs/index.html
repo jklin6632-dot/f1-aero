@@ -1909,15 +1909,15 @@ body.ui-hidden::after{ opacity:0; }
     max-width:52ch; font-size:14.5px; line-height:1.7; color:var(--dim,#8b8b93); margin:0 0 26px;
   }
   #ch-gallery .gal{
-    display:flex; gap:10px; align-items:flex-start;
+    display:flex; gap:2px; align-items:flex-start;
     background:rgba(28,29,34,.92); border-radius:14px; padding:10px;
   }
   #ch-gallery .gal-col{
-    flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:10px;
+    flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:2px;
   }
   #ch-gallery .gal figure{
     display:block; break-inside:avoid; -webkit-column-break-inside:avoid;
-    margin:0 0 10px; position:relative; overflow:hidden;
+    margin:0; position:relative; overflow:hidden;
     border-radius:12px; background:rgba(255,255,255,.03);
     outline:none;
   }
@@ -1929,14 +1929,15 @@ body.ui-hidden::after{ opacity:0; }
   }
   #ch-gallery .gal figure:hover img,#ch-gallery .gal figure:hover video{ transform:scale(1.045); filter:saturate(1.04) contrast(1.04); }
   #ch-gallery .gal figcaption{
-    position:absolute; left:0; right:0; bottom:0; padding:22px 12px 10px;
+    position:absolute; left:0; right:0; bottom:0; padding:38px 12px 10px;
     font-family:var(--mono); font-size:10.5px; letter-spacing:.05em; line-height:1.55;
     color:rgba(255,255,255,.86);
-    background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(6,6,8,.78) 46%, rgba(6,6,8,.94) 100%);
+    background:linear-gradient(180deg, rgba(6,6,8,0) 0%, rgba(6,6,8,.30) 34%, rgba(6,6,8,.72) 72%, rgba(6,6,8,.92) 100%);
     opacity:0; transform:translateY(6px); transition:opacity .3s ease, transform .3s ease;
     pointer-events:none;
   }
-  #ch-gallery .gal figure:hover figcaption,#ch-gallery .gal figure:focus-within figcaption{ opacity:1; transform:none; }
+  /* 悬停不再在照片上压一层图注底板（会被看成把照片切开的一条线）；署名统一放到灯箱里 */
+  #ch-gallery .gal figcaption{ display:none; }
   #ch-gallery .gal figcaption b{ display:block; font-weight:600; letter-spacing:.02em; }
   #ch-gallery .gal figcaption a{ color:inherit; text-decoration:underline; text-underline-offset:2px; pointer-events:auto; }
   #ch-gallery .gal .vid-badge{
@@ -1982,9 +1983,10 @@ body.ui-hidden::after{ opacity:0; }
     overscroll-behavior:contain;
     padding-right:8px;
   }
+  /* 滚动区底部只做很短的软过渡，避免照片被硬切成一条边 */
   #ch-gallery .gal-wrap::after{
-    content:""; position:absolute; left:0; right:8px; bottom:0; height:64px; pointer-events:none;
-    background:linear-gradient(180deg, rgba(16,17,21,0) 0%, rgba(16,17,21,.88) 78%, rgba(16,17,21,.96) 100%);
+    content:""; position:absolute; left:0; right:8px; bottom:0; height:26px; pointer-events:none;
+    background:linear-gradient(180deg, rgba(16,17,21,0) 0%, rgba(16,17,21,.55) 62%, rgba(16,17,21,.88) 100%);
   }
   #ch-gallery .gal-scrollhint{
     display:flex; align-items:center; gap:6px;
@@ -2081,6 +2083,440 @@ body.ui-hidden::after{ opacity:0; }
     background:linear-gradient(180deg, rgba(20,60,38,.95), rgba(10,32,22,.95));
     box-shadow:inset 0 0 12px rgba(40,255,130,.18); }
 
+  /* ============ §V12 首屏：编辑版式（原型） ============ */
+  :root{ --wipe:#0d0d0f; --paper:#f4f4f5; --mute:#a1a1aa; --hair:rgba(255,255,255,.10); }
+
+  /* 顶栏：去掉白色底，只留一条发丝线 */
+  body.mode-site.tone-dark #sbar{
+    background:transparent; border-bottom:1px solid rgba(255,255,255,.08); backdrop-filter:none;
+    height:60px; padding:0 34px;
+  }
+  body.mode-site.tone-dark #sbar .sb-brand b{
+    font-family:'Archivo', var(--display); font-weight:700; font-stretch:112%;
+    font-size:15px; letter-spacing:.16em;
+  }
+  body.mode-site.tone-dark #sbar .sb-brand span{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; color:rgba(255,255,255,.42);
+  }
+  body.mode-site.tone-dark #snav button{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; color:rgba(255,255,255,.52);
+    padding:6px 2px; border-radius:0;
+  }
+  body.mode-site.tone-dark #snav button.on{ color:#f4f4f5; background:none; box-shadow:none; }
+  body.mode-site.tone-dark #snav button.on::after{
+    content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:#e10600;
+  }
+  body.mode-site.tone-dark #snav button{ position:relative; }
+
+  /* 首屏卡片拆掉：不再是一张浮起来的玻璃板 */
+  body.mode-site #ch-hero .ch-in{
+    background:none !important; border:0 !important; box-shadow:none !important;
+    backdrop-filter:none !important; padding:0 !important;
+    width:min(620px, 45vw) !important;
+    animation:none !important;
+  }
+  /* 大标题：Archivo 加宽加粗，压紧字距行高 */
+  #ch-hero h1{
+    font-family:'Archivo', var(--display) !important;
+    font-weight:800 !important; font-stretch:118%;
+    font-size:clamp(92px, 10.8vw, 152px) !important;
+    line-height:.86 !important; letter-spacing:-.044em !important;
+    color:#f4f4f5; margin:0 0 26px;
+  }
+  #ch-hero h1 span{ display:none !important; }
+
+  /* 引导小字（kicker）：等宽、大写字距、前面一根红杠 */
+  #ch-hero .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.22em; color:var(--mute);
+    margin-bottom:18px;
+  }
+  #ch-hero .eyebrow::before{ content:""; width:14px; height:1px; background:#e10600; }
+
+  /* 副标题一行：等宽大写，压在标题下面 */
+  #ch-hero .ch-in > p[data-t="h1sub"],
+  #ch-hero .hero-sub{ display:none; }
+
+  /* 正文 */
+  #ch-hero .ch-in p{
+    font-size:15px; line-height:1.68; color:#c2c2c8; max-width:42ch; margin:0 0 30px;
+  }
+
+  /* 数据带：三格，发丝线分隔，数字用 Archivo + 等宽对齐 */
+  #ch-hero .kpis{
+    display:grid !important; grid-template-columns:repeat(3, minmax(0,1fr));
+    gap:0; margin:0 0 34px; border-top:1px solid var(--hair);
+  }
+  #ch-hero .kpi{
+    padding:16px 0 0; border-right:1px solid var(--hair);
+  }
+  #ch-hero .kpi:last-child{ border-right:0; }
+  #ch-hero .kpi b{
+    display:flex; align-items:baseline; gap:6px;
+    font-family:'Archivo', var(--display); font-weight:600; font-stretch:104%;
+    font-size:42px; line-height:1; letter-spacing:-.03em; color:#f4f4f5;
+    font-variant-numeric:tabular-nums;
+  }
+  #ch-hero .kpi b i{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; color:var(--mute); font-style:normal;
+  }
+  #ch-hero .kpi > span{
+    display:block; margin-top:8px; padding-right:14px;
+    font-family:var(--mono); font-size:10px; letter-spacing:.16em; color:#8b8b93; text-transform:uppercase;
+  }
+
+  /* 继续提示：文字链接，不做胶囊 */
+  #ch-hero .ch-in > a, #ch-hero .cta-more{
+    font-family:var(--mono); font-size:11px; letter-spacing:.16em; color:#e6e6ea;
+    text-decoration:none; border-bottom:1px solid rgba(255,255,255,.24); padding-bottom:4px;
+  }
+
+  body.mode-site #ch-hero::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(96deg, rgba(8,8,10,.86) 0%, rgba(8,8,10,.62) 26%, rgba(8,8,10,.22) 46%, rgba(8,8,10,0) 62%);
+  }
+  body.mode-site #ch-hero .ch-in{ position:relative; z-index:2; }
+
+  /* 副标题 + 索引，编辑版式的小零件 */
+  #ch-hero .ch-in h1::after{
+    content:"FORMULA 1 · 2025 SEASON";
+    display:block; margin-top:14px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.28em; color:#8b8b93; font-weight:400;
+  }
+  #ch-hero .ch-in::after{
+    content:"01 — 09";
+    position:absolute; left:0; bottom:-64px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.2em; color:rgba(255,255,255,.34);
+  }
+  #ch-hero .ch-in > a, #ch-hero .cta-more{}
+
+  /* 分页点：压成细线 */
+  #pager{ opacity:.85; }
+
+  /* ============ §V18 画廊 / 技术：编辑版式 ============ */
+  /* 拆掉玻璃卡：这两章直接铺在场景上 */
+  body.mode-site #ch-gallery .ch-in,
+  body.mode-site #ch-spec .ch-in{
+    background:none !important; border:0 !important; box-shadow:none !important;
+    backdrop-filter:none !important; padding:0 !important;
+  }
+  body.mode-site #ch-gallery .ch-in{ width:min(1180px, 92vw) !important; }
+  body.mode-site #ch-spec .ch-in{ width:min(560px, 42vw) !important; }
+
+  /* 章节标题统一到 Archivo：比首屏小、但仍是大字 + 负字距 */
+  #ch-gallery h2, #ch-spec h2{
+    font-family:'Archivo', var(--display) !important;
+    font-weight:800 !important; font-stretch:116%;
+    font-size:clamp(46px, 4.6vw, 66px) !important;
+    line-height:.94 !important; letter-spacing:-.04em !important;
+    color:#f4f4f5; margin:0;
+  }
+  #ch-gallery .eyebrow, #ch-spec .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.22em;
+    color:#a1a1aa; margin-bottom:14px;
+  }
+  #ch-gallery .eyebrow::before, #ch-spec .eyebrow::before{ content:""; width:14px; height:1px; background:#e10600; }
+
+  /* 头行：标题 + 右侧等宽元信息，压一条发丝线 */
+  #ch-gallery .gal-head{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:24px;
+    padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,.10); margin-bottom:18px;
+  }
+  #ch-gallery .gal-meta{
+    font-family:var(--mono); font-size:10px; letter-spacing:.18em; color:rgba(255,255,255,.36);
+    text-transform:uppercase; padding-bottom:6px; white-space:nowrap;
+  }
+  #ch-gallery .gal-intro{
+    max-width:66ch; font-size:13.5px; line-height:1.6; color:#b9b9c0; margin:0 0 16px;
+  }
+  #ch-gallery .gal-scrollhint, #ch-gallery .gal-note{ font-size:9.5px; color:rgba(255,255,255,.32); }
+  #ch-gallery .gal-note{ margin-top:6px; }
+
+  /* 图墙：更紧的缝、不要面板底色 */
+  #ch-gallery .gal{ background:none !important; padding:0 !important; gap:4px !important; border-radius:0 !important; }
+  #ch-gallery .gal-col{ gap:4px !important; }
+  #ch-gallery .gal-wrap{ max-height:calc(100vh - 348px); }
+
+  /* 技术清单：从六个格子改成一张等宽数据表 */
+  #ch-spec .specs2{
+    display:table !important; width:100%; margin:22px 0 26px !important;
+    background:none !important; border:0 !important; border-top:1px solid rgba(255,255,255,.10) !important;
+    border-collapse:collapse;
+  }
+  #ch-spec .specs2 > div{
+    display:table-row; background:none !important;
+  }
+  #ch-spec .specs2 u{
+    display:table-cell; width:34%; padding:13px 16px 13px 0;
+    font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+    color:#9a9aa2; text-decoration:none; vertical-align:middle;
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  #ch-spec .specs2 b{
+    display:table-cell; padding:13px 0; vertical-align:middle;
+    font-family:'Archivo', var(--display); font-weight:500; font-stretch:104%;
+    font-size:15px; letter-spacing:-.01em; color:#f4f4f5;
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  /* 技术页：照片上要能读字，给右侧压一层向右加深的暗场 */
+  body.mode-site #ch-spec::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(74deg, rgba(8,8,10,0) 16%, rgba(8,8,10,.52) 36%, rgba(8,8,10,.86) 50%, rgba(8,8,10,.94) 72%, rgba(8,8,10,.96) 100%);
+  }
+  body.mode-site #ch-spec .ch-in{ position:relative; z-index:2; }
+
+  #ch-spec p[data-t="spec-p"]{
+    font-size:14px; line-height:1.7; color:#c6c6cc; max-width:38ch; margin:0 0 4px;
+  }
+  /* 技术页按钮：不做实体键，改成带下划线的文字链接 */
+  body.mode-site #ch-spec #tech-open{
+    background:none !important; box-shadow:none !important; border:0 !important;
+    padding:0 0 5px !important; margin:16px 0 0 !important; width:auto !important;
+    font-family:var(--mono) !important; font-size:11px !important; letter-spacing:.16em !important;
+    color:#e6e6ea !important; border-bottom:1px solid rgba(255,255,255,.26) !important;
+    display:inline-flex !important; align-items:center; gap:10px;
+  }
+  body.mode-site #ch-spec #tech-open:hover{ color:#fff !important; border-bottom-color:rgba(255,255,255,.55) !important; }
+  body.mode-site #ch-spec #tech-open i{ font-style:normal; opacity:.6; }
+
+  /* ============ §V19 赛季 / 车手 / 部件 / 队史 / 末页：编辑版式 ============ */
+  body.mode-site #ch-season .ch-in,
+  body.mode-site #ch-drivers .ch-in,
+  body.mode-site #ch-hot .ch-in,
+  body.mode-site #ch-history .ch-in,
+  body.mode-site #ch-cta .ch-in{
+    background:none !important; border:0 !important; box-shadow:none !important;
+    backdrop-filter:none !important; animation:none !important;
+  }
+  body.mode-site #ch-season .ch-in{ width:min(680px, 56vw) !important; padding:0 !important; }
+  body.mode-site #ch-drivers .ch-in{ width:min(880px, 74vw) !important; padding:0 !important; }
+  body.mode-site #ch-hot .ch-in{ width:min(430px, 38vw) !important; padding:0 !important; }
+  body.mode-site #ch-history .ch-in{ width:min(560px, 46vw) !important; padding:0 !important; max-width:none !important; }
+  body.mode-site #ch-cta .ch-in{ width:min(520px, 42vw) !important; padding:0 !important; }
+
+  #ch-season h2, #ch-drivers h2, #ch-hot h2, #ch-history h2, #ch-cta h2{
+    font-family:'Archivo', var(--display) !important;
+    font-weight:800 !important; font-stretch:116%;
+    font-size:clamp(38px, 3.6vw, 54px) !important;
+    line-height:.96 !important; letter-spacing:-.04em !important; color:#f4f4f5; margin:0 0 12px;
+  }
+  #ch-season .eyebrow, #ch-drivers .eyebrow, #ch-hot .eyebrow, #ch-history .eyebrow, #ch-cta .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.22em; color:#a1a1aa; margin-bottom:14px;
+  }
+  #ch-season .eyebrow::before, #ch-drivers .eyebrow::before, #ch-hot .eyebrow::before,
+  #ch-history .eyebrow::before, #ch-cta .eyebrow::before{ content:""; width:14px; height:1px; background:#e10600; }
+
+  /* 正文统一 */
+  body.mode-site #ch-season p[data-t="sea-p"],
+  body.mode-site #ch-drivers p,
+  body.mode-site #ch-hot p[data-t="hot-p"],
+  body.mode-site #ch-cta p[data-t="cta-p"]{
+    font-size:14px; line-height:1.7; color:#c2c2c8; max-width:52ch; margin:0 0 18px;
+  }
+
+  /* 赛季：七张卡改成一张成绩表（flex 行，不用 table 语义） */
+  #ch-season .wins{
+    display:flex !important; flex-direction:column; gap:0 !important;
+    background:none !important; border:0 !important; border-top:1px solid rgba(255,255,255,.12);
+    margin:6px 0 20px; width:100%;
+  }
+  #ch-season .win{
+    display:flex !important; align-items:center; gap:14px;
+    background:none !important; border:0 !important; box-shadow:none !important;
+    transform:none !important; border-bottom:1px solid rgba(255,255,255,.08);
+    padding:11px 0 !important; width:100%;
+  }
+  #ch-season .win::before, #ch-season .win::after{ display:none !important; }
+  #ch-season .win em{
+    flex:0 0 92px; font-family:var(--mono); font-size:9.5px; letter-spacing:.16em;
+    color:#8b8b93; font-style:normal;
+  }
+  #ch-season .win b{ flex:1 1 auto; font-size:14.5px; font-weight:500; color:#f0f0f3; letter-spacing:0; }
+  #ch-season .win > i{
+    flex:0 0 40px; font-family:var(--mono); font-size:11px; font-style:normal; color:#e10600;
+  }
+  #ch-season .win .go{
+    flex:0 0 56px; text-align:right; background:none !important; box-shadow:none !important;
+    border:0 !important; padding:0 !important; font-family:var(--mono); font-size:9.5px;
+    letter-spacing:.14em; color:rgba(255,255,255,.42) !important;
+  }
+  #ch-season .win:hover b{ color:#fff; }
+  #ch-season .win:hover .go{ color:#fff !important; }
+  #ch-season .win.sum em, #ch-season .win.sum b, #ch-season .win.sum > i{ color:#8b8b93; }
+  #ch-season .win.sum{ border-bottom:0; }
+
+  /* 右侧几章都要垫一层暗场，文字才压得住车 */
+  body.mode-site #ch-season::before,
+  body.mode-site #ch-drivers::before,
+  body.mode-site #ch-history::before,
+  body.mode-site #ch-cta::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(76deg, rgba(8,8,10,0) 22%, rgba(8,8,10,.55) 44%, rgba(8,8,10,.86) 62%, rgba(8,8,10,.94) 100%);
+  }
+  body.mode-site #ch-season .ch-in,
+  body.mode-site #ch-drivers .ch-in,
+  body.mode-site #ch-history .ch-in,
+  body.mode-site #ch-cta .ch-in{ position:relative; z-index:2; }
+
+  /* 车手：双栏档案 */
+  #ch-drivers .drv{ display:grid !important; grid-template-columns:1fr 1fr; gap:34px; }
+  #ch-drivers .drv article{
+    background:none !important; border:0 !important; box-shadow:none !important;
+    padding:0 !important; border-top:1px solid rgba(255,255,255,.12) !important; padding-top:16px !important;
+  }
+  #ch-drivers .drv .num{
+    font-family:'Archivo', var(--display); font-weight:800; font-stretch:112%;
+    font-size:64px; line-height:.8; letter-spacing:-.05em; color:rgba(255,255,255,.16);
+  }
+  #ch-drivers .drv h3{
+    font-family:'Archivo', var(--display); font-weight:600; font-stretch:104%;
+    font-size:22px; letter-spacing:-.02em; color:#f4f4f5; margin:10px 0 2px;
+  }
+  #ch-drivers .drv .tag{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; color:#8b8b93;
+    text-transform:uppercase; margin-bottom:14px;
+  }
+  #ch-drivers .drv .pw{ margin:0; }
+  #ch-drivers .drv .pw img{ border-radius:2px; width:100%; height:236px; object-fit:cover; object-position:50% 16%; }
+  #ch-drivers .drv .pw figcaption{ font-size:9.5px; color:rgba(255,255,255,.34); }
+  #ch-drivers .drv p{ font-size:13.5px; line-height:1.66; color:#c2c2c8; margin:12px 0 14px; }
+  #ch-drivers .drv .st{
+    border-top:1px solid rgba(255,255,255,.10); border-bottom:0; padding-top:10px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+  }
+  #ch-drivers .drv .st > *{ background:none !important; border:0 !important; padding:0 !important; }
+  #ch-drivers .drv .st b{ font-family:'Archivo'; font-weight:600; font-size:20px; color:#f4f4f5; }
+  #ch-drivers .drv .st span{ font-family:var(--mono); font-size:9px; letter-spacing:.16em; color:#8b8b93; }
+  body.mode-site #ch-drivers .cta-btn{
+    background:none !important; box-shadow:none !important; border:0 !important;
+    padding:0 0 5px !important; margin-top:12px !important; width:auto !important;
+    font-family:var(--mono) !important; font-size:10px !important; letter-spacing:.16em !important;
+    color:#d8d8de !important; border-bottom:1px solid rgba(255,255,255,.22) !important;
+    display:inline-flex !important; align-items:center; gap:8px;
+  }
+
+  /* 部件：这一章正文已经把交互讲清楚了，再放一行提示会和正文叠字，直接不显示 */
+  body.mode-site #ch-hot .ch-hint{ display:none !important; }
+  body.mode-site #ch-hot::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(72deg, rgba(8,8,10,0) 34%, rgba(8,8,10,.72) 62%, rgba(8,8,10,.9) 84%, rgba(8,8,10,.94) 100%);
+  }
+  body.mode-site #ch-hot .ch-in{ position:relative; z-index:2; }
+  body.mode-site #ch-hot p[data-t="hot-p"]{ font-size:13.5px; line-height:1.72; color:#c6c6cc; max-width:34ch; }
+  /* 部件：提示行压成等宽小字 */
+  #ch-hot .ch-hint{
+    display:block !important; background:none !important; border:0 !important; padding:0 !important;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; color:#8b8b93;
+  }
+  #ch-hot .ch-hint::before{ display:none !important; }
+  #ch-hot .ch-hint b{ color:#e6e6ea; font-weight:500; }
+
+  /* 队史：年份表 */
+  #ch-history .tl{ border-top:1px solid rgba(255,255,255,.12); margin:6px 0 0; }
+  #ch-history .row{
+    background:none !important; border:0 !important; border-bottom:1px solid rgba(255,255,255,.08) !important;
+    padding:11px 0 !important; display:grid !important; grid-template-columns:74px 1fr; gap:14px;
+  }
+  #ch-history .row.on{ background:none !important; }
+  #ch-history .row .yr{ font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:#8b8b93; padding-top:2px; }
+  #ch-history .row .tx{ font-size:13px; line-height:1.62; color:#c2c2c8; }
+  #ch-history .row.on .yr{ color:#e10600; }
+  #ch-history .row.on .tx{ color:#f0f0f3; }
+  #ch-history .ch-hint{
+    display:block !important; background:none !important; border:0 !important; padding:0 !important;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; color:#8b8b93; margin:0 0 14px;
+  }
+  #ch-history .ch-hint::before{ display:none !important; }
+  #ch-history .ch-hint b{ color:#e6e6ea; font-weight:500; }
+  #ch-history #hphoto img{ border-radius:2px; }
+  #ch-history #hphoto .cap, #ch-history #hphoto figcaption{ font-size:9.5px; color:rgba(255,255,255,.36); }
+
+  /* 末页：大标题 + 文字按钮 */
+  body.mode-site #ch-cta #cta-work{
+    background:none !important; box-shadow:none !important; border:0 !important;
+    padding:0 0 6px !important; width:auto !important;
+    font-family:var(--mono) !important; font-size:11.5px !important; letter-spacing:.18em !important;
+    color:#f4f4f5 !important; border-bottom:1px solid rgba(255,255,255,.34) !important;
+  }
+  body.mode-site #ch-cta #cta-work:hover{ color:#fff !important; border-bottom-color:#e10600 !important; }
+
+  /* ============ §V20 弹层（战报 / 生涯 / 技术单 / 灯箱）：同一套编辑语言 ============ */
+  #racebox .rb-card, #drvbox .db-card, #techbox .tb-card, #lbox .lb-card{
+    background:rgba(9,9,11,.965) !important;
+    border:1px solid rgba(255,255,255,.13) !important;
+    border-radius:3px !important;
+    box-shadow:0 46px 110px -34px rgba(0,0,0,.92) !important;
+    backdrop-filter:none !important;
+  }
+  #racebox .rb-x, #drvbox .db-x, #techbox .tb-x, #lbox .lb-x{
+    background:none !important; border:1px solid rgba(255,255,255,.18) !important;
+    border-radius:3px !important; box-shadow:none !important; color:#d8d8de !important;
+  }
+  #racebox .rb-x:hover, #drvbox .db-x:hover, #techbox .tb-x:hover, #lbox .lb-x:hover{
+    border-color:rgba(255,255,255,.42) !important; color:#fff !important;
+  }
+
+  /* 标题：Archivo 800 */
+  #racebox #rb-h, #drvbox .db-name, #techbox .tb-h{
+    font-family:'Archivo', var(--display) !important;
+    font-weight:800 !important; font-stretch:114%;
+    letter-spacing:-.035em !important; color:#f4f4f5 !important;
+  }
+  #racebox #rb-h{ font-size:38px !important; line-height:1 !important; }
+  #drvbox .db-name{ font-size:40px !important; line-height:1 !important; }
+  #techbox .tb-h{ font-size:34px !important; line-height:1 !important; }
+
+  /* 小标签：等宽大写 */
+  #racebox #rb-k, #racebox #rb-sub, #racebox #rb-cap,
+  #drvbox .db-k, #drvbox .db-tag, #techbox .tb-k, #techbox .tb-p,
+  #lbox .lb-meta{
+    font-family:var(--mono) !important; letter-spacing:.14em !important;
+    text-transform:uppercase; color:#8b8b93 !important; font-size:10px !important;
+  }
+  #racebox #rb-txt, #drvbox .db-bio{ font-size:13.5px !important; line-height:1.75 !important; color:#c6c6cc !important; }
+
+  /* 战报里的四格数据：去掉小卡片，改成一条带分隔线的读数 */
+  #racebox #rb-stats{ display:grid !important; grid-template-columns:repeat(4,1fr) !important; gap:0 !important; border:0 !important; background:none !important; }
+  #racebox #rb-stats > *{
+    background:none !important; border:0 !important; border-left:1px solid rgba(255,255,255,.10) !important;
+    padding:2px 12px !important;
+  }
+  #racebox #rb-stats > *:first-child{ border-left:0 !important; padding-left:0 !important; }
+  #racebox #rb-stats b, #racebox #rb-stats strong{
+    font-family:'Archivo', var(--display) !important; font-weight:600 !important;
+    font-size:22px !important; letter-spacing:-.02em !important; color:#f4f4f5 !important;
+  }
+  #racebox #rb-stats span, #racebox #rb-stats em{
+    font-family:var(--mono) !important; font-size:9px !important; letter-spacing:.16em !important;
+    text-transform:uppercase; color:#8b8b93 !important; font-style:normal !important;
+  }
+
+  /* 时间轴 / 清单里的年份标签 */
+  #drvbox .db-main .yr, #drvbox .db-main em, #techbox .tb-i em{
+    font-family:var(--mono) !important; font-size:9.5px !important; letter-spacing:.14em !important;
+    color:#8b8b93 !important; font-style:normal !important;
+  }
+  #drvbox .db-main h4, #techbox .tb-i h4{
+    font-family:'Archivo', var(--display) !important; font-weight:600 !important;
+    letter-spacing:-.015em !important; color:#f0f0f3 !important;
+  }
+  #techbox .tb-i::after{ background:#e10600 !important; }
+  #racebox .rb-ph img, #lbox .lb-ph img, #techbox .tb-ph img{ border-radius:2px !important; }
+  #lbox .lb-cap b{ font-family:'Archivo', var(--display) !important; font-weight:600 !important; }
+
+  /* 中文小标签不要被 text-transform:uppercase 影响（本来就没大写），但图注要能读 */
+  #racebox #rb-cap{
+    text-transform:none !important; letter-spacing:.02em !important;
+    font-size:10px !important; color:rgba(255,255,255,.78) !important;
+    padding:26px 12px 10px !important; left:0; right:0; bottom:0;
+    background:linear-gradient(180deg, rgba(6,6,8,0) 0%, rgba(6,6,8,.72) 55%, rgba(6,6,8,.92) 100%);
+  }
+  #racebox #rb-stats span, #racebox #rb-stats em{ text-transform:none !important; letter-spacing:.08em !important; }
+
+
+
 </style>
 </head>
 <body>
@@ -2141,14 +2577,14 @@ body.ui-hidden::after{ opacity:0; }
         <div class="eyebrow" data-t="gal-k">Gallery · 影像</div>
         <div class="gal-head">
           <h2 data-t="gal-h">赛场之外</h2>
-          <div class="gal-meta" data-t="gal-meta">16 帧 · Wikimedia Commons</div>
+          <div class="gal-meta" data-t="gal-meta">16 帧 · Wikimedia Commons · build 00:38</div>
         </div>
         <p class="gal-intro" data-t="gal-p">从发车到车库，从旗下一个弯到整条赛道。所有照片来自公开授权（CC BY / CC BY-SA），署名在图注里，点许可证可回到原始文件页。</p>
         <div class="gal-wrap">
           <div class="gal" id="gal"></div>
         </div>
         <div class="gal-scrollhint" data-t="gal-scroll">滚动 · 共 16 帧</div>
-        <p class="gal-note" data-t="gal-note">素材：Wikimedia Commons · 遵循 CC 授权，仅作展示</p>
+        <p class="gal-note" data-t="gal-note">素材：Wikimedia Commons · 遵循 CC 授权 · 点开任意一张可看图注与署名</p>
       </div>
     </section>
 
@@ -9646,10 +10082,10 @@ const EN = {
   nav0:'Overview', nav1:'Gallery', nav2:'Technical', nav3:'Aero', nav4:'Season', nav5:'Drivers', nav6:'Parts', nav7:'History',
   'gal-k':'Gallery · images',
   'gal-h':'Beyond the circuit',
-  'gal-meta':'12 frames · Wikimedia Commons',
+  'gal-meta':'16 frames · Wikimedia Commons · build 00:38',
   'gal-p':'From the grid to the garage, from a single corner to the whole circuit. Every frame is openly licensed (CC BY / CC BY-SA); the credit is in the caption and the licence links back to the original file.',
   'gal-scroll': 'Scroll · 16 frames',
-  'gal-note':'Source: Wikimedia Commons · CC licensed · shown for reference',
+  'gal-note':'Source: Wikimedia Commons · CC licensed · tap any frame for its caption and credit',
   towork:'Open workspace',
   'scroll':'Click anywhere to continue →',
   'hero-k':'Scuderia Ferrari · Formula 1 2025',
