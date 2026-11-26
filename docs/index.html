@@ -2508,12 +2508,39 @@ body.ui-hidden::after{ opacity:0; }
 
   /* 中文小标签不要被 text-transform:uppercase 影响（本来就没大写），但图注要能读 */
   #racebox #rb-cap{
-    text-transform:none !important; letter-spacing:.02em !important;
+    text-transform:none !important; letter-spacing:.01em !important;
     font-size:10px !important; color:rgba(255,255,255,.78) !important;
-    padding:26px 12px 10px !important; left:0; right:0; bottom:0;
+    padding:24px 12px 8px !important; left:0; right:0; bottom:0;
     background:linear-gradient(180deg, rgba(6,6,8,0) 0%, rgba(6,6,8,.72) 55%, rgba(6,6,8,.92) 100%);
   }
+  #racebox #rb-cap a{ white-space:nowrap; }
   #racebox #rb-stats span, #racebox #rb-stats em{ text-transform:none !important; letter-spacing:.08em !important; }
+
+  /* 技术弹层左边四格：去掉小方框，改成发丝线读数，和战报四格同一套语言 */
+  #techbox .tb-st{
+    display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:0 !important; background:none !important;
+    border:0 !important; border-top:1px solid rgba(255,255,255,.14) !important;
+  }
+  #techbox .tb-st div{
+    background:none !important; border:0 !important; padding:13px 14px 15px 0 !important;
+    border-bottom:1px solid rgba(255,255,255,.08) !important;
+  }
+  #techbox .tb-st div:nth-child(2n){
+    border-left:1px solid rgba(255,255,255,.10) !important; padding-left:14px !important;
+  }
+  #techbox .tb-st div:nth-child(n+3){ border-bottom:0 !important; }
+  #techbox .tb-st u{ font:500 9px/1.2 var(--mono) !important; letter-spacing:.16em !important; color:#8b8b93 !important; }
+  #techbox .tb-st b{
+    margin-top:7px !important; font-family:'Archivo', var(--display) !important;
+    font-weight:600 !important; font-size:21px !important; line-height:1.05 !important;
+    letter-spacing:-.02em !important; color:#f4f4f5 !important;
+  }
+  #techbox .tb-st i{ margin-top:5px !important; font-size:9px !important; line-height:1.45 !important; color:rgba(255,255,255,.40) !important; }
+  #techbox .tb-st b span{ font-size:12px !important; letter-spacing:0 !important; }
+
+  /* 部件章：文字块给热区点让位时平滑上移（见 hotNudge()） */
+  body.mode-site #ch-hot .ch-in{ transition:transform .46s cubic-bezier(.22,.61,.36,1); }
 
 
 
@@ -10767,7 +10794,7 @@ function openRace(i, quiet){
   }
   /* 有署名才写图注；无图站由 noPhoto() 自己写「该站暂无实拍图」，别在这里覆盖成「摄影：—」 */
   if (o.by && o.ph){
-    const pre = o.demo ? (en ? 'Reference shot · not from this round · ' : '示意图（非本站实拍）· ') : '';
+    const pre = o.demo ? (en ? 'Reference · ' : '示意图 · ') : '';
     const what = o.demo && o.cap ? ((en ? o.capE : o.cap) + ' · ') : '';
     cap.innerHTML = pre + what + (en ? 'Photo: ' : '摄影：') + o.by + ' / <a href="' + o.page +
       '" target="_blank" rel="noopener">' + o.lic + '</a>';
@@ -11078,6 +11105,45 @@ function hideHotTip(){
   if (tip) tip.classList.remove('show');
 }
 
+/* 部件章：热点用 #hot 的 z-index 62 固定画在文字之上，窄屏时「尾翼」点会压住大标题。
+   点不能藏（六个部件都要能点），所以让文字块自动往上让，让开后仍保持右侧对齐；
+   宽屏本来就不打架，保持原来的居中构图不动。 */
+const HOTN = { nat:null, sh:0, w:0, h:0, lang:null };
+function hotNudge(pts, w, h){
+  const el = document.querySelector('#ch-hot .ch-in');
+  if (!el) return;
+  if (!document.body.classList.contains('hot-on')){
+    if (HOTN.sh){ HOTN.sh = 0; el.style.transform = ''; }
+    HOTN.nat = null;
+    return;
+  }
+  const lang = document.documentElement.lang || '';
+  /* 每 ~2.5 秒重测一次自然位置：字体/图片晚到或相机还在过渡时量到的值可能偏，别让它一直错下去 */
+  if ((HOTN.f = (HOTN.f || 0) + 1) % 150 === 0) HOTN.nat = null;
+  if (!HOTN.nat || HOTN.w !== w || HOTN.h !== h || HOTN.lang !== lang){
+    /* 量「没让位时」的自然位置：临时关掉过渡和位移再读，否则读到的是动画中间值 */
+    const t0 = el.style.transition, tr0 = el.style.transform;
+    el.style.transition = 'none'; el.style.transform = 'none';
+    const r = el.getBoundingClientRect();
+    el.style.transform = tr0; el.style.transition = t0;
+    HOTN.nat = { l:r.left, r:r.right, t:r.top, b:r.bottom };
+    HOTN.w = w; HOTN.h = h; HOTN.lang = lang;
+  }
+  const q0 = HOTN.nat;
+  let need = 0;
+  for (const q of pts){
+    if (q.x + 17 < q0.l - 8 || q.x - 17 > q0.r + 8) continue;   /* 横向不挨着 */
+    if (q.y + 17 < q0.t || q.y - 17 > q0.b) continue;           /* 纵向不挨着 */
+    need = Math.max(need, q0.b - (q.y - 17) + 12);              /* 抬到点的上沿之上 */
+  }
+  need = Math.round(Math.min(need, Math.max(0, q0.t - 96)));    /* 别顶到导航条上 */
+  /* 死区 10px：镜头有极慢的浮动，点会亚像素抖动，跟着它每帧改位移会让过渡一直重启、永远到不了位 */
+  if (Math.abs(need - HOTN.sh) > 10){
+    HOTN.sh = need;
+    el.style.transform = need ? 'translateY(' + (-need) + 'px)' : '';
+  }
+}
+
 function siteTick(){
   requestAnimationFrame(siteTick);
   if (!SITE.on || !SITE.hot.length) return;
@@ -11138,6 +11204,7 @@ function siteTick(){
     q.o.el.style.left = q.x.toFixed(1) + 'px';
     q.o.el.style.top  = q.y.toFixed(1) + 'px';
   });
+  hotNudge(pts, w, h);
 }
 
 /* 模式切换统一走这里：先压黑 220ms 盖住瞬间的换色，换完再淡出 420ms */
