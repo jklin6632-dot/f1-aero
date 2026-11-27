@@ -25,3 +25,6 @@ desktop.ini
 
 # 内部交接记录（开发过程笔记，不对外）
 HANDOFF-*.txt
+
+# WorkBuddy 的本地记忆目录（工具私有，不入库）
+.workbuddy/
