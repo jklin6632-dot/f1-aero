@@ -28,3 +28,6 @@ HANDOFF-*.txt
 
 # WorkBuddy 的本地记忆目录（工具私有，不入库）
 .workbuddy/
+
+# Netlify 手动部署包（临时）
+sf24-netlify.zip
