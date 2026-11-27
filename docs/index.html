@@ -2610,7 +2610,7 @@ body.ui-hidden::after{ opacity:0; }
   body.mode-site #ch-cta #cta-work:hover{ color:#fff !important; border-bottom-color:#e10600 !important; letter-spacing:.04em !important; }
 
   /* 车手卡：新版没有卡片，旧的红线去掉，改成整卡轻微提亮 */
-  body.mode-site #ch-drivers .drv article{ position:relative; transition:background-color .18s ease; }
+  body.mode-site #ch-drivers .drv article{ position:relative; transition:background-color .18s ease; cursor:pointer; }
   body.mode-site #ch-drivers .drv article::before{ display:none !important; }
   body.mode-site #ch-drivers .drv article:hover{ background:rgba(255,255,255,.028); }
 
@@ -13251,8 +13251,8 @@ document.addEventListener('click', (e) => {
   if (e.target.id === 'rb-back' || e.target.id === 'rb-close') closeRace();
   if (e.target.id === 'rb-prev'){ rbGo(-1); return; }
   if (e.target.id === 'rb-next'){ rbGo(1); return; }
-  const d = e.target.closest('#ch-drivers .cta-btn');
-  if (d){ openDriver(+d.closest('.drv article').dataset.drv); return; }
+  const d = e.target.closest('#ch-drivers .drv article');
+  if (d && !e.target.closest('a')){ openDriver(+d.dataset.drv); return; }   /* 整张卡可点；图注里的外链除外 */
   if (e.target.id === 'db-back' || e.target.id === 'db-close') closeDriver();
   if (e.target.closest('#tech-open')){ openTech(); return; }
   if (e.target.id === 'tb-back' || e.target.id === 'tb-close') closeTech();
